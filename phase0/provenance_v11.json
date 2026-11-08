@@ -31,6 +31,6 @@
   },
   "calculator_tree_sha256": "5f7de0147ce76d59f1e6bf3078f8ca46b8743c88544e904e7cd0ecf27f22c262",
   "requirements_lock_sha256": "607e1667d3c99e13fc68f4d6bd57f106580bacd0f4a034e5c0a12fa6f7f4dae5",
-  "pytest_summary": "223 passed, 4 skipped in 2.94s",
+  "pytest_summary": "223 passed, 4 skipped in 2.92s",
   "verify_passed": true
 }

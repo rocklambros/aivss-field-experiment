@@ -1,4 +1,4 @@
-"""Report figures for v1.1, drawn in the report template's palette.
+"""Experiment figures for v1.1, drawn in one fixed palette.
 
 Version: 1.1.0
 Owner: Rock Lambros

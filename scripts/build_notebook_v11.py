@@ -4,10 +4,10 @@
 Version: 1.1.0
 Owner: Rock Lambros
 
-The notebook recomputes every number, table, and figure in the v1.1 report from
+The notebook recomputes every number, table, and figure of the experiment from
 the saved assessor outputs, with no model calls, and writes
-results_v11/notebook_numbers.json, which is the only number source the report
-generator reads. Execute with nbconvert (run_all.sh does).
+results_v11/notebook_numbers.json, the single number source for any summary of
+the results. Execute with nbconvert (run_all.sh does).
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ md("""
 
 **Version 1.1. Owner: Rock Lambros.**
 
-This notebook reproduces every number, table, and figure in the version 1.1 report from the saved experiment outputs. It makes no model calls. It runs top to bottom on a fresh kernel with fixed seeds. Its sections follow the report: data loading and the calculator results, one section per hypothesis, the FinBot case study, and the figures.
+This notebook reproduces every number, table, and figure of the AIVSS field experiment from the saved experiment outputs. It makes no model calls. It runs top to bottom on a fresh kernel with fixed seeds. Its sections run in this order: data loading and the calculator results, one section per hypothesis, the FinBot case study, and the figures.
 
 Terms used throughout. A **finding** is one documented attack path in a target application. The **target applications** are agent-sec-lab, DVAA (Damn Vulnerable AI Agent), and FinBot (the OWASP FinBot CTF demo). The **assessors** are Assessors A through G, seven reasoning models from seven model families, all run with the same reasoning effort setting. **CVSS-BT** is the CVSS v4.0 score with exploit maturity applied and no environmental metrics. **CVSS-BTE** appears only in the mitigation pass, where environmental metrics are set.
 """)
@@ -60,7 +60,7 @@ from aivss_v11 import data as D, hypotheses as H, stats as S
 
 FIG = ROOT / "figures_v11"
 FIG.mkdir(exist_ok=True)
-N = {}  # every number the report uses, written to results_v11/notebook_numbers.json at the end
+N = {}  # every headline number, written to results_v11/notebook_numbers.json at the end
 
 def rec(key, value):
     N[key] = value
@@ -75,7 +75,7 @@ md("""
 
 ### 1.1 Scorecards and Adjudicated Vectors
 
-The run named in `runs/CANONICAL` holds every assessor response from the version 1.1 rerun, saved as raw HTTP bodies. This section parses each response strictly, applies the one exploit maturity rule, scores every scorecard through the AIVSS reference calculator (aivss-calc 1.2.0), and adjudicates one vector per finding. The experiment files call the headline score field `cvss_bte`. The calculator labels those scores CVSS-BT because no environmental metric is set, so this notebook and the report call it CVSS-BT.
+The run named in `runs/CANONICAL` holds every assessor response from the final scoring run, saved as raw HTTP bodies. This section parses each response strictly, applies the one exploit maturity rule, scores every scorecard through the AIVSS reference calculator (aivss-calc 1.2.0), and adjudicates one vector per finding. The experiment files call the headline score field `cvss_bte`. The calculator labels those scores CVSS-BT because no environmental metric is set, so this notebook calls it CVSS-BT.
 """)
 
 code("""
@@ -155,7 +155,7 @@ print("retest", json.dumps(N["retest"]))
 md("""
 ### 1.3 Control Arms
 
-Two checks test whether differences come from ordinary run to run variation or from the injection text inside the briefings. The retest arm sent 12 briefings a second time. The ablation arm sent each briefing that quotes assistant-addressed payload lines with those lines withheld. The canary is a harmless instruction inside the untrusted text, and following it shows an assessor obeyed text it was told to treat as data.
+Two checks test whether differences come from ordinary run to run variation or from the injection text inside the briefings. The retest arm sent 12 briefings a second time. The ablation arm sent each briefing that quotes payload lines addressed to the assistant with those lines withheld. The canary is a harmless instruction inside the untrusted text, and following it shows an assessor obeyed text it was told to treat as data.
 """)
 
 code("""
@@ -171,7 +171,7 @@ print("canary", ctl["canary"])
 hyp_text = {
     "H1": ("Inflation", "AIVSS places more findings in High or Critical than CVSS-BT alone. The test counts findings that sit below High under CVSS-BT and reach High or Critical under AIVSS, a band crossing. The calculator never scores AIVSS below CVSS-BT, so the direction is fixed by design and the result is about size."),
     "H2": ("Information Loss", "AIVSS separates fewer pairs of findings than CVSS-BT. The test counts tied pairs under each score and the pairs that only one score separates."),
-    "H3": ("Cross-Boundary Propagation as the Main Switch", "Findings reach the top agent class, A2, mainly because compromised intent crosses a trust boundary into another agent or principal. The test counts how each A2 finding got there."),
+    "H3": ("Propagation Across Trust Boundaries as the Main Switch", "Findings reach the top agent class, A2, mainly because compromised intent crosses a trust boundary into another agent or principal. The test counts how each A2 finding got there."),
     "H4": ("Where the Assessors Disagree", "The assessors' disagreements on the agentic metrics concentrate on two named boundaries, and disagreements on the AIVSS band come from the agentic answers rather than from the CVSS answers. The test swaps one assessor's CVSS vector or agent class into another's scorecard and records which swap closes the band gap."),
     "H5": ("Unknown Answers", "Unknown answers are common enough to leave results provisional, with a material gap between the lowest and highest AIVSS the calculator reports for them."),
     "H6": ("Exploit Maturity Policy", "The choice of exploit maturity policy changes the AIVSS band for a material share of findings."),
@@ -192,7 +192,7 @@ print(json.dumps({{k: v for k, v in h.items() if k not in ("verdict",)}}, indent
 md("""
 ## 12. Case Study: FinBot Invoice Approval
 
-FinBot was replayed twice on this machine only. The first replay ran with no model key, so FinBot used its built-in fallback rules. The second ran with a model reached through a US endpoint. These are two different systems. The fallback approval is not evidence that a model falls for the payload. Rock wrote the FinBot payloads by hand, and they live in `finbot_exploits.md`, which this notebook does not open.
+FinBot was replayed twice on this machine only. The first replay ran with no model key, so FinBot used its own fallback rules. The second ran with a model reached through a US endpoint. These are two different systems. The fallback approval is not evidence that a model falls for the payload. Rock wrote the FinBot payloads by hand, and they live in `finbot_exploits.md`, which this notebook does not open.
 """)
 
 code("""
@@ -214,7 +214,7 @@ print("fallback", fallback); print("model", model); print(N["finbot_model_calls"
 md("""
 ## 13. Figures
 
-Every figure in the report is drawn here, saved to `figures_v11/`, and followed by the table it was drawn from, so no value depends on reading a color. The forms follow the data's job: a tile row for the headline numbers, ribbons and dumbbells for inflation, a forest plot for agreement, a unit chart for what drives disagreement, a heatmap for unknown answers, a slope chart for exploit maturity, a bump chart for ordering, and an outcome grid for FinBot. The colors come from the report template. Severity bands run lavender to dark purple. Each of the seven assessors has its own color and carries its letter on every mark.
+Every figure is drawn here, saved to `figures_v11/`, and followed by the table it was drawn from, so no value depends on reading a color. The forms follow the data's job: a tile row for the headline numbers, ribbons and dumbbells for inflation, a forest plot for agreement, a unit chart for what drives disagreement, a heatmap for unknown answers, a slope chart for exploit maturity, a bump chart for ordering, and an outcome grid for FinBot. The colors come from one fixed palette. Severity bands run lavender to dark purple. Each of the seven assessors has its own color and carries its letter on every mark.
 """)
 
 code("""
@@ -298,9 +298,9 @@ rec("figure_tables", tables)
 """)
 
 md("""
-## 14. Numbers Used in the Report
+## 14. Headline Numbers
 
-This cell gathers every derived number the report states, such as shares, ranges, and rounded statistics, so the report generator reads numbers only from this notebook.
+This cell gathers every derived number that summaries of the experiment quote, such as shares, ranges, and rounded statistics, into `results_v11/notebook_numbers.json`, so every summary reads its numbers from this notebook and none computes its own.
 """)
 
 code('''
