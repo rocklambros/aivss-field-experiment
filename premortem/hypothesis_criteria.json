@@ -1,0 +1,144 @@
+{
+  "version": "1.1.2",
+  "owner": "Rock Lambros",
+  "written": "2026-11-07. Specified after the v1.0 results on the same 48 findings and the same three assessor models were known, and before the v1.1 rerun. Verdicts are therefore exploratory-confirmatory, not confirmatory. The same rules are applied to v1.0 for comparison.",
+  "note": "AIVSS_EXPERIMENT.md registered H1 to H10 as named measurements with four allowed verdicts (Supported, Not supported, Mixed, Insufficient data) but no predicted outcome or falsifying result. The claims below restate each registered name as a directional claim, and the rules fix the verdict before the rerun. This is a deviation from the protocol and is reported in the Method section.",
+  "alpha": 0.05,
+  "hypotheses": {
+    "H1": {
+      "name": "inflation",
+      "claim": "AIVSS places more findings in High or Critical than CVSS-BT alone.",
+      "primary_statistic": "Count and share of adjudicated findings below High under CVSS-BT that reach High or Critical under AIVSS (band crossings), with a path-group cluster bootstrap 95% CI on the share. The one-way floor (AIVSS never below CVSS-BT) is shown by enumeration over the calculator input space, not tested.",
+      "supported_if": "At least 10 percent of findings cross into High or Critical.",
+      "not_supported_if": "No finding crosses.",
+      "mixed_if": "Some findings cross but fewer than 10 percent, or the full set and the subset passing the gate as modeled fall on different sides of 10 percent.",
+      "insufficient_if": "Fewer than 10 adjudicated findings.",
+      "secondary": [
+        "mean AIVSS minus CVSS-BT gap with cluster bootstrap CI",
+        "per target application with exact binomial intervals",
+        "under uniform Attacked, Proof of concept, and Unreported evidence",
+        "subset passing the gate as modeled",
+        "excluding findings with CVSS-BT 0.0",
+        "co-primary for any per target application statement: shares under uniform Attacked, Proof of concept, and Unreported evidence",
+        "Attack Vector and User Interaction sensitivity: AV Local UI None, AV Network UI Passive, AV Network UI Active for listener-bound findings"
+      ],
+      "construction_note": "The calculator never scores AIVSS below CVSS-BT, so the claim can fail only by a tie in counts. The verdict tests magnitude, not direction."
+    },
+    "H2": {
+      "name": "information loss",
+      "claim": "AIVSS separates fewer pairs of findings than CVSS-BT.",
+      "primary_statistic": "Tied pairs among all finding pairs under AIVSS against under CVSS-BT, adjudicated scores rounded to one decimal.",
+      "supported_if": "AIVSS has more tied pairs than CVSS-BT and the pairs separated only by CVSS-BT outnumber the pairs separated only by AIVSS.",
+      "not_supported_if": "AIVSS has the same or fewer tied pairs than CVSS-BT.",
+      "mixed_if": "AIVSS has more tied pairs but the pairs separated only by AIVSS are as many or more than the pairs separated only by CVSS-BT.",
+      "insufficient_if": "Fewer than 10 adjudicated findings.",
+      "secondary": [
+        "distinct values",
+        "duplicate path groups described, not counted as loss",
+        "tie-break sensitivities from adjudication"
+      ]
+    },
+    "H3": {
+      "name": "AP as master switch",
+      "claim": "Findings reach the top agent class mainly through cross-boundary propagation (AP Lateral).",
+      "primary_statistic": "Among adjudicated A2 findings, the count that reach A2 only through AP Lateral, against the counts through LC with CP and LC with RH.",
+      "supported_if": "A2-only-through-AP-Lateral is more than half of A2 findings.",
+      "not_supported_if": "At least one adjudicated finding has AP Lateral and A2-only-through-AP-Lateral is half or fewer of A2 findings.",
+      "mixed_if": "Not used.",
+      "insufficient_if": "No adjudicated finding has AP Lateral, or there are no A2 findings.",
+      "secondary": [
+        "single-assessor and leave-one-assessor-out A2 counts",
+        "tie rule sensitivities"
+      ]
+    },
+    "H4": {
+      "name": "where raters disagree",
+      "claim": "AP Lateral against Contained and LC Mediated against Indirect are the largest share of agentic letter disagreements, and AIVSS band disagreements come from the agentic letters.",
+      "primary_statistic": "Pairwise agentic disagreements by value pair over all assessor pairs, X excluded and counted separately. For each AIVSS band disagreement, four cells: CVSS swap alone closes it, agent class swap alone closes it, either closes it, neither closes it. A pair counts as closed if a swap in either direction closes it. Both directions reported. A variant excludes Attack Vector and User Interaction from the CVSS swap.",
+      "supported_if": "Every testable named value pair is among the two most frequent agentic value-pair disagreements (ties at second place included) and class-only closures exceed CVSS-only closures.",
+      "not_supported_if": "No testable named value pair is among the two most frequent and CVSS-only closures exceed class-only closures.",
+      "mixed_if": "Any other combination of the testable parts.",
+      "insufficient_if": "Both named value pairs are untestable and there are fewer than 10 band disagreements.",
+      "testability_note": "A named value never chosen by any assessor makes that value pair untestable. The verdict is computed on the testable parts only and the untestable part is reported as Insufficient data."
+    },
+    "H5": {
+      "name": "unknowns",
+      "claim": "Unknown (X) answers are common enough to leave results provisional, with a material gap between the lowest and highest possible AIVSS.",
+      "primary_statistic": "Share of adjudicated findings that are provisional, and the mean aivss_max minus aivss_min across provisional findings.",
+      "supported_if": "At least 10 percent of adjudicated findings are provisional and the mean spread across provisional findings is at least 1.0.",
+      "not_supported_if": "No adjudicated finding is provisional.",
+      "mixed_if": "Some findings are provisional but the share is under 10 percent or the mean spread is under 1.0.",
+      "insufficient_if": "Not used.",
+      "secondary": [
+        "X counts per metric per assessor",
+        "provisional share per assessor",
+        "spread distribution over every assessor report",
+        "tie rule sensitivity (X-wins against less-severe)",
+        "per assessor and leave-one-assessor-out"
+      ]
+    },
+    "H6": {
+      "name": "Exploit Maturity policy",
+      "claim": "The Exploit Maturity policy changes the AIVSS band for a material share of findings.",
+      "primary_statistic": "Share of adjudicated findings whose AIVSS band differs between any two of Attacked, Proof of concept, and Unreported. Not defined scores the same as Attacked under CVSS v4.0 and is reported only to show that.",
+      "supported_if": "At least 10 percent of findings change AIVSS band.",
+      "not_supported_if": "No finding changes AIVSS band.",
+      "mixed_if": "Some but under 10 percent.",
+      "insufficient_if": "Not used.",
+      "secondary": [
+        "CVSS-BT band changes for comparison",
+        "empty evidence object against an explicit Attacked value written in the vector, on one finding"
+      ]
+    },
+    "H7": {
+      "name": "distinctions that do not change the score",
+      "claim": "Assessor disagreements on LC Direct against Indirect, LC Mediated against None, RH Possible against None, and ES do not change the AIVSS score.",
+      "primary_statistic": "Exhaustive enumeration over every combination of the other agentic letters and every CVSS-BT score from 0.0 to 10.0 in steps of 0.1: share of inputs where changing only the named letter changes AIVSS. Secondary: per-kind single-letter swaps on every assessor pair that disagrees, both directions, not pooled.",
+      "supported_if": "The enumeration share is zero for every named distinction and no observed swap changes AIVSS.",
+      "not_supported_if": "The enumeration share is at least 50 percent for every named distinction.",
+      "mixed_if": "Any other result.",
+      "insufficient_if": "Not used. A named distinction with no observed disagreement is reported as not observed, and the enumeration still decides.",
+      "testability_note": "A named pair with no disagreements is reported as not testable."
+    },
+    "H8": {
+      "name": "applicability gate",
+      "claim": "A strict reading of the applicability gate rejects some agents, and the assessors disagree about which.",
+      "primary_statistic": "Per agent, each assessor's answer is the majority over that agent's findings (a tie counts as split). Report per agent pass, fail, or split for both readings, within-assessor consistency per agent, and confidence. DVAA as implemented is reported separately as failing by target application design.",
+      "supported_if": "At least one agent fails the gate as modeled by assessor majority and at least two agents have answers that differ across assessors in either reading.",
+      "not_supported_if": "Every agent passes the gate as modeled by majority and every answer is unanimous.",
+      "mixed_if": "Any other result.",
+      "insufficient_if": "Not used."
+    },
+    "H9": {
+      "name": "controls",
+      "claim": "Plausible mitigations move AIVSS less often than they move CVSS (the earlier full enumeration analysis found that controls move the headline less than they reduce exposure).",
+      "primary_statistic": "Environmental arm: count of findings whose CVSS-BTE changes and count whose AIVSS changes, with edits applied only where the finding holds the from-value. That AIVSS can move only through a CVSS-BTE band change for A1 and A2 findings is shown by enumeration, not tested. Agentic arm and both-arm reported the same way. Lab-fix arm: per assessor, paired band changes under AIVSS against CVSS-BT, read against the retest band.",
+      "supported_if": "In the environmental arm AIVSS changes on fewer findings than CVSS-BTE by at least 10 percent of the findings that received an edit.",
+      "not_supported_if": "AIVSS changes on as many or more findings than CVSS-BTE.",
+      "mixed_if": "AIVSS changes on fewer findings but by less than 10 percent of edited findings.",
+      "insufficient_if": "Fewer than 10 findings receive any environmental edit.",
+      "secondary": [
+        "per edit firing and movement counts",
+        "band changes",
+        "agentic arm movement",
+        "lab documented fixed configurations scored where the target application documents them"
+      ]
+    },
+    "H10": {
+      "name": "ordering",
+      "claim": "AIVSS reorders findings relative to CVSS-BT enough that a defender's top five changes.",
+      "primary_statistic": "Top five membership. A finding counts as moved when its score is strictly above the fifth-place value under one ranking and strictly below the block of findings tied at fifth place under the other. Provisional findings rank by their AIVSS point score. Secondary: Jaccard overlap of tie-inclusive top-five sets, Kendall tau-b with cluster bootstrap CI, strict inversions and ties from scores, probability the top five changes under uniform random tie-breaking (10,000 draws, seed 42).",
+      "supported_if": "At least one finding moved.",
+      "not_supported_if": "No finding moved.",
+      "mixed_if": "Not used.",
+      "insufficient_if": "Fewer than 10 adjudicated findings.",
+      "secondary": [
+        "Kendall tau-b with cluster bootstrap CI",
+        "strict inversions and ties counted from scores",
+        "agent class then CVSS-BT ranking compared the same way"
+      ]
+    }
+  },
+  "lab_severity_comparison": "Descriptive only, n=3 (DV-D1, DV-D2, DV-D3, all labeled critical by the target application). Difficulty and points are not severity and are excluded.",
+  "revision_1_1_2": "2026-11-07, before any call to the seven-assessor panel. The owner replaced the three-assessor panel with seven reasoning assessors (ledger R14). Rules now apply to all assessor pairs and to per-assessor reductions for any number of assessors. Thresholds are unchanged."
+}

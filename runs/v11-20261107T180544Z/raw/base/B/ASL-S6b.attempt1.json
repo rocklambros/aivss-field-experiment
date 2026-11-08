@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/ASL-S6b",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "ASL-S6b",
+    "packet_path": "packets_v11/base/ASL-S6b.json",
+    "prompt_sha256": "927f044c4f900071792284f3ad19a896b4f0db7944a2547a5041d6dfb99b600c"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:06:28.569411+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.04
+  },
+  "body": {
+    "id": "gen-1794074788-5b9Da5PcpEbG3Jhr0E6F",
+    "object": "chat.completion",
+    "created": 1794074788,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The entry point is an ordinary user task with no attacker-supplied language; the documented trigger is the model's own design of echoing the key as api_key, so no natural-language path from an attacker reaches a privileged sink.\",\"CP\":\"No attacker-controlled context or memory persists across sessions on this path; the exposure is a one-shot credential written into runs.jsonl, and the source content is only re-read, not stored as agent memory.\",\"AP\":\"The effect is confined to the agent process and its transcript file; no other agent, tenant, or policy domain is affected on this path.\",\"RH\":\"The briefing gives no evaluator, verifier, or reward channel on this path and no verified episodes, and the isolation facts are unknown, so classify_rh returns X.\",\"ES\":\"The only tool named on the path is call_api, a fixed built-in binding enforced outside model output; no dynamic extension surface is involved on this path.\",\"CVSS\":\"The attacker is a local reader of runs.jsonl or the tool-call record (CLI agent, no network listener), so AV:L with no privileges or interaction; the billing key is fully disclosed in cleartext (VC:H), and that key grants access to the billing API as a subsequent system (SC:H). No integrity or availability loss is documented.\"},\"evidence\":{\"LC\":[\"agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18\"],\"CP\":[\"agent-sec-lab/agent/loop.py:64-69\"],\"AP\":[\"agent-sec-lab/agent/loop.py:53-54\"],\"RH\":[\"agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18\"],\"ES\":[\"agent-sec-lab/agent/billing.py:31-41\"],\"CVSS\":[\"agent-sec-lab/agent/loop.py:64-69\",\"agent-sec-lab/agent/loop.py:53-54\",\"agent-sec-lab/agent/billing.py:31-41\",\"agent-sec-lab/docker-compose.yml:39-42\"]},\"confidence\":{\"LC\":\"medium\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"Exploitation requires a party to read runs.jsonl or the tool-call record; the leak itself occurs automatically on any billing task, but the attacker must actively obtain the log, which is not a scripted end-to-end remote exploit.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"Only confidentiality is affected: the billing API credential is disclosed. No code execution, data modification, or availability loss is documented.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The hand-written loop has the model emit tool_use blocks each turn and the harness executes them (loop.py:28-38, loop.py:53-54); the model pursues the task from the prompt and chooses and sequences tool calls itself.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes the same loop: model call, tool dispatch, repeat, up to 10 turns, with tool_use blocks from the model (__main__.py:9-21, loop.py:43-56).\"},\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "This is a secrets-leakage path, not language injection. Entry point: ordinary user task; no attacker input needed; the reader of the log gains the secret.\n\nAIVSS:\n- LC: no attacker-supplied natural language drives security-relevant behavior on this path \u2192 N? Entry point is an ordinary user task, no attacker input. The log reader is the attacker, but language doesn't reach privileged behavior. LC = N (or X). I'll say N.\n- CP: no attacker-controlled context persistence \u2192 N.\n- AP: confined to the component (log/transcript) \u2192 N.\n- RH: no evaluator/reward channel on path; no verified episodes. reachable_proxy unknown \u2192 X? classify_rh: reachable_proxy null, isolation_verified null \u2192 X.\n- ES: on the path, only call_api tool is used; it's a fixed built-in tool, arguments not validated but the path uses it as designed. Extension surface: the MCP manifest is dynamic/untrusted but not on this path. Named tool call_api is fixed builtin. ES = N? Arguments not validated \u2192 M? The path names call_api, a fixed builtin; no dynamic extension. ES = N.\n\nCVSS: Vulnerable system = agent process (transcript/log). Attacker = log reader. Attacker needs to read the log \u2014 local access. AV=L? The transcript is a file in transcript_dir; reader needs local access to the workspace \u2192 AV:L. PR: none needed beyond reading the log file? Preconditions say attacker can read the log. If they already have that access, AV=L, PR... the log reader may be another local user, no privileges \u2192 PR:N? Reading another's log file might require some access. Attacker must read transcript log; CLI is local. AV:L, PR:N, UI:N, AC:L, AT:N. VC:H (credential fully disclosed). VI:N, VA:N. Subsequent: SC? The billing API is a subsequent system using the leaked key \u2014 but the impact is disclosure; using the key could affect the billing service. I'd say SC:H? The billing API credential gives access to billing data. Keep SI:N/SA:N. I'll set SC:H.\n\nAutomatable: No (requires local log access / human reader) \u2014 \"No\".\nTechnical impact: Partial (credential disclosure only).\n\nApplicability: agent selects actions via tool calls \u2192 as implemented: model_directed_goal_pursuit true, selects_or_sequences_actions true. Same as modeled.\n\nEffect class ladder: all N/X \u2014 AX-ish but CVSS handles it.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null \u2192 X.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "This is a secrets-leakage path, not language injection. Entry point: ordinary user task; no attacker input needed; the reader of the log gains the secret.\n\nAIVSS:\n- LC: no attacker-supplied natural language drives security-relevant behavior on this path \u2192 N? Entry point is an ordinary user task, no attacker input. The log reader is the attacker, but language doesn't reach privileged behavior. LC = N (or X). I'll say N.\n- CP: no attacker-controlled context persistence \u2192 N.\n- AP: confined to the component (log/transcript) \u2192 N.\n- RH: no evaluator/reward channel on path; no verified episodes. reachable_proxy unknown \u2192 X? classify_rh: reachable_proxy null, isolation_verified null \u2192 X.\n- ES: on the path, only call_api tool is used; it's a fixed built-in tool, arguments not validated but the path uses it as designed. Extension surface: the MCP manifest is dynamic/untrusted but not on this path. Named tool call_api is fixed builtin. ES = N? Arguments not validated \u2192 M? The path names call_api, a fixed builtin; no dynamic extension. ES = N.\n\nCVSS: Vulnerable system = agent process (transcript/log). Attacker = log reader. Attacker needs to read the log \u2014 local access. AV=L? The transcript is a file in transcript_dir; reader needs local access to the workspace \u2192 AV:L. PR: none needed beyond reading the log file? Preconditions say attacker can read the log. If they already have that access, AV=L, PR... the log reader may be another local user, no privileges \u2192 PR:N? Reading another's log file might require some access. Attacker must read transcript log; CLI is local. AV:L, PR:N, UI:N, AC:L, AT:N. VC:H (credential fully disclosed). VI:N, VA:N. Subsequent: SC? The billing API is a subsequent system using the leaked key \u2014 but the impact is disclosure; using the key could affect the billing service. I'd say SC:H? The billing API credential gives access to billing data. Keep SI:N/SA:N. I'll set SC:H.\n\nAutomatable: No (requires local log access / human reader) \u2014 \"No\".\nTechnical impact: Partial (credential disclosure only).\n\nApplicability: agent selects actions via tool calls \u2192 as implemented: model_directed_goal_pursuit true, selects_or_sequences_actions true. Same as modeled.\n\nEffect class ladder: all N/X \u2014 AX-ish but CVSS handles it.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null \u2192 X.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10188,
+      "completion_tokens": 1371,
+      "total_tokens": 11559,
+      "cost": 0.0026287892,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2752,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0026287892,
+        "upstream_inference_prompt_cost": 0.0007093892,
+        "upstream_inference_completions_cost": 0.0019194
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 563,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

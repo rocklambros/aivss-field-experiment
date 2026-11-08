@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/FB-01",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/base/FB-01.json",
+    "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T19:53:10.663985+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.65
+  },
+  "body": {
+    "id": "gen-1794081190-2E26v4A9m6M3eNZQ64a8",
+    "object": "chat.completion",
+    "created": 1794081190,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's invoice description is returned verbatim to the model in a tool result, and the model can then call approve_invoice. No independent transformation to closed fields sits in between. The detector only sets a flag and does not gate the write.\",\"CP\":\"Each request builds a fresh messages list from the system prompt and a user message. The invoice status is persisted, but no attacker context is carried into agent memory or standing behaviour by this path. The FinBotConfig custom_goals route is a separate path.\",\"AP\":\"The effect stays in the single FinBot invoice-processing component. This path writes one invoice row and crosses no agent, tenant or principal boundary.\",\"RH\":\"The briefing does not say whether the model can reach a proxy evaluator or reward signal, and it records no reward-hacking episodes. The model is persuaded by the input, not gaming a grader. The facts cannot determine reachability, so RH is X.\",\"ES\":\"There are five fixed tools defined in code, with no dynamic tools, MCP servers or plugins. The tool set is fixed, so extension surface is narrow, although argument validation is minimal.\",\"CVSS\":\"The app binds 0.0.0.0 with no authentication, open CORS, and self-registration of vendors, so AV:N, PR:N and UI:N. AC is low because the attacker only writes text. AT is present because success depends on the model accepting persuasion, which the lab gives no success rate for. VI is high because an above-threshold invoice is approved with payment_processed set and no review. VC is low because the path itself discloses little. The attacker is a self-registered vendor who owns none of the affected approval state.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\"],\"CVSS\":[\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/routes/vendor.py:12-48\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The attacker can script vendor registration and invoice submission over unauthenticated HTTP. Each attempt is a synchronous call that returns the processing result, so retries are cheap. Success depends on the model accepting the persuasion, but attempts can be repeated.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker controls approval of invoices through the model's decision, but only the invoice status and payment flag are written. The attacker does not gain control of the whole system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"With the OpenAI client present, gpt-4.1-mini chooses tools with tool_choice auto over up to 5 iterations and decides the outcome. The rule-based fallback applies only when the client cannot be created.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous assistant with natural-language goals such as business continuity. It says the model weighs persuasive context and decides which tool to call.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 20537,
+      "completion_tokens": 1561,
+      "total_tokens": 22098,
+      "cost": 0.0623524,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0623524,
+        "upstream_inference_prompt_cost": 0.0451814,
+        "upstream_inference_completions_cost": 0.017171
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

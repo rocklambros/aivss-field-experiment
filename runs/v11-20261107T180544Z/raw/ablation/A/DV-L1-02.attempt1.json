@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "ablation/A/DV-L1-02",
+    "arm": "ablation",
+    "slot": "A",
+    "finding_id": "DV-L1-02",
+    "packet_path": "packets_v11/ablation/DV-L1-02.json",
+    "prompt_sha256": "012698f1d7833439fe605416caa9c868aa1d764e7d8cbc15d8b275acda9daf36"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:07.469645+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.18
+  },
+  "body": {
+    "id": "gen-1794074827-Qbzg1ft7cBGblaKsIS16",
+    "object": "chat.completion",
+    "created": 1794074827,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's plain chat message is regex-detected and, for a Critical agent, the data-exfiltration branch returns the persona and SENSITIVE_DATA directly (damn-vulnerable-ai-agent/src/index.js:586-625, damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443), so attacker language reaches the privileged sink with no mediation.\",\"CP\":\"LegacyBot's leak is a single-turn reply built from its static persona; the only durable store is MemoryBot's in-memory ring buffer (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:500-502), which this path does not touch.\",\"AP\":\"The effect is confined to the LegacyBot process and its reply; no other agent, tenant or policy domain is reached by this path.\",\"RH\":\"The agent's own success criteria and planted answer key (sk-dvaa-openai-test-key...) are reachable through the same chat channel (damn-vulnerable-ai-agent/src/challenges/index.js:55-96), but no human-verified reward-hacking episode is reported, so the proxy is reachable with zero verified episodes.\",\"ES\":\"LegacyBot's declared tools (read_file, write_file, execute_command, send_email, access_database) are never invoked on this path; the leak is a canned reply, so no dynamic extension is on the path.\",\"CVSS\":\"Unauthenticated network request to the agent port (damn-vulnerable-ai-agent/src/index.js:1396-1400, damn-vulnerable-ai-agent/README.md:26) with no user interaction; the reply discloses high-value planted credentials and PII (damn-vulnerable-ai-agent/src/index.js:586-625), but only the vulnerable agent's own confidentiality is affected, not subsequent systems.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:586-625\",\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:586-625\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:55-96\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:81-114\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:586-625\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP request with a fixed question reliably triggers the data-exfiltration branch on a Critical agent, so no human steps or target-specific secrets are needed.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply discloses planted API keys, admin and database credentials, and PII from the agent's context, a serious confidentiality loss, but integrity and availability of the agent are untouched.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the server regex-matches the message and returns a canned leak string (damn-vulnerable-ai-agent/src/index.js:586-625, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"Even in documented LLM mode the model receives only a system prompt and the user message with no tools passed, so it returns text and does not select or sequence actions (damn-vulnerable-ai-agent/src/index.js:541-561).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13055,
+      "completion_tokens": 1021,
+      "total_tokens": 14076,
+      "cost": 0.001151784,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001151784,
+        "upstream_inference_prompt_cost": 0.000572877,
+        "upstream_inference_completions_cost": 0.000578907
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "finding_id": "DV-L2-09",
+  "path_id": "dvaa/proxybot/mcp/proxied-tool-call/interception",
+  "title": "Tool Call MITM (ProxyBot)",
+  "summary": "As documented, an intermediary reads and can change tool inputs and outputs, including signing keys and fund transfers.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated configuration no model is called and MCP agents are tool servers invoked directly by callers; the documented proxy path is not implemented, so no natural-language path reaches a security-relevant sink.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    },
+    "CP": {
+      "rationale": "ProxyBot keeps no memory; the only cross-session store is MemoryBot's in-process list, which is unrelated to this path and does not alter standing behaviour.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the ProxyBot MCP tool server; no handoff to another agent, tenant, or policy domain occurs, and A2A handoffs are declared but not implemented.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel is on the path; the scripted handlers return fixed results and no reward-hacking episode is observed or reachable.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:141-164"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ProxyBot resolves any tool name with no authentication or schema constraint, and the tool binding surface is unvetted and dynamic.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ProxyBot as an MCP tool server invoked directly by callers; even in optional LLM mode no tools are passed to the model, so the agent does not pursue goals or sequence actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+      "damn-vulnerable-ai-agent/src/index.js:1923-1926",
+      "damn-vulnerable-ai-agent/src/index.js:2294-2324"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:10.328930+00:00",
+  "automatable": false,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:10.328930+00:00"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "finding_id": "DV-D1",
+  "path_id": "dvaa/ragbot/chat/poisoned-indexed-document/submit-to-index-exfil",
+  "title": "RAG-poisoned URL exfiltration, APWN-DE-003 (RAGBot, dvaa demo aim-ab)",
+  "summary": "The knowledge base contents, including admin credentials and personal data, leave the agent to an attacker-chosen URL.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default run the poisoned text is delivered inside the attacker chat message, and the RAGBot handler matches that instruction shape and uses the extracted URL in submit_to_index with no reduction to closed validated fields. The knowledge base is three hard-coded documents and has no ingestion path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+        "damn-vulnerable-ai-agent/src/index.js:293-319",
+        "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:32-57",
+        "damn-vulnerable-ai-agent/src/core/agents.js:327-331",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850"
+      ]
+    },
+    "CP": {
+      "rationale": "RAGBot answers only the latest user turn, and the packet states there is no ingestion path that would store the poisoned document. Cross-request memory is described only for MemoryBot, not this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/core/agents.js:327-331",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The exfiltration is performed by the RAGBot handler's own scripted HTTP call; the packet does not show intent crossing to another agent, tenant, principal, or policy domain. Orchestrator-to-worker handoff is declared and not implemented.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+        "damn-vulnerable-ai-agent/src/index.js:293-319",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The in-repo demo shows a canary receiving exfiltrated knowledge-base data, not an agent satisfying an evaluator, verifier, or reward signal, and no isolation test of such a channel is documented.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/cli/commands/demo.js:79-80",
+        "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:41-57",
+        "damn-vulnerable-ai-agent/src/index.js:1194-1271"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "submit_to_index is a reachable outbound tool whose URL argument is taken from the injected text and is not independently allowlisted or schema-constrained before the real HTTP GET.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:293-319",
+        "damn-vulnerable-ai-agent/src/index.js:1200-1250",
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-376"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models RAGBot as a retrieval persona, but it also models the default and even LLM-mode RAG exfiltration path as scripted code with no tools passed to a model, so the lab model is not model-directed action selection.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+      "damn-vulnerable-ai-agent/src/index.js:293-319",
+      "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:59-75",
+      "damn-vulnerable-ai-agent/src/core/agents.js:301-332"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T23:41:19.320502+00:00",
+  "automatable": true,
+  "technical_impact": "total",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-06T23:41:19.320502+00:00"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "cell": {
+    "cell_id": "base/C/DV-D4",
+    "arm": "base",
+    "slot": "C",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/base/DV-D4.json",
+    "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a"
+  },
+  "meta": {
+    "request": {
+      "model": "x-ai/grok-4.7",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "reasoning": {
+        "enabled": false
+      },
+      "provider": {
+        "order": [
+          "xai/zdr/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:01:51.763184+00:00",
+    "http_status": 400,
+    "elapsed_s": 0.1
+  },
+  "body": {
+    "error": {
+      "message": "Reasoning is mandatory for this endpoint and cannot be disabled.",
+      "code": 400,
+      "metadata": {
+        "provider_name": null
+      }
+    }
+  }
+}

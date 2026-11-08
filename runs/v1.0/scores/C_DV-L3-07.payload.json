@@ -1,0 +1,84 @@
+{
+  "finding_id": "DV-L3-07",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/same-name-shadow",
+  "title": "Tool Shadowing (same-name tool replaces a legitimate tool)",
+  "summary": "As documented, persistent interception or modification of every call meant for the real tool. As implemented, the advertised description of the tool is replaced.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:X/AP:N/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Default simulated mode does not call a model, and the sink is a direct unauthenticated JSON-RPC tools/call that writes the registry rather than natural language driving a decision or invocation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    },
+    "CP": {
+      "rationale": "register_tool replaces an advertised-list entry, but the memory profile limits cross-session persistence to MemoryBot and does not say whether PluginBot's list survives the session boundary or is only request-scoped.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ]
+    },
+    "AP": {
+      "rationale": "The implemented effect stays on PluginBot's own registry and keeps the original handler; ProxyBot registration changes nothing, and no code hands the change to another agent or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The cited unit test runs without a fleet and is not a human-verified episode of an agent meeting a proxy, evaluator, or reward, and no citation places such a channel inside or outside the agent's reach.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:170-182",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:801-842"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "PluginBot accepts runtime tool definitions with no signature or source check, so tool identity on the registration path is dynamic and unvetted.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models PluginBot and ProxyBot as MCP tool servers with scripted or caller-invoked tools, not as a model that pursues goals or sequences actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:42:04.053387+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:42:04.053387+00:00"
+  }
+}

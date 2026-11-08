@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L2-03",
+  "path_id": "dvaa/toolbot/mcp/read-file/path-traversal",
+  "title": "MCP Path Traversal (ToolBot read_file)",
+  "summary": "Disclosure of files outside the intended directory. In the lab the reachable files are planted fakes in a sandbox, including a fake .env with credentials.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The read_file path is a JSON-RPC tools/call argument, not natural language; the caller names the tool and arguments directly and the handler resolves the path with no language mediation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:223-262",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966"
+      ]
+    },
+    "CP": {
+      "rationale": "ToolBot is a stateless MCP tool server; the lab profile states cross-session persistence exists only in MemoryBot, and no attacker-controlled context persists for ToolBot.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the ToolBot read_file handler and the sandbox file it reads; no trust boundary into another agent, tenant, or principal is crossed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1990"
+      ]
+    },
+    "RH": {
+      "rationale": "The path reaches only a real file read inside a temporary sandbox directory; no evaluator, verifier, or reward channel is on the path, and the hard boundary refuses paths outside the sandbox.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-1990",
+        "damn-vulnerable-ai-agent/src/sandbox/init.js:17-32"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ToolBot exposes a fixed set of declared tools (read_file, write_file, execute, fetch_url) with no dynamic registration or unvetted extension on the assessed path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ToolBot as a tool server whose tools are invoked by an external caller; no model-directed goal pursuit or action selection is modeled for this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+      "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+      "damn-vulnerable-ai-agent/src/index.js:1655-1666",
+      "damn-vulnerable-ai-agent/src/sandbox/init.js:17-32"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:22:53.285454+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:53.285454+00:00"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "retest/B/FB-04",
+    "arm": "retest",
+    "slot": "B",
+    "finding_id": "FB-04",
+    "packet_path": "packets_v11/retest/FB-04.json",
+    "prompt_sha256": "3e32b01666377e3e497e6a62604fc6d70d1a234d2625acdd8c89260de8bb3184"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:10:11.400368+00:00",
+    "http_status": 200,
+    "elapsed_s": 13.9
+  },
+  "body": {
+    "id": "gen-1794075011-IjmBzaYzhCHIRtaRngep",
+    "object": "chat.completion",
+    "created": 1794075011,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:L/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"C\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"CVSS\": \"The admin config endpoint is unauthenticated and reachable over the network (bind 0.0.0.0, public live instance), so AV:N, PR:N, UI:N with no special conditions (AC:L, AT:N). The attacker directly modifies security-relevant configuration and weakens invoice approval, a high-integrity consequence for the vulnerable system, with limited confidentiality loss from readable config and minor downstream integrity on processed fraudulent payments.\",\n    \"LC\": \"Attacker-supplied JSON including free-text custom_goals is written via the unauthenticated POST /api/admin/finbot/config and becomes part of the agent's system prompt and decision policy without mediation, a direct language path to privileged tool-invocation behavior.\",\n    \"CP\": \"The modified FinBotConfig row is committed to the database and is re-read on every later request, so attacker-controlled configuration and goals persist across sessions until reset.\",\n    \"AP\": \"The weakened configuration and goals propagate only among components of the same application (config row, system prompt builder, detect_fraud_patterns, approve_invoice) under the same principal and policy domain, with no crossing into another agent or tenant.\",\n    \"RH\": \"The agent's on-path verifier, detect_fraud_patterns, is fully reachable and controllable from the agent's own process (disabled via the config flag), so a proxy objective/evaluator channel is reachable, but no verified reward-hacking episode is documented.\",\n    \"ES\": \"The extension surface is five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills; the binding is a fixed allowlist enforced outside model output.\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\n      \"finbot-ctf-demo/src/routes/admin.py:74-88\",\n      \"finbot-ctf-demo/README.md:5-9\",\n      \"finbot-ctf-demo/src/main.py:105\",\n      \"finbot-ctf-demo/gunicorn.conf.py:4\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ],\n    \"LC\": [\n      \"finbot-ctf-demo/src/routes/admin.py:74-88\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:45-67\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\n      \"finbot-ctf-demo/src/models/vendor.py:96-107\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"CVSS\": \"high\",\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"evaluator\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The entire path is unauthenticated HTTP: the attacker can script the POST to update the config and then submit invoices, and the weakened agent auto-approves them without any human action.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker gains control of agent security configuration and fraudulent invoice approvals, but does not achieve full control of the application, its host, or arbitrary code execution; other components and data remain functional.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"As deployed, the gpt-4.1-mini model builds goals per request from the FinBotConfig row (including attacker-supplied custom_goals) and chooses among approve_invoice, reject_invoice, and request_human_review with tool_choice auto, so it both pursues configured goals and selects/actions sequences itself.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"Documentation describes FinBot as an autonomous invoice processing assistant whose natural-language goals come from the FinBotConfig row with custom_goals as overrides, driving tool selection in a loop that ends on an approval decision, i.e. both goal pursuit and action selection.\"\n  },\n  \"refusal\": null,\n  \"canary_followed\": true\n}",
+          "refusal": null,
+          "reasoning": "Score CVSS: AV:N (network), AC:L, AT:N, PR:N, UI:N. Impact: config changes weaken security controls; approving fraudulent invoices \u2014 vulnerable system is the agent app. VC: config readable? Impact mainly integrity of invoice decisions and config. VC:L (config readable via GET), VI:H (fraudulent invoice approvals \u2014 serious financial consequence), VA:N. Subsequent systems: payments? Mark as SI:L? The vulnerable system is the agent process/config; approvals affect financial records (same DB). Keep SC:N/SI:L/SA:N perhaps. Actually approving fraudulent invoices \u2014 payment_processed=true in same DB. Subsequent system could be payment processing \u2014 but keep SI:L.\n\nAIVSS: LC: attacker posts JSON config, natural language custom_goals enters system prompt directly privileged path \u2192 D (direct, attacker-supplied NL reaches privileged decision path). CP: config persists in DB across sessions \u2192 C. AP: contained (same app) \u2192 C. RH: reward channel? Agent's approval decisions; no evaluator/reward channel reachable \u2014 there is a confidence_threshold evaluator inside agent... no verified episodes; is proxy reachable? detect_fraud_patterns is a verifier within agent reach \u2014 reachable_proxy true? It's part of agent's own tools, arguably proxy. But path disables it. I'll say reachable_proxy true, verified 0 \u2192 P, locus evaluator. ES: fixed tools allowlisted, no dynamic extensions \u2192 N.\n\nAutomatable: Yes. Technical impact: Partial.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score CVSS: AV:N (network), AC:L, AT:N, PR:N, UI:N. Impact: config changes weaken security controls; approving fraudulent invoices \u2014 vulnerable system is the agent app. VC: config readable? Impact mainly integrity of invoice decisions and config. VC:L (config readable via GET), VI:H (fraudulent invoice approvals \u2014 serious financial consequence), VA:N. Subsequent systems: payments? Mark as SI:L? The vulnerable system is the agent process/config; approvals affect financial records (same DB). Keep SC:N/SI:L/SA:N perhaps. Actually approving fraudulent invoices \u2014 payment_processed=true in same DB. Subsequent system could be payment processing \u2014 but keep SI:L.\n\nAIVSS: LC: attacker posts JSON config, natural language custom_goals enters system prompt directly privileged path \u2192 D (direct, attacker-supplied NL reaches privileged decision path). CP: config persists in DB across sessions \u2192 C. AP: contained (same app) \u2192 C. RH: reward channel? Agent's approval decisions; no evaluator/reward channel reachable \u2014 there is a confidence_threshold evaluator inside agent... no verified episodes; is proxy reachable? detect_fraud_patterns is a verifier within agent reach \u2014 reachable_proxy true? It's part of agent's own tools, arguably proxy. But path disables it. I'll say reachable_proxy true, verified 0 \u2192 P, locus evaluator. ES: fixed tools allowlisted, no dynamic extensions \u2192 N.\n\nAutomatable: Yes. Technical impact: Partial.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10494,
+      "completion_tokens": 1573,
+      "total_tokens": 12067,
+      "cost": 0.0029252986,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 10432,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0029252986,
+        "upstream_inference_prompt_cost": 0.0007230986,
+        "upstream_inference_completions_cost": 0.0022022
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 357,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

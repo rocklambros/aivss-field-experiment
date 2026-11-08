@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-D2",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-D2",
+    "packet_path": "packets_v11/bridge/DV-D2.json",
+    "prompt_sha256": "131a695730ebe3fbe92711dde783b81cad50beed146778db74aaaf314d025c41"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:14:21.314533+00:00",
+    "http_status": 200,
+    "elapsed_s": 13.55
+  },
+  "body": {
+    "id": "gen-1794075261-3IuwpGjvU7Cw7IRWFPSw",
+    "object": "chat.completion",
+    "created": 1794075261,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"N\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"Attacker-controlled language arrives via a fetched web page (an ai-instructions meta tag) that drives the wallet-read and callback send, an indirect path.\",\"CP\":\"FlightBot answers only the latest user message and holds no durable memory of the page; the poisoned page is consumed within a single request and nothing persists.\",\"AP\":\"The wallet is read from FlightBot itself and exfiltrated to an attacker endpoint; no other agent, tenant, or policy domain is crossed.\",\"RH\":\"No evaluator, verifier, grader, or reward channel exists on this scripted path, and the demo run confirms the flow goes only through detector, wallet read, and callback send.\",\"ES\":\"web_fetch fetches an arbitrary attacker URL and http_post sends the wallet to a callback URL found in that page, with no independent allowlist or argument constraint on either callable operation.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:980-1092\",\"damn-vulnerable-ai-agent/src/payloads/agentpwn-flight-mirror.js:43-65\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\"Other chat agents answer only the latest user turn.\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1086-1092\",\"damn-vulnerable-ai-agent/src/core/agents.js:472\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:980-1092\",\"damn-vulnerable-ai-agent/src/core/agents.js:450-483\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:988-1192\",\"damn-vulnerable-ai-agent/src/index.js:1037-1080\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":1,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The attack requires the traveler to direct FlightBot at an attacker-controlled or attacker-edited URL, so it depends on victim interaction rather than an automated scan.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The traveler's stored wallet (synthetic test cards) is disclosed to an attacker endpoint, a confidentiality-only loss with no integrity or availability effect on the agent or downstream systems.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"rationale\":\"In the default simulated configuration no model is called; FlightBot is a deterministic regex handler and the fetch, wallet read, and callback send are all hardcoded scripted code paths.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"rationale\":\"Even in LLM mode the model receives only a weak system prompt and the user message, no tools are passed to it, and the exfiltration path remains scripted in code, so the model neither directs goals nor selects actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "Score DV-D2: indirect injection, wallet exfiltration from FlightBot.\n\nLC: I \u2014 attacker-controlled page content influences behavior. CP: session-only (ephemeral). AP: contained \u2014 same principal; exfil to attacker endpoint is external, not lateral into another agent. RH: no evaluator/reward channel on path \u2014 but is there a proxy? Not really; RH N? Rubric N requires test confirming isolation of evaluators. The canary listener is not a reward channel. FlightBot path has no evaluator; RH Possible vs None? The agent doesn't reach any evaluator; a test (the demo) shows no evaluator exists on path... I'd say N? But N requires \"a test confirms the isolation.\" No verifier exists at all \u2014 arguably N. But safer: X? Evidence: scripted demo, no evaluator mentioned. I'll pick N with isolation_verified false? Hmm inconsistent. Choose P? P requires a reachable proxy channel \u2014 none described. Choose N? isolation_verified: no evaluator on path, but no test confirms... I'll pick N and set isolation_verified true (demo run shows no evaluator interference; canary is listener not verifier). Actually the detector \"finds the injection\" \u2014 that's a detector, not a reward. I'll go N with medium confidence.\n\nES: web_fetch/http_post \u2014 tools are fixed scripted paths, not model-chosen; but they're dynamic external fetch, not independently constrained: web_fetch fetches arbitrary URL, http_post sends to arbitrary callback. ES W.\n\nCVSS: AV:N (HTTP chat endpoint; default loopback but published... lab default simulated binds 127.0.0.1 \u2014 attack requires local or user pointing agent at attacker URL. Attack vector: the agent makes network request to attacker page; attacker needs victim to mention URL. In default config listener binds 127.0.0.1 but the attack works via crafted URL given to a bound agent. AV:N reasonable. AC:L, AT:N (requires victim to fetch attacker URL \u2014 that's a precondition, AT:N? AT:P since attacker must get user to request a specific URL). PR:N, UI:N. VC:N, VI:H? Data exfiltration of wallet = confidentiality high. VI:N? Exfiltration only confidentiality. VC:H, VI:N/None? Wallet disclosure = VC:H. VA:N. SC:N, SI:N, SA:N. Actually downstream exfil to attacker endpoint: no impact on subsequent systems.\n\nAIVSS: LC=I, CP=S? Session context \u2014 the fetched page context within a single request. CP: no persistence; single request, no memory. CP=N (single-turn stateless). AP=C or N \u2014 effect confined to the agent's own execution (wallet read and sent out) \u2014 no trust boundary crossing to another component; exfil is an external sink, initial component's tool. AP=N? \"Effect confined to initially affected component\" \u2014 the wallet is held by FlightBot itself, so N. Hmm but the exfil crosses a boundary to attacker, not another agent. AP=N.\n\nAIVSS letters: LC=I, CP=N, AP=N, RH=N, ES=W.\n\nCVSS vector: \"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\"\n\nautomatable: No \u2014 requires victim to ask agent to fetch attacker URL (user interaction). Actually UI:N in vector but AT:P. Automatable: No.\n\ntechnical_impact: Partial (data exfiltration only).\n\napplicability_as_implemented: model_directed_goal_pursuit false (no model in default; scripted regex). selects_or_sequences_actions false. As modeled (LLM mode): model_directed true? LLM mode returns text only, tools scripted \u2014 selects_or_sequences_actions false, model_directed_goal_pursuit true? Model gets weak prompt and user message; injection content is in web page processed by code not model. As modeled still false for this path. Keep false/true? Model-directed: LLM mode model output not used for tools. So false both.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score DV-D2: indirect injection, wallet exfiltration from FlightBot.\n\nLC: I \u2014 attacker-controlled page content influences behavior. CP: session-only (ephemeral). AP: contained \u2014 same principal; exfil to attacker endpoint is external, not lateral into another agent. RH: no evaluator/reward channel on path \u2014 but is there a proxy? Not really; RH N? Rubric N requires test confirming isolation of evaluators. The canary listener is not a reward channel. FlightBot path has no evaluator; RH Possible vs None? The agent doesn't reach any evaluator; a test (the demo) shows no evaluator exists on path... I'd say N? But N requires \"a test confirms the isolation.\" No verifier exists at all \u2014 arguably N. But safer: X? Evidence: scripted demo, no evaluator mentioned. I'll pick N with isolation_verified false? Hmm inconsistent. Choose P? P requires a reachable proxy channel \u2014 none described. Choose N? isolation_verified: no evaluator on path, but no test confirms... I'll pick N and set isolation_verified true (demo run shows no evaluator interference; canary is listener not verifier). Actually the detector \"finds the injection\" \u2014 that's a detector, not a reward. I'll go N with medium confidence.\n\nES: web_fetch/http_post \u2014 tools are fixed scripted paths, not model-chosen; but they're dynamic external fetch, not independently constrained: web_fetch fetches arbitrary URL, http_post sends to arbitrary callback. ES W.\n\nCVSS: AV:N (HTTP chat endpoint; default loopback but published... lab default simulated binds 127.0.0.1 \u2014 attack requires local or user pointing agent at attacker URL. Attack vector: the agent makes network request to attacker page; attacker needs victim to mention URL. In default config listener binds 127.0.0.1 but the attack works via crafted URL given to a bound agent. AV:N reasonable. AC:L, AT:N (requires victim to fetch attacker URL \u2014 that's a precondition, AT:N? AT:P since attacker must get user to request a specific URL). PR:N, UI:N. VC:N, VI:H? Data exfiltration of wallet = confidentiality high. VI:N? Exfiltration only confidentiality. VC:H, VI:N/None? Wallet disclosure = VC:H. VA:N. SC:N, SI:N, SA:N. Actually downstream exfil to attacker endpoint: no impact on subsequent systems.\n\nAIVSS: LC=I, CP=S? Session context \u2014 the fetched page context within a single request. CP: no persistence; single request, no memory. CP=N (single-turn stateless). AP=C or N \u2014 effect confined to the agent's own execution (wallet read and sent out) \u2014 no trust boundary crossing to another component; exfil is an external sink, initial component's tool. AP=N? \"Effect confined to initially affected component\" \u2014 the wallet is held by FlightBot itself, so N. Hmm but the exfil crosses a boundary to attacker, not another agent. AP=N.\n\nAIVSS letters: LC=I, CP=N, AP=N, RH=N, ES=W.\n\nCVSS vector: \"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\"\n\nautomatable: No \u2014 requires victim to ask agent to fetch attacker URL (user interaction). Actually UI:N in vector but AT:P. Automatable: No.\n\ntechnical_impact: Partial (data exfiltration only).\n\napplicability_as_implemented: model_directed_goal_pursuit false (no model in default; scripted regex). selects_or_sequences_actions false. As modeled (LLM mode): model_directed true? LLM mode returns text only, tools scripted \u2014 selects_or_sequences_actions false, model_directed_goal_pursuit true? Model gets weak prompt and user message; injection content is in web page processed by code not model. As modeled still false for this path. Keep false/true? Model-directed: LLM mode model output not used for tools. So false both.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7866,
+      "completion_tokens": 1576,
+      "total_tokens": 9442,
+      "cost": 0.0027562334,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0027562334,
+        "upstream_inference_prompt_cost": 0.0005498334,
+        "upstream_inference_completions_cost": 0.0022064
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 835,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

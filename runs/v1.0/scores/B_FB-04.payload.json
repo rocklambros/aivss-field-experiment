@@ -1,0 +1,81 @@
+{
+  "finding_id": "FB-04",
+  "path_id": "finbot/admin-config-api/weaken-controls/approve-invoice",
+  "title": "Security configuration bypass through the unauthenticated admin config endpoint",
+  "summary": "Security controls for every later invoice are removed or weakened until the configuration is reset. Fraudulent invoices are approved more easily. The same endpoint also accepts custom_goals.",
+  "risk_category": "ASI03",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:L/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "An unauthenticated POST to the admin config endpoint writes attacker-supplied configuration and custom_goals natural language directly into the system prompt that drives tool invocation, with no mediation or validation.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:74-88",
+        "finbot-ctf-demo/src/services/finbot_agent.py:750-770",
+        "finbot-ctf-demo/src/services/finbot_agent.py:45-67"
+      ]
+    },
+    "CP": {
+      "rationale": "The manipulated FinBotConfig row persists in the database and is re-injected into the system prompt of every later invoice run, surviving the originating session.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166"
+      ]
+    },
+    "AP": {
+      "rationale": "A single agent relays the compromised configuration into its own tool decisions (approve_invoice) within the same application and principal domain; no trust boundary to another agent or tenant is crossed.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:26-65",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent's approval decisions sit on a proxy/flag path (invoice approved under stated conditions), but no human-verified reward-hacking episode is documented in the packet.",
+      "evidence_refs": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184",
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "Only five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills on the path.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice-processing agent whose goals and tool choices are directed by the model, with the rule-based fallback only when no OpenAI client exists, which is not the documented default.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:74-88",
+      "finbot-ctf-demo/src/services/finbot_agent.py:750-770",
+      "finbot-ctf-demo/src/services/finbot_agent.py:45-67",
+      "finbot-ctf-demo/src/services/finbot_agent.py:505-515"
+    ]
+  },
+  "evidence": {
+    "poc": false
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:35:45.900271+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:35:45.900271+00:00"
+  }
+}

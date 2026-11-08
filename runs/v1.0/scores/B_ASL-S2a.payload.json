@@ -1,0 +1,79 @@
+{
+  "finding_id": "ASL-S2a",
+  "path_id": "asl/s2/tool-args/read-file/outside-workspace",
+  "title": "Over-permissioned read_file: path traversal reads files outside the workspace",
+  "summary": "Arbitrary file disclosure to the model context, and from there to the user or to an exfiltration channel.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:N/AP:C/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The lab says the traversal path is delivered by a prompt injection (S1) or a confused request, i.e. attacker-controlled language from ingested content or the request reaches the read_file tool-invocation path unmediated.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+        "agent-sec-lab/attacks/s2_over_permissioned/payloads.py:1-16",
+        "agent-sec-lab/agent/tools.py:213-216"
+      ]
+    },
+    "CP": {
+      "rationale": "This scenario only re-retrieves file content into the session; no evidence shows attacker-controlled context persisting into durable agent memory on this path, so no carryover is demonstrated.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/tools.py:298-304",
+        "agent-sec-lab/tests/test_s2_over_permissioned.py:39-42"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect relays from the model to the read_file tool within one agent under one principal and policy domain; no second agent, tenant, or trust boundary is crossed.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/mapping.md:28",
+        "agent-sec-lab/agent/tools.py:226-258"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, grader, or reward channel is documented on this path, and no isolation test exists, so the evidence cannot decide whether a proxy is reachable.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/results.md:3-15",
+        "agent-sec-lab/tests/test_s2_over_permissioned.py:53-57"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "The tool surface is unconstrained in the baseline: all twelve tools are offered with unvalidated arguments, and remote MCP tool schemas are trusted unpinned.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/tools.py:20-99",
+        "agent-sec-lab/agent/tools.py:235-238",
+        "agent-sec-lab/services/mcp_server/app.py:27-43"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models a tool-using office assistant whose model selects and sequences the twelve built-in tools; the scripted worst-case models in the tests stand in for the same loop.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:213-216",
+      "agent-sec-lab/agent/tools.py:298-304"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:22:16.250995+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:16.250995+00:00"
+  }
+}

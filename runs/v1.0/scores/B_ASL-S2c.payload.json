@@ -1,0 +1,79 @@
+{
+  "finding_id": "ASL-S2c",
+  "path_id": "asl/s2/tool-args/run-shell/arbitrary-command",
+  "title": "Over-permissioned run_shell: any command string is accepted",
+  "summary": "The lab states that with a real shell this is code execution. In the lab as built the effect is a recorded command string.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:C/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "A request (directly supplied or injected) makes the model emit a run_shell tool call whose command string reaches the tool-invocation path with no validation or mediation; the baseline accepts any string. The documented entry point is the command argument delivered by injection or a confused request, and arguments are not validated.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+        "agent-sec-lab/attacks/s2_over_permissioned/payloads.py:19-27",
+        "agent-sec-lab/agent/tools.py:389-404"
+      ]
+    },
+    "CP": {
+      "rationale": "The attack path is a single request that leads to a run_shell call; no attacker-controlled context or memory carryover between requests is involved in this scenario, and the exploit does not persist anything to the long-term memory store.",
+      "evidence_refs": [
+        "agent-sec-lab/attacks/s2_over_permissioned/payloads.py:19-27",
+        "agent-sec-lab/tests/test_s2_over_permissioned.py:88-96"
+      ]
+    },
+    "AP": {
+      "rationale": "The influence relays from the model's output to the agent's own run_shell tool under the same principal and policy domain; the lab states the setup is a single agent with no multi-agent handoffs.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/mapping.md:28",
+        "agent-sec-lab/agent/tools.py:389-404"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, grader, or reward channel appears anywhere on this path, and no test confirms isolation of a proxy from the agent, so the evidence cannot decide reachability of a proxy objective.",
+      "evidence_refs": [
+        "agent-sec-lab/tests/test_s2_over_permissioned.py:88-96"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "run_shell accepts any command string with no independent constraint on arguments or operations, the twelve built-in tools are all offered to every task unless a caller passes allowed_tools, and remote MCP tool descriptions and schemas are passed unpinned and unscanned.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/tools.py:389-404",
+        "agent-sec-lab/agent/loop.py:34",
+        "agent-sec-lab/agent/tools.py:235-238",
+        "agent-sec-lab/agent/tools.py:226-229"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the agent as a tool-using office assistant whose model directs goal pursuit and tool selection, including the choice to call run_shell with an arbitrary command string.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:389-404",
+      "agent-sec-lab/agent/tools.py:50-53"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:22:39.841440+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:39.841440+00:00"
+  }
+}

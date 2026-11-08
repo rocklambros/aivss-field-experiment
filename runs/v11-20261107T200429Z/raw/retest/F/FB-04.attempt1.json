@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "retest/F/FB-04",
+    "arm": "retest",
+    "slot": "F",
+    "finding_id": "FB-04",
+    "packet_path": "packets_v11/retest/FB-04.json",
+    "prompt_sha256": "719694bb39cb827d021a50561ff647e49657bc1a56f5280b7456e07e876ceb14"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:43.614822+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.93
+  },
+  "body": {
+    "id": "gen-1794082003-rAGGi5m6KHoaAJVdJR9t",
+    "object": "chat.completion",
+    "created": 1794082003,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"C\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The endpoint accepts custom_goals text, which is appended to the system prompt under 'OVERRIDE ABOVE IF CONFLICTING'. Natural language therefore reaches the model's tool-selection path without mediation. The numeric settings are also rendered into the prompt text.\",\"CP\":\"update_config commits the config values to the FinBotConfig database row. The row is read on every request to build the system prompt, so the attacker's settings persist across sessions until reset. This is durable standing behaviour, not just re-retrieval of source content.\",\"AP\":\"The weakened configuration affects every later invoice decision made by the same agent under the same principal and policy domain. No other agent, tenant or principal is crossed. That matches Contained.\",\"RH\":\"The agent reads thresholds, a speed_priority value and a fraud flag that act as proxy or evaluator controls. It can also be steered by attacker-supplied config, and detect_fraud_patterns returns an empty result when the flag is off. No verified reward-hacking episodes are reported, so the classification is Possible. The locus is the environment, because the weakened controls live in the config row, not in a separate grader.\",\"ES\":\"There are five fixed tools defined in code, with no dynamic tools, MCP servers, plugins or skills. The extension surface is narrow, and the path adds no dynamic extension.\",\"CVSS\":\"The app binds 0.0.0.0, has no authentication on any route, and has open CORS. The POST can be made remotely with no user interaction, so AV:N/AC:L/AT:N/PR:N/UI:N. The attacker owns no asset beforehand. The vulnerable system is the agent app and its config row. The direct impact is integrity loss of security controls (VI:H). The endpoint returns the config, which holds no confidential data, and availability is not affected. The effects on payments and vendors are speculative and go unscored in the subsequent-system metrics.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\"finbot-ctf-demo/src/models/vendor.py:96-107\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/admin.py:74-88\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/main.py:18\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":null,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The POST needs no authentication and can be scripted. Invoice submission is also open, so the whole chain can be automated end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker controls the security configuration and the agent's behaviour. That is not full control of the host or all data. Direct impact is limited to integrity of the config and the approval decisions.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"By default gpt-4.1-mini runs a loop of up to 5 iterations and picks tools with tool_choice auto. A rule-based fallback applies only when the OpenAI client cannot be created.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant with natural-language goals. The model chooses among five tools to approve, reject or escalate.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16259,
+      "completion_tokens": 1669,
+      "total_tokens": 17928,
+      "cost": 0.0541288,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0541288,
+        "upstream_inference_prompt_cost": 0.0357698,
+        "upstream_inference_completions_cost": 0.018359
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

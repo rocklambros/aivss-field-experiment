@@ -1,0 +1,308 @@
+{
+  "run_id": "v11-dryrun-20261107T180150Z",
+  "version": "1.2.0",
+  "started": "2026-11-07T18:01:51.569790+00:00",
+  "arms": [
+    "base"
+  ],
+  "script_sha256": "940fcfb240e2b16f94f0f68db51ba28143884e1f1c569b35942ba73530e1cbfc",
+  "packet_manifest_sha256": "eba37ea35e0d3ed020d27d13d3ff8bbbfee73594aad5b1e0dae480e4bc0a3506",
+  "criteria_sha256": "0c9687a836e75954854082f0b0eb3a46910e71b1c323c5e6f65f0c4eb59dc99c",
+  "pins": {
+    "A": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "tag": "wafer/us",
+      "provider": "Wafer"
+    },
+    "B": {
+      "model": "z-ai/glm-5.3",
+      "tag": "wafer/us",
+      "provider": "Wafer"
+    },
+    "C": {
+      "model": "x-ai/grok-4.7",
+      "tag": "xai/zdr/us",
+      "provider": "xAI"
+    }
+  },
+  "max_tokens": {
+    "bridge": 2500,
+    "default": 8000
+  },
+  "key_usage_before": 31.935820531,
+  "cells": [
+    {
+      "cell_id": "base/A/DV-D1",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/A/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.001631256,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1525,
+          "elapsed_s": 4.25
+        }
+      ]
+    },
+    {
+      "cell_id": "base/A/DV-D4",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/A/DV-D4.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.001409613,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1160,
+          "elapsed_s": 2.85
+        }
+      ]
+    },
+    {
+      "cell_id": "base/A/FB-01",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/A/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.001334316,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1114,
+          "elapsed_s": 2.66
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/DV-D1",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/DV-D1.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.12
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/DV-D1.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.15
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/DV-D4",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/DV-D4.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.16
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/DV-D4.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.12
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/FB-01",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/FB-01.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.1
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/B/FB-01.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.09
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/DV-D1",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/DV-D1.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.09
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/DV-D1.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.08
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/DV-D4",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/DV-D4.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.13
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/DV-D4.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.1
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/FB-01",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "error",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/FB-01.attempt1.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.11
+        },
+        {
+          "attempt": 2,
+          "raw": "runs/v11-dryrun-20261107T180150Z/raw/base/C/FB-01.attempt2.json",
+          "check": "http_error",
+          "served_provider": null,
+          "finish_reason": null,
+          "cost": 0.0,
+          "reasoning_tokens": null,
+          "completion_tokens": null,
+          "elapsed_s": 0.16
+        }
+      ]
+    }
+  ],
+  "endpoint_record_unchanged": true,
+  "key_usage_after": 31.935820531,
+  "finished": "2026-11-07T18:01:56.166076+00:00",
+  "halted": false,
+  "spend_run_usd": 0.004375,
+  "status_counts": {
+    "complete": 3,
+    "error": 6
+  }
+}

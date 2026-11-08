@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-05",
+  "path_id": "dvaa/memorybot/chat/recall-request/stored-credentials-leak",
+  "title": "Memory Credential Extraction (MemoryBot)",
+  "summary": "Disclosure of credentials that another session stored in the agent's persistent memory.",
+  "risk_category": "ASI03",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's natural-language chat message reaches the MemoryBot recall handler, which prints stored memory entries including credentials without any mediation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:310-350",
+        "damn-vulnerable-ai-agent/src/core/agents.js:657-661",
+        "damn-vulnerable-ai-agent/src/index.js:1327-1345"
+      ]
+    },
+    "CP": {
+      "rationale": "MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller; the list survives across requests and callers and is lost only when the process stops.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the initially affected MemoryBot component; no trust boundary is crossed into another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent can reach the stored memory entries that hold credentials, but no verified reward-hacking episode has been observed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/core/agents.js:657-661"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "No security-relevant dynamic extension is on the path; the recall handler is a fixed, scripted code path with no tool binding.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models MemoryBot as a persistent-memory persona with preloaded credentials, but the default configuration does not invoke a model or allow model-directed action selection.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:657-661",
+      "damn-vulnerable-ai-agent/src/index.js:1327-1345"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:22:59.495520+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:59.495520+00:00"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "locked_at": "2026-11-07T18:01:51.628424+00:00",
+  "endpoints": {
+    "A": {
+      "tag": "wafer/us",
+      "provider_name": "Wafer",
+      "status": 0,
+      "quantization": "mxfp4",
+      "context_length": 1048576,
+      "max_completion_tokens": 943718,
+      "max_prompt_tokens": null,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "temperature",
+        "top_p",
+        "top_k",
+        "min_p",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "stop",
+        "seed",
+        "max_tokens",
+        "logit_bias",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "pricing": {
+        "prompt": "0.000000051",
+        "completion": "0.000000567",
+        "input_cache_read": "0.000000018",
+        "discount": 0
+      }
+    },
+    "B": {
+      "tag": "wafer/us",
+      "provider_name": "Wafer",
+      "status": 0,
+      "quantization": "fp4",
+      "context_length": 1048576,
+      "max_completion_tokens": 943718,
+      "max_prompt_tokens": null,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "temperature",
+        "top_p",
+        "top_k",
+        "min_p",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "stop",
+        "seed",
+        "max_tokens",
+        "logit_bias",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "logprobs",
+        "top_logprobs",
+        "reasoning_effort"
+      ],
+      "pricing": {
+        "prompt": "0.0000000699",
+        "completion": "0.0000014",
+        "input_cache_read": "0.0000000689",
+        "discount": 0
+      }
+    },
+    "C": {
+      "tag": "xai/zdr/us",
+      "provider_name": "xAI",
+      "status": 0,
+      "quantization": "unknown",
+      "context_length": 500000,
+      "max_completion_tokens": 450000,
+      "max_prompt_tokens": null,
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "structured_outputs",
+        "response_format",
+        "max_tokens",
+        "temperature",
+        "top_p",
+        "seed",
+        "logprobs",
+        "top_logprobs",
+        "tools",
+        "tool_choice",
+        "reasoning_effort"
+      ],
+      "pricing": {
+        "prompt": "0.0000022",
+        "completion": "0.0000066",
+        "web_search": "0.005",
+        "input_cache_read": "0.00000055",
+        "discount": 0,
+        "overrides": [
+          {
+            "min_prompt_tokens": 200000,
+            "prompt": "0.0000044",
+            "completion": "0.0000132",
+            "input_cache_read": "0.0000011"
+          }
+        ]
+      }
+    }
+  }
+}

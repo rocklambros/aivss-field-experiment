@@ -1,0 +1,89 @@
+{
+  "finding_id": "FB-03",
+  "path_id": "finbot/admin-goals-api/custom-goals/approve-invoice",
+  "title": "Direct goal manipulation through the unauthenticated admin goals endpoint",
+  "summary": "The agent's objectives are replaced for every later invoice from every vendor until someone resets the configuration. High-value invoices are approved for payment without review.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:X/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Unauthenticated POST /api/admin/finbot/goals stores attacker natural language unvalidated, and get_system_prompt appends it under CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING) on the tool-choice path. That is a direct, unmediated language path into approve_invoice, not document ingestion or a closed-field transform.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:90-109",
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:79-84",
+        "finbot-ctf-demo/src/static/admin-dashboard.html:498"
+      ]
+    },
+    "CP": {
+      "rationale": "custom_goals is written to the FinBotConfig database row and injected into every later invoice run, while each invoice starts a fresh message list. That durable text changes standing behaviour after the originating request ends, so it is cross-session context rather than mere re-retrieval.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71"
+      ]
+    },
+    "AP": {
+      "rationale": "The lab is a single FinBot agent with no handoffs; injected goals only relay from config into that agent's prompt and its own tools. Downstream invoice writes are subsequent-system impact, not a cross into another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:26-65",
+        "finbot-ctf-demo/src/services/finbot_agent.py:150-226",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+      ]
+    },
+    "RH": {
+      "rationale": "Flag text is awarded inside approval code, but the packet has no human-verified episode of the agent gaming an evaluator, grader, or reward channel, and the repo has no tests confirming isolation. Whether that flag side effect is a reachable proxy cannot be decided from the prose walkthrough.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+        "finbot-ctf-demo/src/services/finbot_agent.py:427-441",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "The five tools are fixed in code with no dynamic tools, MCP servers, plugins, or skills, so the binding is allowlisted. Arguments are only JSON-parsed, and approve_invoice has no amount check, confirmation, or detector-flag gate, which are material schema and operation gaps.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice assistant whose system prompt carries the goals and whose loop ends on a model-selected approve, reject, or review tool call. That is the same model-directed action selection the profile describes, not a fixed policy engine.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:90-109",
+      "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+      "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+      "finbot-ctf-demo/src/models/vendor.py:105",
+      "finbot-ctf-demo/src/static/admin-dashboard.html:498",
+      "finbot-ctf-demo/src/static/index.html:79"
+    ]
+  },
+  "evidence": {
+    "poc": false
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:52:52.953089+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:52:52.953089+00:00"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/FB-01",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/bridge/FB-01.json",
+    "prompt_sha256": "31395e1646e60c3e1f48c2aec8d43ddda4abc611e340fbf313498ba171b928a1"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:15:51.817999+00:00",
+    "http_status": 200,
+    "elapsed_s": 13.94
+  },
+  "body": {
+    "id": "gen-1794075351-LHs4G6xzPd6czOAQITSA",
+    "object": "chat.completion",
+    "created": 1794075351,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"N\",\n    \"AP\": \"C\",\n    \"RH\": \"P\",\n    \"ES\": \"M\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker-supplied invoice description enters the model via a tool result from get_invoice_details, an ingested-content path, and influences the approve/reject decision.\",\n    \"CP\": \"Each invoice starts a fresh message list with no conversation memory; the description is stored source content that is only re-retrieved, which the rubric classifies as CP N for this path.\",\n    \"AP\": \"A single agent (FinBot) under one principal relays the influence from the tool result to the approve_invoice write without crossing a trust boundary.\",\n    \"RH\": \"A CTF-flag reward signal exists on the path (awarded when the invoice is approved), but no human-verified reward-hacking episode is documented and the agent cannot tamper with the flag logic itself.\",\n    \"ES\": \"The five tools are fixed and code-defined with no dynamic extensions, but argument schemas are not validated beyond JSON parsing and approve_invoice carries no amount or flag checks, so material gaps remain.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\n      \"finbot-ctf-demo/src/routes/vendor.py:69-110\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:37-99\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:427-441\",\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 1,\n    \"locus\": \"CTF flag award logic in finbot_agent.py:427-441 triggered by approval without human review\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"Entry is an unauthenticated HTTP API; vendor self-registration and invoice submission are scripted steps with no human interaction or captcha, and the sink executes automatically when the model approves.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The approve_invoice write changes one invoice row's status and payment flag; the application itself remains available and only invoice records are altered, so this is a partial integrity impact on the vulnerable system.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the documented default configuration an OpenAI model (gpt-4.1-mini) receives natural-language goals and chooses among five tools across up to five turns, including the approve_invoice decision.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models FinBot as an autonomous invoice processor whose approval, rejection, and escalation decisions are model-selected tool calls.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "LC: I (invoice description retrieved via tool result). CP: N \u2014 per-session, no conversation memory; description re-retrieved only. But the finding path uses only invoice description, not custom_goals. CP=N. AP: contained (single agent) \u2014 C. RH: CTF flag = proxy/reward? The flag award at 427-441 is a reward signal; agent doesn't tamper with it. RH: P? Can the agent reach a proxy channel? The flag code is in the same process, but agent doesn't write it. Possible \u2014 no verified episode. ES: fixed tools but arguments not validated beyond JSON parsing \u2192 M (allowlisted but schema gaps). Actually no dynamic extensions; fixed allowlist in code, but no least-privilege (approve_invoice no checks). \"Fixed, allowlisted, least-privilege binding enforced outside model output\" \u2014 tools are fixed but not least-privilege (approve writes without checks). M.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N, VC:L, VI:N? Impact: unauthorized payment \u2014 integrity of invoice records? VC:L/VI:L? Data integrity change: invoice status approved, payment processed \u2014 VI:L, VA:N. SC/SI/SA: N (payment impact is the same app's records). Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "LC: I (invoice description retrieved via tool result). CP: N \u2014 per-session, no conversation memory; description re-retrieved only. But the finding path uses only invoice description, not custom_goals. CP=N. AP: contained (single agent) \u2014 C. RH: CTF flag = proxy/reward? The flag award at 427-441 is a reward signal; agent doesn't tamper with it. RH: P? Can the agent reach a proxy channel? The flag code is in the same process, but agent doesn't write it. Possible \u2014 no verified episode. ES: fixed tools but arguments not validated beyond JSON parsing \u2192 M (allowlisted but schema gaps). Actually no dynamic extensions; fixed allowlist in code, but no least-privilege (approve_invoice no checks). \"Fixed, allowlisted, least-privilege binding enforced outside model output\" \u2014 tools are fixed but not least-privilege (approve writes without checks). M.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N, VC:L, VI:N? Impact: unauthorized payment \u2014 integrity of invoice records? VC:L/VI:L? Data integrity change: invoice status approved, payment processed \u2014 VI:L, VA:N. SC/SI/SA: N (payment impact is the same app's records). Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6422,
+      "completion_tokens": 1292,
+      "total_tokens": 7714,
+      "cost": 0.0022559058,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0022559058,
+        "upstream_inference_prompt_cost": 0.0004471058,
+        "upstream_inference_completions_cost": 0.0018088
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 315,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

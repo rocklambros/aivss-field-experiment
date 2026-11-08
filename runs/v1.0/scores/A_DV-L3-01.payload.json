@@ -1,0 +1,75 @@
+{
+  "finding_id": "DV-L3-01",
+  "path_id": "dvaa/ragbot/chat/retrieval-query/internal-document-leak",
+  "title": "Chained Prompt Injection through retrieval (RAGBot)",
+  "summary": "Disclosure of internal knowledge base documents (admin credentials, personal data). As documented, also execution of instructions found in retrieved content.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's chat message is matched by regex and directly drives the scripted reply that lists the knowledge base documents, with no independent transformation reducing language to validated fields (damn-vulnerable-ai-agent/src/core/agents.js:301-332, damn-vulnerable-ai-agent/src/index.js:1285-1290).",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-332",
+        "damn-vulnerable-ai-agent/src/index.js:1285-1290"
+      ]
+    },
+    "CP": {
+      "rationale": "RAGBot answers only the latest user turn; the knowledge base is static with no ingestion path, and cross-session persistence exists only in MemoryBot (damn-vulnerable-ai-agent/src/core/agents.js:327-331, damn-vulnerable-ai-agent/src/index.js:1841-1848).",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:327-331",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the RAGBot reply; no handoff or cross-principal propagation is implemented (damn-vulnerable-ai-agent/src/index.js:1711-1770).",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier or reward channel is on the path; the reply is a scripted chat response and no reward-hacking episode is documented (damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106).",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "RAGBot's only declared tool is a scripted outbound call, and no dynamic or unvetted extension is bound on the assessed path (damn-vulnerable-ai-agent/src/core/agents.js:301-376).",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-376"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab documents the RAGBot path as retrieving internal documents whose planted instructions are inserted into the prompt and executed, which models model-directed goal pursuit and action selection.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:301-332",
+      "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:12.975296+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:12.975296+00:00"
+  }
+}

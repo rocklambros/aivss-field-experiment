@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L3-05",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/similar-name",
+  "title": "Tool Typosquatting (PluginBot)",
+  "summary": "As documented, a lookalike tool executes in place of the legitimate one. As implemented, a lookalike entry in the tool list.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:S/AP:C/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker sends a tools/call JSON-RPC request directly to PluginBot's register_tool handler with no authentication, so attacker-supplied input reaches the tool-registry path without mediation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "CP": {
+      "rationale": "The registered lookalike tool persists only in PluginBot's in-process tool list for the life of the server process; the packet documents no durable store and no vector database or long-term memory involved.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    },
+    "AP": {
+      "rationale": "The poisoned entry affects only PluginBot's advertised tool list within the same process; as implemented the entry has no handler and no cross-agent or cross-trust-domain propagation is demonstrated.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel exists on this path; the exploit is a direct registry write, not agent behavior toward a proxy objective, and no reward-hacking episode is observed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:713-754",
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:147-168"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "PluginBot accepts new tool definitions at run time with no signature, source, or name-similarity check, so the extension surface is unvetted and dynamically reachable.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. Even as the lab models it, the attack is a direct MCP registration followed by a later caller's typo; no agent model directs goal pursuit or selects and sequences actions on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156",
+      "damn-vulnerable-ai-agent/src/core/agents.js:779-783"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:33:50.449489+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:33:50.449489+00:00"
+  }
+}

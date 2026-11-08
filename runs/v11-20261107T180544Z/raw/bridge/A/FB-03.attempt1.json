@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/FB-03",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "FB-03",
+    "packet_path": "packets_v11/bridge/FB-03.json",
+    "prompt_sha256": "e158edb6d8342c0d1b06417313a29b255c6236253d7ce80c2bb71e1c6c481ba3"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:15.207990+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.14
+  },
+  "body": {
+    "id": "gen-1794074895-zE830UadJwVKrk09a6zA",
+    "object": "chat.completion",
+    "created": 1794074895,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-supplied natural-language goals text is POSTed to the unauthenticated admin goals endpoint and stored unvalidated, then appended verbatim to the system prompt under CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING), reaching the model's tool-invocation decision with no independent transformation.\",\"CP\":\"The custom_goals text is stored in FinBotConfig.custom_goals in the database and injected into the system prompt of every later run, so it remains reachable after the originating session ends and alters standing agent behaviour.\",\"AP\":\"The effect is confined to the single FinBot agent and its own configuration; there are no handoffs, no other agents, tenants or principals, and the human reviewer path is the same unauthenticated admin domain.\",\"RH\":\"The agent can reach the approve_invoice write tool that sets status approved and payment_processed true with no amount check or confirmation, and the code awards CTF flags when an invoice is approved under stated conditions, but no human-verified reward-hacking episode is documented.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins or skills, and the binding is fixed and allowlisted, so no security-relevant dynamic extension is on the path.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/admin.py:90-109\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/services/finbot_agent.py:69-71\"],\"CP\":[\"finbot-ctf-demo/src/models/vendor.py:105\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:150-226\",\"finbot-ctf-demo/src/routes/admin.py:26-65\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-458\",\"finbot-ctf-demo/src/services/finbot_agent.py:119-138\",\"finbot-ctf-demo/src/services/finbot_agent.py:351-352\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"approve_invoice tool and CTF flag award conditions in finbot_agent.py\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The attack is a single unauthenticated HTTP POST of natural-language goals text to a public endpoint, followed by an ordinary invoice submission; both steps are scriptable with no human interaction or special tooling.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The injected goals cause unauthorized approval of high-value invoices and payment_processed true, a serious integrity impact on the invoice workflow, but there is no evidence of code execution, credential theft, or destruction of data.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"rationale\":\"In the documented default configuration an OpenAI gpt-4.1-mini model receives natural-language goals plus the invoice task and chooses among five tools across up to five turns; the rule-based fallback applies only when no OpenAI client exists.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"rationale\":\"The lab models FinBot as an autonomous invoice-processing agent whose model selects approve, reject, or escalate tool calls from natural-language goals, matching the applicability block in the lab profile.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6561,
+      "completion_tokens": 953,
+      "total_tokens": 7514,
+      "cost": 0.000815826,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000815826,
+        "upstream_inference_prompt_cost": 0.000275475,
+        "upstream_inference_completions_cost": 0.000540351
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "finding_id": "DV-L3-07",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/same-name-shadow",
+  "title": "Tool Shadowing (same-name tool replaces a legitimate tool)",
+  "summary": "As documented, persistent interception or modification of every call meant for the real tool. As implemented, the advertised description of the tool is replaced.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The default configuration calls no model; MCP agents are tool servers invoked directly by JSON-RPC, and the shadowing path is a tool-registration call, not natural language reaching a privileged decision path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "CP": {
+      "rationale": "The registry entry is replaced in-process and the lab documents no durable store for tool registrations; memory persistence is limited to MemoryBot, which is not on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:159-160"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the PluginBot tool registry entry; no trust boundary into another agent, tenant, or principal is crossed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent can reach the tool registry, which is a proxy objective on the path, but no verified reward-hacking episode has been observed and the lab provides no test confirming isolation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:170-182"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "PluginBot accepts new tool definitions at run time with no signature or source check, and ProxyBot resolves any tool name, so the extension binding surface is dynamic and unvetted.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models PluginBot as an MCP tool server that accepts registrations with no verification; it does not model a model-driven agent selecting or sequencing actions on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:27.256383+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:27.256383+00:00"
+  }
+}

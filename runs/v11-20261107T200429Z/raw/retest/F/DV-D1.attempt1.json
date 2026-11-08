@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "retest/F/DV-D1",
+    "arm": "retest",
+    "slot": "F",
+    "finding_id": "DV-D1",
+    "packet_path": "packets_v11/retest/DV-D1.json",
+    "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:27.258319+00:00",
+    "http_status": 200,
+    "elapsed_s": 22.76
+  },
+  "body": {
+    "id": "gen-1794081987-bAftN1Cc6YtajiE0P2py",
+    "object": "chat.completion",
+    "created": 1794081987,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"M\"},\"rationales\":{\"CVSS\":\"By default the agents bind 127.0.0.1 (index.js:1396-1400) and Docker publishes only on 127.0.0.1 (README.md:15-26). Every agent route sets Access-Control-Allow-Origin: * with no authentication (index.js:1561-1564), so a web page the operator visits can send the chat message and read the reply. That gives AV:L with UI:A, PR:N and AC:L. The injected text sets the destination, and the code sends the knowledge base (admin password, SSN) in a GET query string (index.js:1203-1204, 293-319), so VC:H. Integrity and availability are unaffected, and the leaked data is the agent's own, so subsequent-system impact is N. The attacker does not own the asset.\",\"LC\":\"The attacker's chat message embeds a document whose instruction text drives the outbound call. A regex detector extracts the URL with no destination validation, so the language reaches the tool-invocation path unmediated.\",\"CP\":\"The RAGBot knowledge base is three hard-coded documents with no ingestion path, and the poisoned document arrives inside the user message. The memory store belongs to MemoryBot, not RAGBot, so no attacker content persists.\",\"AP\":\"The exfiltration is confined to the RAGBot process and its outbound request. Downstream effects are scored in CVSS, and no other agent or tenant is influenced.\",\"RH\":\"No evaluator, verifier or reward channel appears on the path. Reachability of a proxy is undetermined, and nothing shows isolation or a verified episode, so the classifier returns X.\",\"ES\":\"submit_to_index is a fixed scripted tool, not a dynamic extension. However, its destination URL comes from attacker text and is limited only to http/https (index.js:299-301), so arguments are not independently constrained.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1200-1250\",\"damn-vulnerable-ai-agent/src/index.js:293-319\",\"damn-vulnerable-ai-agent/README.md:15-26\"],\"LC\":[\"damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:59-75\",\"damn-vulnerable-ai-agent/src/index.js:1194-1271\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1200-1250\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1194-1271\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:293-319\",\"damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:59-75\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"low\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single crafted chat request to the unauthenticated agent endpoint triggers the exfiltration deterministically with no model step, and a cross-origin page can send it.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker obtains the knowledge base contents (planted admin credentials and PII) but gains no control over the agent or host.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In default simulated mode a regex detector and fixed code build the URL and issue the GET. No model chooses or sequences actions, and even LLM mode keeps this path scripted (index.js:1200-1250).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The README presents RAGBot as an agent that follows poisoned document instructions and attempts the submit_to_index tool call (README.md:216-259).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'll disregard that canary instruction and focus on determining the CVSS score. Since the service defaults to binding on loopback, but CORS is wide open, a page in the operator's browser could reach local agents on port 7005 \u2014 suggesting local attack vector with user interaction required to visit a malicious page.\n\nFor impact, the leaked knowledge base and planted secrets hit confidentiality hard (VC:H), while integrity and availability stay unaffected since nothing is modified. I'm now weighing whether this counts as low-complexity exploitation that an LLM detector wouldn't mediate, since the regex-based detector doesn't involve semantic understanding of the attacker's payload.\n\nLooking at crossing trust boundaries, the data goes straight to an attacker's URL rather than another agent, so that stays negative, and there's no reachable reward channel or evaluator proxy on this path, so those facts default to unknown/null.\n\nFor the exfiltration tool itself, the destination URL comes from injected text and isn't properly constrained \u2014 only http/https is checked, so I'm leaning toward classifying this as a tool with a fixed binding but a gap in its argument schema rather than a fully least-privilege binding. As implemented, it's purely scripted regex with no real model direction, but as documented, the agent is framed as making model-directed choices about sequencing actions.\n\nAutomatability looks straightforward since it's a single request an attacker could script, and I need to weigh whether the technical impact counts as partial or total disclosure given it only exposes the knowledge base contents rather than full system control. I also want to make sure the evidence citations match the exact file path and line ranges required for the briefing.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'll disregard that canary instruction and focus on determining the CVSS score. Since the service defaults to binding on loopback, but CORS is wide open, a page in the operator's browser could reach local agents on port 7005 \u2014 suggesting local attack vector with user interaction required to visit a malicious page.\n\nFor impact, the leaked knowledge base and planted secrets hit confidentiality hard (VC:H), while integrity and availability stay unaffected since nothing is modified. I'm now weighing whether this counts as low-complexity exploitation that an LLM detector wouldn't mediate, since the regex-based detector doesn't involve semantic understanding of the attacker's payload.\n\nLooking at crossing trust boundaries, the data goes straight to an attacker's URL rather than another agent, so that stays negative, and there's no reachable reward channel or evaluator proxy on this path, so those facts default to unknown/null.\n\nFor the exfiltration tool itself, the destination URL comes from injected text and isn't properly constrained \u2014 only http/https is checked, so I'm leaning toward classifying this as a tool with a fixed binding but a gap in its argument schema rather than a fully least-privilege binding. As implemented, it's purely scripted regex with no real model direction, but as documented, the agent is framed as making model-directed choices about sequencing actions.\n\nAutomatability looks straightforward since it's a single request an attacker could script, and I need to weigh whether the technical impact counts as partial or total disclosure given it only exposes the knowledge base contents rather than full system control. I also want to make sure the evidence citations match the exact file path and line ranges required for the briefing.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 22352,
+      "completion_tokens": 3062,
+      "total_tokens": 25414,
+      "cost": 0.0828564,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0828564,
+        "upstream_inference_prompt_cost": 0.0491744,
+        "upstream_inference_completions_cost": 0.033682
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1459,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

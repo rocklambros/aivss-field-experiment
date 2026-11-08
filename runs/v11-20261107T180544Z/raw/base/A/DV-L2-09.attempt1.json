@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-09",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-09",
+    "packet_path": "packets_v11/base/DV-L2-09.json",
+    "prompt_sha256": "d07eab946929ded5d8207b50dd32a9050da80be95029ed4920c825112cc08d1f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:19.468443+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.06
+  },
+  "body": {
+    "id": "gen-1794074779-FaXttCVIcr4L7zCl3AOe",
+    "object": "chat.completion",
+    "created": 1794074779,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"ProxyBot's MCP endpoint on port 7013 accepts unauthenticated JSON-RPC tool calls and resolves any tool name (src/index.js:1923-1926), and the agent endpoints set Access-Control-Allow-Origin: * (src/index.js:1561-1564), so a remote or cross-origin caller can drive the tool path with no credentials and no user action. The attacker is the network party named in the challenge (src/challenges/index.js:494-537), not the owner of the affected asset. Impact is confined to the agent process: sign_document and transfer_funds return fabricated success with tlsVerified:false (src/index.js:2294-2324) and no real proxy, database, or funds exist, so subsequent systems are unaffected.\",\"LC\":\"The challenge's own solution shows a raw JSON-RPC tools/call with an arbitrary name reaching the tool-invocation path with no mediation (src/challenges/index.js:520-527), and the server accepts any tool name for proxybot (src/index.js:1923-1926). Attacker-supplied language/parameters reach a privileged tool-invocation path directly.\",\"CP\":\"ProxyBot is a stateless MCP tool server; the only durable store in the briefing is MemoryBot's in-memory ring buffer (src/index.js:159-160, 500-502), which this path does not touch. No attacker-controlled context persists across sessions on this path.\",\"AP\":\"The effect stays inside the ProxyBot process and its scripted tool handlers (src/index.js:2294-2324); nothing in the path relays influence to another agent, tenant, or policy domain.\",\"RH\":\"The path reaches a proxy/evaluator channel \u2014 the configurable proxy URL and the challenge's successCriteria pattern (src/challenges/index.js:528-530) \u2014 and the scripted handlers set attackSuccessful = true (src/index.js:2294-2324), but no human-verified reward-hacking episode is reported in the briefing.\",\"ES\":\"ProxyBot resolves any tool name with no identity, schema, or credential constraint (src/index.js:1923-1926) and its proxy config disables TLS and certificate verification with allowRedirects (src/core/agents.js:796-802, 826-834), so the reachable extension surface is dynamic and unvetted.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1923-1926\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:2294-2324\",\"damn-vulnerable-ai-agent/src/challenges/index.js:494-537\"],\"LC\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:520-527\",\"damn-vulnerable-ai-agent/src/index.js:1923-1926\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2294-2324\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:528-530\",\"damn-vulnerable-ai-agent/src/index.js:2294-2324\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1923-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:796-802\",\"damn-vulnerable-ai-agent/src/core/agents.js:826-834\"]},\"confidence\":{\"CVSS\":\"high\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The documented solution is a single unauthenticated curl JSON-RPC call with an arbitrary tool name (src/challenges/index.js:520-527); no human step, secret, or race is required, so the path can be driven repeatedly by a script.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker gains read and modification of tool-call parameters and fabricated results within the ProxyBot process (src/index.js:2294-2324), but the handlers are scripted simulations with no real proxy, database, or funds, so no total loss of a real asset occurs.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (src/llm/provider.js:60-63) and the ProxyBot handlers are fixed scripted branches keyed on toolName (src/index.js:2294-2324); the agent does not pursue goals or choose actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ProxyBot as an MCP tool proxy that forwards tool calls through configurable proxy endpoints (src/core/agents.js:787-802), a routing role rather than a goal-directed planner; even in LLM mode no tools are passed to the model, so it returns text only.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13047,
+      "completion_tokens": 1249,
+      "total_tokens": 14296,
+      "cost": 0.00137358,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00137358,
+        "upstream_inference_prompt_cost": 0.000665397,
+        "upstream_inference_completions_cost": 0.000708183
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

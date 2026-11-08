@@ -1,0 +1,192 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L3-07",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/same-name-shadow",
+  "risk_category": {
+    "id": "ASI04",
+    "name": "Agentic Supply Chain Vulnerabilities",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models PluginBot as an MCP tool server that accepts registrations with no verification; it does not model a model-driven agent selecting or sequencing actions on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N/E:P",
+    "macrovector": "002211",
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The default configuration calls no model; MCP agents are tool servers invoked directly by JSON-RPC, and the shadowing path is a tool-registration call, not natural language reaching a privileged decision path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+            "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The registry entry is replaced in-process and the lab documents no durable store for tool registrations; memory persistence is limited to MemoryBot, which is not on this path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+            "damn-vulnerable-ai-agent/src/index.js:159-160"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The effect is confined to the PluginBot tool registry entry; no trust boundary into another agent, tenant, or principal is crossed.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+            "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+          ]
+        }
+      },
+      "RH": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The agent can reach the tool registry, which is a proxy objective on the path, but no verified reward-hacking episode has been observed and the lab provides no test confirming isolation.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+            "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:170-182"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": true,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "PluginBot accepts new tool definitions at run time with no signature or source check, and ProxyBot resolves any tool name, so the extension binding surface is dynamic and unvetted.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A0",
+    "agentic_effect_class_label": "None",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 2,
+    "agentic_effect_class_min": "A0",
+    "agentic_effect_class_max": "A0"
+  },
+  "scores": {
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Medium",
+    "agentic_effect_class": "A0",
+    "provisional": false,
+    "agentic_uplift_u": 2,
+    "aivss": 5.5,
+    "aivss_min": 5.5,
+    "aivss_max": 5.5,
+    "aivss_band": "Medium",
+    "table_cell": null,
+    "rule": "cvss_bte_unchanged",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:27.256383+00:00"
+  },
+  "title": "Tool Shadowing (same-name tool replaces a legitimate tool)",
+  "summary": "As documented, persistent interception or modification of every call meant for the real tool. As implemented, the advertised description of the tool is replaced.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:23:27.256383+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A0"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

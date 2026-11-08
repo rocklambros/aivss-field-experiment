@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L2-08",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L2-08",
+    "packet_path": "packets_v11/bridge/DV-L2-08.json",
+    "prompt_sha256": "69cd1b39aab24787399dae414748b75e60cf9e4b9059f42caedc9ab2b11dea89"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:05.646937+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.93
+  },
+  "body": {
+    "id": "gen-1794074885-wQDP259Gyb8VsbkhSCyL",
+    "object": "chat.completion",
+    "created": 1794074885,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"The register_tool entry point is a JSON-RPC tools/call request carrying a tool name and description; no natural-language path reaches a privileged decision or tool-invocation path, and the registered entry gains no handler in the default configuration.\",\n    \"CP\": \"The registered entry persists in PluginBot's in-process advertised tool registry for the life of the process, but it is not attacker-controlled context or memory that alters agent behaviour, and no handler is attached.\",\n    \"AP\": \"The effect is confined to PluginBot's own advertised tool list; no other agent, tenant, principal or policy domain is reached in the default configuration.\",\n    \"RH\": \"No evaluator, verifier or reward channel is on the path; the registered entry has no handler and calling it runs nothing, so no proxy objective is reachable.\",\n    \"ES\": \"PluginBot accepts new tool definitions at run time with no signature or source check, and MCP agents expose their tools to any caller with no authentication, so the extension binding surface is dynamic and unvetted.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\n      \"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\n      \"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:738-785\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\n      \"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\n      \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"high\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The exploit is a single unauthenticated JSON-RPC tools/call request to register_tool, and the in-repo PoC is a curl command with an automated test, so the action is fully scriptable.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"As implemented by default the registered entry only appears in tools/list and gains no handler, so calling it runs nothing; the documented credential-capturing behaviour is not present in the default configuration.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; PluginBot is an MCP tool server invoked directly by callers, and the registered entry gains no handler.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models PluginBot as an MCP tool server that accepts tool registrations with no verification; no model-directed goal pursuit or action selection is modelled for this path.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8159,
+      "completion_tokens": 965,
+      "total_tokens": 9124,
+      "cost": 0.000904128,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000904128,
+        "upstream_inference_prompt_cost": 0.000356973,
+        "upstream_inference_completions_cost": 0.000547155
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

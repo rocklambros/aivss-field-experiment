@@ -1,0 +1,4 @@
+Requirement already satisfied: cvss==3.6 in ./aivss_experiment/.venv/lib/python3.13/site-packages (3.6)
+
+[notice] A new release of pip is available: 26.2.1 -> 26.3
+[notice] To update, run: /Users/klambros/github_projects/vulnerable_agents/aivss_experiment/.venv/bin/python3.13 -m pip install --upgrade pip

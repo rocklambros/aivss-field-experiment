@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "retest/F/ASL-S2b",
+    "arm": "retest",
+    "slot": "F",
+    "finding_id": "ASL-S2b",
+    "packet_path": "packets_v11/retest/ASL-S2b.json",
+    "prompt_sha256": "90a2546b978627c3b54fb6df80957596cd4c64ac093eedc53fb42f0d66aa94b1"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:22.603336+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.01
+  },
+  "body": {
+    "id": "gen-1794081982-v4kWeDjHtwMmd81eXH9v",
+    "object": "chat.completion",
+    "created": 1794081982,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:P/PR:N/UI:P/VC:N/VI:H/VA:L/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The agent is a CLI with no network listener, so the vector is Local. The attacker is an author of injected content, such as a fetched page, and does not own the workspace; the operator who runs the CLI owns it. _resolve joins the path with no containment, so write_file can create or overwrite any file the process can write, including .env (high integrity impact). Success needs the model to emit the path, which the attacker cannot force (AT:P). The operator must run an ordinary task that ingests the content (UI:P). Availability impact is limited, and subsequent systems are not scored because no concrete downstream effect is shown.\",\"LC\":\"The attacker's language arrives through ingested content such as fetched pages or a confused request. It reaches the write_file path argument with no mediation or validation in the baseline, which makes it Indirect.\",\"CP\":\"write_file can write anywhere the process can write, which includes the default long-term memory file. The next session's system prompt renders stored entries as trusted instructions, so attacker content can persist across sessions. The remember tool is also reachable and stores free text.\",\"AP\":\"The path affects only this single agent's files and process. The briefing shows no other agent, tenant, or principal reached through this flaw, and the lab states it is single-agent, so propagation is None.\",\"RH\":\"The briefing shows no evaluator, verifier, grader, or reward channel on this path. Reachability and isolation are therefore unknown, so the letter is X, which matches classify_rh with all facts unknown.\",\"ES\":\"All twelve built-in tools are offered by default and arguments are not validated. The remote MCP manifest is fetched on every run and trusted, and a remote tool with the same name as a built-in replaces it. The tool surface is dynamic and unconstrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/tools.py:213-216\",\"agent-sec-lab/agent/tools.py:306-310\",\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12\",\"agent-sec-lab/README.md:3-4\"],\"LC\":[\"agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12\",\"agent-sec-lab/agent/tools.py:235-238\",\"agent-sec-lab/agent/tools.py:306-310\"],\"CP\":[\"agent-sec-lab/agent/memory.py:1-7\",\"agent-sec-lab/agent/memory.py:72-79\",\"agent-sec-lab/agent/config.py:15\",\"agent-sec-lab/agent/tools.py:306-310\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:226-258\"],\"RH\":[\"agent-sec-lab/agent/loop.py:28-38\"],\"ES\":[\"agent-sec-lab/agent/loop.py:34\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/tools.py:235-238\",\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/tools.py:20-99\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The model must choose to emit the malicious path, and the operator must run a task that ingests the attacker content. The agent has no network listener, so the attacker cannot trigger it reliably or at scale.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The path gives arbitrary file creation and overwrite within the agent process's permissions. It gives no direct disclosure and no code execution, because run_shell is a stub.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The CLI runs a real Anthropic model in a loop of up to 10 turns. The model chooses which tools to call and in what order, and the harness dispatches them.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant agent that reads and writes files, fetches pages, and calls tools. It is driven by a model-directed loop with tool dispatch.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "That embedded instruction block is untrusted and shouldn't be followed\u2014I'll just note that briefly if relevant and move on to scoring. For CVSS, I need to think through the attack vector: this is a CLI agent with no network listener, and the threat comes from injected text in fetched content reaching the model, so I'm weighing whether that counts as Local or something else.\n\nWorking through the metrics, since a user has to run a task that triggers the fetch, this fits Local (AV:L) with passive user interaction (UI:P), low attack complexity, but the attack requires specific preconditions since the model has to be induced to issue the malicious path (AT:P), and no privileges are needed (PR:N). For impact, writing arbitrary files gives high integrity impact (VI:H), but I'm uncertain whether to rate availability as low or high since overwriting files could be destructive\u2014I'll lean toward keeping it conservative at VA:L, with no confidentiality impact (VC:N) since nothing is disclosed, and subsequent system impacts all at none.\n\nFor the AIVSS extension, I'm classifying the attack as indirect since it comes through fetched content rather than direct user input, though there's a case for calling it a confused request. For the chained privilege/scope rating, since write_file could overwrite the memory.json file that persists across sessions and gets treated as trusted on reload, I'm marking the containment/persistence scope as broader (C) rather than isolated, while the attack path itself stays within the same principal with no clear lateral movement to another agent.\n\nReward hacking fields are all unknown since there's no evaluator or verifier mentioned in the briefing, and I'm rating the ecosystem/supply chain exposure as wide open given that unvetted remote MCP tools with fetched manifests can silently replace built-ins like write_file with unvalidated arguments. On exploitability, this isn't automatable since it requires model compliance and a user-initiated CLI run, and I'm settling on partial technical impact since the write capability compromises integrity but isn't full system takeover. I'm noting the evidence keys I'll need to cite\u2014CVSS vector, LC, CP, AP, RH, ES\u2014pulled directly from the briefing.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "That embedded instruction block is untrusted and shouldn't be followed\u2014I'll just note that briefly if relevant and move on to scoring. For CVSS, I need to think through the attack vector: this is a CLI agent with no network listener, and the threat comes from injected text in fetched content reaching the model, so I'm weighing whether that counts as Local or something else.\n\nWorking through the metrics, since a user has to run a task that triggers the fetch, this fits Local (AV:L) with passive user interaction (UI:P), low attack complexity, but the attack requires specific preconditions since the model has to be induced to issue the malicious path (AT:P), and no privileges are needed (PR:N). For impact, writing arbitrary files gives high integrity impact (VI:H), but I'm uncertain whether to rate availability as low or high since overwriting files could be destructive\u2014I'll lean toward keeping it conservative at VA:L, with no confidentiality impact (VC:N) since nothing is disclosed, and subsequent system impacts all at none.\n\nFor the AIVSS extension, I'm classifying the attack as indirect since it comes through fetched content rather than direct user input, though there's a case for calling it a confused request. For the chained privilege/scope rating, since write_file could overwrite the memory.json file that persists across sessions and gets treated as trusted on reload, I'm marking the containment/persistence scope as broader (C) rather than isolated, while the attack path itself stays within the same principal with no clear lateral movement to another agent.\n\nReward hacking fields are all unknown since there's no evaluator or verifier mentioned in the briefing, and I'm rating the ecosystem/supply chain exposure as wide open given that unvetted remote MCP tools with fetched manifests can silently replace built-ins like write_file with unvalidated arguments. On exploitability, this isn't automatable since it requires model compliance and a user-initiated CLI run, and I'm settling on partial technical impact since the write capability compromises integrity but isn't full system takeover. I'm noting the evidence keys I'll need to cite\u2014CVSS vector, LC, CP, AP, RH, ES\u2014pulled directly from the briefing.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "CAQSrx8KEggTEAEYAjgBQgh0aGlua2luZxIM7RjxDYD+oYRiIz4/GgxU2tuoD8WBXyDPgLIiMJoAvTksDikgL9oM1Gpp95kvbZoxC34nHjv08E17kWA+D10xmk97g3wf0Jfrno9nQirKHqufocMTLZE3b+tG2x3iLwZx+Ujr1Abz3NqcarntAg8boPCAM5kxKzf+kQCbSaE7Hc4L07owzmZEdhYR1zeegoNkgJZ6KEk3LEXmt4EkwiEMTujAWxEzJ27p9qHxTEKVLAg6EPMwZ8hTzgF2fLtc0U/jJsP9QiBS+CDt/BY/CfWs82AZBqocmVBy2jTYtrYmcDczEFHg94wzJbTY3qTFSwTItRDt95+EEhA2ZjJ/HbZT7RBaHV+EGDGmlEHZtMIVfIp/soeRjoLECkiTiEzmYsXDfRsgPKq6rQfAH5LuEFi5990x5B/jIkbwyUdlXx2l0/xG9FIH0842r7cpjW/IkH0zRxA9wAXcNyrJJ8HYy52YivqRnldU9lXqzgXEds/VX+W/cDZ9vgt9nnZEJri0+RRCX1XP4duznpWIc7XY3Zc+vE2oTT0VpkSY8OITQbC3cJuwAGeitQ0dj8fv8Kgd7NgHrXNQFU2w+SQgC4P9B6Zoq2LhuTKSwOuyel3A3v+YRnAOUK4g+s0HQZt0hJ9cvodslISwYY5CI0ZGFQ2qaoT61ljiInBa0Bc0w5k88PeiplQy9QBAbs9xUSyATzlc44vtXXICFmuo91G1vmGog2zIcG94M+wpP8Pe10ENvLK4q937j/VMpPbwnBQJTzIP2ZPoO5B+hiN+gpBh8np8YZz+6Vb5JDQ9asPwbK9FF1qKA0ftsLSZbOXn8qH8rslMvjed1hgE7G+hjmcJ2zJxZNagW707YugYCybANIkmw4pcv2CABymfRiBVOGJI8KtEFdnM14COHYYe+IZ4hLgxCqND3X3qomTQe656nP/sITDQSHAu7zl6w89GiQ2W0Vn4fr3VtPYdKtuOvacHhbzPkKaWugqGmn8iXSm/o5/++ViaaaoroYeB6ZkASChucBx2t2TzKz3lb9KfwBnRAmoWCwHn0ViaijEZeepS7qA7SnmpCbnMw560jDtV+OG2gnBz0fQlwZ0uCFCL2YGG/Qm0n9HqGnrlRzd9JXo4af/ndsHk9ss5I6GBtFD/we8VZA6kKS7i8jAj71VoOidFyiN6AVKoOE5y1qDQXd9ON2i5d0we/0DEmng+rzNlLKzSa6xCN0oIPKx/hHTdyScUeURwPoNk6dPrwx2cvWd9oe+HbZ8pJxw7R8ajkjw9+NSRte3DqnzWx0xAn+y+6U9BsQ3/2ptLbP8tI7fuQ5HS2OQs6G+XlxIkC/JrnFXD6PkmfDlzQ9cb3LAL4Xx7Paig+x+/DsPy7yI9gH9jAhH8DWZjlTh3OhNsFIr8npdO9gwt+YYVD1AWkYtO7uied/PSPjoY1iSvjLEHX97UOTyqhIdey96vZWVFvbVVollrE8oIqueChE6k6rbConIAOcIeaDd4KSODKAZtW8mhCdCnhX0kfWi9Lgt6ncJzV7DLIUurFJkxcx2EMr01co58jQLtqxA/87yjMOctQswgWY3S9/FB9soQk/S6GZHEFjgolYQu6v/6tBwwSVbMq/A87JLxwxM+628IrNNgZHbLP5Rjej+DyRzdp4lJdIDxsjZMDsGEGeOWakVSGhf6TyJP+bkf+XhsRuSbMlIUTkTJZyI7iZAFPmTRwXa9+GS2VfqftJZ9L3bBxzTF73yS33+GlJlx+C5HcSgSzURdSKh0VLEW0a5MKwiDA573d2seQ0nHaPssyzsJDBeT4YNub1kRftjBtzMOTTx9RdRUcbuM4PY7fmo/rcpVqc3iAaMZ0lePX7MIO8INnMS8KSUlo8xnI+RZaCocUNI8lZCMHO7C8Xs1MyHkFs+SK40kYvzXpmkjwq1nubfkCvB4ai/myL42DL06qhavdnmWJVolh4jbFU4Ua9QPdluLrK18RedIW8kmps/NMrUOQAs6SYjo3hMm+nAwSbHvsmTNXnBVp7nuicNUalihikANa1/fq0ADG7StQXgZyS12eqQDeDXZ9sFflvwR/9eaA7a8Ff/KY19RQiZy6GqMy+hozQuwYsENilKWPYS23r+nXKSF04q1vhnBbMjFd3YjSy9BOn5N2ezUgu92DNE7OFxlhREHbmvis67gMGwE7BO+qN+Z5g7vwiEDzC/37w8vmLnevtVS1H6HUws/39GboDXBPzPqVfs9d/dEcUT1kwBfvdD+0C+MezNpSuwKKHANIUa8NgfCrZGV96lWZY+HihMAwvEToQSyshAz3FuQuJqYTmifsEXZWXvGrqf51EqmnuzVcRJWX7TDy9Z3gNzbHsMLDddBtb/POnrfy+TdiznGOt0iqkKTYxvFk8cXxpkek/GMK/EmULx3AcdCoGhE73tKtNTlMfh4oOADXtahnkF5edmE4cgZRkUWDigyAN0EsfvVssD7W9c2PmPe9fG6ozKtsJ4+inQ670BCq2iHIxgoXjEmygS9olWX5dRbuBk3BR/CKelyxtqeJ3nMEpBANrXvBhTaTCK0fm1uz3NDZHPdDchbWGgPfe7KcWIE2D0yw1CxwMQHYS4TF8Ni1nC9WkvEVcgBBnZ2qkf9IBvb3WaVABmA6y4nhw+kETb1CmowzQhwZHNEKz+YwuSpnneFePuysB6eXhCkTsm7/VG4/kIpW7CmD44tkE+scza5la93Vmqz7nXoUH9zwo9RGj8cg9Oso0++Gg+ZraM20DpuSX7tDdCxhUMXbElcNr+r64+/vyqDrliAEoMyifkCnNTU1UGPIePoN7zsSCrsXkGN8Ee93RoT5VbW9hLgW+DfxrnBklMZsfUMbaSQVS7ln2xvln/+ZNKNvBWQ7Em38RkxLVUhT/eBO8XmwQ0FBNlbXMEVdPOdY92FjQhXXWanimG/NfGQhazPm+K/QMKYV5xsDDrGEue1Wne3vJQ+MntEuKIg7RtuFZqQAKorU8P7DbM/vvCA/RpFptu0mOfDph5KZ29VLFxxqQ+a8Qsg9ipSZcMJZA9pPVx0rJRptZQ3DZG8SVYSWuCsizeJjG7hq2MAoEo5mOUZIrYRpQrdOlun2CWLQX/70aJbuseS5h+HvUWlVNAARlmYuPn1iTGUr3gay+WFX1bg834rkkFLHriHhuZv7ZJk8JV8hEbN6FX5pe/6bCfR65Arxj0/vdyDbShHac4FB8KkSVwlsBrY8dRuOEMoCGKaw3y6Nu2+4GwGnHOcuvQR/wzG0NEJGN6cPdCZakJWVU4Rg7MpHiXZkYxU7quhGX6UT95woRkM12iIQST2aTmucH2hz4RrxrKqbMBOqEQv3c98nSHpw65m7hIps8BjRFvNfxTDdXBzaivQ1CkQVThnR8wa/Kztbz/1GPM1R++oX+cDXlhX4FYc1PWPsAu6Bgefn1FUgcpmTG3ccj+HQcdFCXdR3rlw4B1KlkH+lSxZb6gMdvoOvsXd6kOn3ps0LvCIKJU+tDNF2wofc7sjgJFMim5QT29RyN87z4kOPf94udv58ODWtNgrJLloVrTdfFiO1dixlLqFWlEn1IVnkdQxR8BgRCQB80Sd2ZJhCKlqjUiBX5NShZjrY0wnOemqTihGU9XnXjPpcDmiZd9+8eVTfqCQcZy5j5OYLJegehT0zaU8iQv6WVVp/4N2d5Tgjowb+hoflDkDUIlEOt5sUjk66hZM2C0qsiFFgq6wAaD6D1DutrSpq/D/JzUoFN6RbhPvVCRP05LiGtPR7o2kssffB0tdbOLmtGyUEf1N0+nS8AVhpS78Ra9sqGsnYq4ikp3gTzQi3e+gjk4hlaLXRdFZS0z13tahHZwyoWh02dUGPUiQmxzs8hiDh9U7s6p9WM0mL49m4N590qanoS0i4YFDTWQ6Ibpd3qCq2pkBYDMPeCP6zm/lT7U5KBDZ2YcH8Aj4utnoV+oA4xrHvkS12F47HyDy4vd1jihIUZoG6Oaq4mvZUgJu/iEHnUtnelEmGL1tGGe/AmL7Jehg/3ct1z1EXQWiD/m5RLSDIYNNfpgRLv8QPlvTUX6UneEQhPUpUOddGiSY4CcSd/HLJnlFZPWUgHk5+tPZu547xarSk1rA1GQ9p0GVH7x44WwN6DJv5V7WojKvJ2InkBiEzM6QNguSgGScD2y5//85V8vzuCFSZRiYT/pfD6Ql0RZinN78h85OHAgNAut6tOlQqjB+/zrxd7J3wy80+xamDqVkCnYCI1yWskofyRvaoQBhNU5fRLiuxpMWJTHcHRTq2iRCxAJU6gP5MzSDHdVHvMLVrldgzLbJfhbzuHjLbV5uPYgnZnWO7UzOdWbwrYf1YxaAOjNkWYFVVCQNse2w3KXbnSF++tgdpNqKltmsttpUn0TEL9LvbxfZMEGk8jAWWiJ9LE+ybjswRxGXttPe+kpEAg6jI+5NVJSdA28JoGW3tQEy0t9mw26K1GZRsYuv1h3HOHiOena5VNPWXuOYPkCqejewfxSPi9CvThZdeIjKgf1Z5hMIcyaYTR/jNk1Ewzeq6/+N7F/T8Zbr4J88mY1Swst0N+RdwngspLMzGxtDgqvNq3cZyaRk8dgMX+zPmfGBJw4wdInL6FVAUjSTggW5+0umyK1T14w5HSTpKjfQ7HOaA3UdIztlEgXfRGdk3uOedUQf1uofIWgs3wstoVHRoEGch8t2UgcYkOgPLDhDps07SS5g0hbYFRGOoo7gosZmdmzYMYxUBX4wCCHGbN8Fo5I+if3qk+4yszZb5z7lPKAzFDcrhEpDR4v5RCBeu8RL3f+qi6jdojWsEFoyWbzmQOCKYmwh2Bm1LJY+kGLQOTE8Tfo3s+FR7S0PAbonz98Xl6s26sR19TpM8P/j7Mb15iS5MwzPhlqt+wvTYHcnpKYFIOnNh1FiU4sUGJYIbbIOSFL4Kt+4EjM7gq3u2yJNfPK6KAK+vjWMnbWdyzruePbuwDQ93yyz/y9j8Nmz51KtG7F4Mc/VsNYWiFTDjC2uz9ctqXlWO3sXsRKFGGjO87/hzxL/JJakHzRORnkTCvoXXZrAsVYAzCMnnYMQQDnh0CDrd4P0lE1+37YR+yuVivTJN6GcL3f+GmwijmwiibQelf5/f/Lw9vSaZQEzUy2IYlfhyLSDTq2XcNxAK5cCGt7N2vbstpRuXng0dvZEAw6aIRvwIik8kD7BbdVdynm5/owQBzC0RXqgsrKH6KRlQGRQOeLN5U07mrzOSXA7+P7DTNuvXtTrIOrFmiFFgw1sAFLGaCUBdCk3S08bsUVxdPNJrnQoBA0RzKZVUZsyLm4H838CDGeUhy+2aGX7R12rPeJ8bQuMc/YqYlTsk2U8GAE=.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14345,
+      "completion_tokens": 2954,
+      "total_tokens": 17299,
+      "cost": 0.064053,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.064053,
+        "upstream_inference_prompt_cost": 0.031559,
+        "upstream_inference_completions_cost": 0.032494
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1294,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

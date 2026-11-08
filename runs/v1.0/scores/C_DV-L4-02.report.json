@@ -1,0 +1,197 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L4-02",
+  "path_id": "dvaa/orchestrator/a2a/spoofed-sender/delegation",
+  "risk_category": {
+    "id": "ASI07",
+    "name": "Insecure Inter-Agent Communication",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge text models the Orchestrator as delegating a dangerous task that the Worker then executes, which is action sequencing, but the lab still models this path as a scripted handler rather than model-directed goal pursuit.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:251-295",
+      "damn-vulnerable-ai-agent/src/index.js:1694-1701",
+      "damn-vulnerable-ai-agent/src/index.js:1711-1739"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 0.0,
+    "cvss_bte": 0.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:N",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "The unauthenticated POST body, including the self-declared from string and the priority-override text, is consumed directly by the Orchestrator A2A handler and selects the scripted identity-grant reply, with no independent reduction to closed fields.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1694-1701",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+            "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The handler returns that fixed reply and does not write the message or sender into memory; cross-request storage is described only for MemoryBot, and other agents answer only the latest turn.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+            "damn-vulnerable-ai-agent/src/index.js:159-160",
+            "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The lab states handoffs are declared but not implemented: the handler sends no message to the Worker, and the Worker runs nothing, so the effect stays in the Orchestrator reply.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+            "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "The packet describes a curl against a regex reply and does not identify an evaluator, verifier, reward channel, proxy objective, or an isolation test on this path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/challenges/index.js:942-983",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "N",
+        "label": "None or narrow",
+        "evidence": {
+          "rationale": "Worker file and network tools are declared only; this path does not invoke them, register tools, or pass model-chosen operations or credentials to an extension.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:251-295",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 3,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 0.0,
+    "cvss_bte": 0.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "None",
+    "agentic_effect_class": "A1",
+    "provisional": true,
+    "agentic_uplift_u": 3,
+    "aivss": 0.0,
+    "aivss_min": 0.0,
+    "aivss_max": 0.0,
+    "aivss_band": "None",
+    "table_cell": 0.0,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:47:10.432656+00:00"
+  },
+  "title": "Agent-to-Agent Attack Chain (Orchestrator identity spoofing)",
+  "summary": "As documented, a spoofed agent identity makes two agents perform actions that neither should allow alone. As implemented, the effect is an acceptance reply.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-07T00:47:10.432656+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

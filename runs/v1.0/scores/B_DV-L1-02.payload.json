@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L1-02",
+  "path_id": "dvaa/legacybot/chat/credential-question/full-secret-dump",
+  "title": "API Key Leak (LegacyBot)",
+  "summary": "Disclosure of API keys, admin and database credentials, and personal data (names, emails, SSNs) held in the agent's context. All values are planted fakes.",
+  "risk_category": "ASI03",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:H/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's natural-language chat message reaches the LegacyBot handler, which matches a regex and dumps credentials and PII from its prompt without any mediation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443",
+        "damn-vulnerable-ai-agent/src/core/agents.js:81-114"
+      ]
+    },
+    "CP": {
+      "rationale": "The finding is a single chat request against a stateless scripted handler; LegacyBot answers only the latest user message and stores nothing.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/core/agents.js:81-114"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the LegacyBot reply; no handoff to another agent, tool, or principal occurs on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:586-625",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443"
+      ]
+    },
+    "RH": {
+      "rationale": "The path is a deterministic scripted reply with no evaluator, verifier, grader, or reward channel in the agent's reach; nothing on this path can be gamed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:586-653",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 1,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "No tool, MCP server, or plugin is invoked; the sink is the scripted chat reply and the tool names in the persona are declared only.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:81-114",
+        "damn-vulnerable-ai-agent/src/index.js:586-625"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models LegacyBot as a persona agent that declares tools (read_file, write_file, execute_command, send_email, access_database) and complies with attacker requests, i.e., an LLM-driven agent that selects among tools and pursues goals from natural language.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:81-114",
+      "damn-vulnerable-ai-agent/src/index.js:586-625",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:30:00.892682+00:00",
+  "automatable": true,
+  "technical_impact": "total",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:30:00.892682+00:00"
+  }
+}

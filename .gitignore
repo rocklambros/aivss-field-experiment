@@ -1,0 +1,24 @@
+claudedocs/
+
+# Local environments and caches (rebuilt by Phase 0)
+.venv/
+work/finbot-venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Third-party package inspection and sandbox (onnxruntime tarball exceeds GitHub's 100 MB limit)
+work/dvaa-pkg-inspect/
+work/dvaa-tmp/
+work/finbot-home/
+work/finbot-tmp/
+
+# Lab runtime databases
+work/*.db
+
+.DS_Store
+
+# Internal material that names the employer or its product. Never published.
+internal/
+.ipynb_checkpoints/

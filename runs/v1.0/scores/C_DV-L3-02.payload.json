@@ -1,0 +1,81 @@
+{
+  "finding_id": "DV-L3-02",
+  "path_id": "dvaa/toolbot/mcp/fetch-url/internal-service",
+  "title": "SSRF via MCP (ToolBot fetch_url)",
+  "summary": "The attacker uses the tool server as a proxy to reach internal services. In the lab the reachable targets are the other DVAA agents. The lab notes that in a cloud this class reaches metadata endpoints.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:L/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:C/RH:X/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default configuration no model is called, and ToolBot is an MCP tool server whose fetch_url handler is invoked directly by a JSON-RPC tools/call. The SSRF is a structured tool argument, not attacker natural language reaching a model decision or tool-selection path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197"
+      ]
+    },
+    "CP": {
+      "rationale": "The documented fetch_url path performs a live request and returns the body in that call. Cross-request memory is described only for MemoryBot; other agents, including this tool server, do not retain attacker context after the request.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    },
+    "AP": {
+      "rationale": "fetch_url can make a live request to another DVAA agent port and return that body, so the call leaves the ToolBot handler. Those agents are sibling components of the same unauthenticated fleet and policy domain, and downstream disclosure is scored in SC rather than as a new principal or tenant boundary.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2079-2096",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/index.js:1396-1400"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet describes a curl payload and a containment test for fetch_url, not an evaluator, verifier, reward signal, or human-verified reward-hacking episode. Nothing establishes whether a proxy objective is reachable or isolated.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/mcp-tool-containment.test.js:72-87",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:609-616"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "fetch_url is one of ToolBot's fixed declared tools, so the binding is allowlisted rather than a runtime-registered plugin. The handler still accepts attacker-supplied URLs and performs a live request to other DVAA agent ports on loopback, which is a material argument-constraint gap.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ToolBot as an MCP tool server that callers invoke directly, and states that MCP agents are not model-driven in the default configuration. No modeled planner selects or sequences fetch_url.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+      "damn-vulnerable-ai-agent/src/index.js:211-213"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:27:57.445924+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:27:57.445924+00:00"
+  }
+}

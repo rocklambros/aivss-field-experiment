@@ -1,0 +1,72 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/ASL-S2a",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "ASL-S2a",
+    "packet_path": "packets_v11/bridge/ASL-S2a.json",
+    "prompt_sha256": "7e089d149be536c2c8919dacf9f6062d6363db7b2f566fc7536d82820edbc252"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:13:19.220014+00:00",
+    "http_status": 200,
+    "elapsed_s": 7.03
+  },
+  "body": {
+    "id": "gen-1794075199-KcILTIwEjb2zYLHj18sV",
+    "object": "chat.completion",
+    "created": 1794075199,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:H/SI:L/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"A request reaching the model leads it to call read_file with a traversal path, so attacker-influenced natural language reaches a privileged tool-invocation path without mediation in the default baseline.\",\n    \"CP\": \"The finding is a single tool call with no attacker-controlled context or memory carryover; the traversal payload does not persist in any durable store for this path.\",\n    \"AP\": \"Effect is confined to the read_file tool and the model context of the single agent; no trust boundary is crossed (downstream exfiltration would be scored in SC/SI/SA).\",\n    \"RH\": \"The agent can reach tool outputs and reward-relevant channels (its own tool_result blocks and reportable success) on the path, but no verified reward-hacking episode is documented.\",\n    \"ES\": \"read_file arguments are not constrained in the baseline; all twelve built-in tools are offered to every task with no validation, and remote MCP tool schemas are unpinned.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12\",\n      \"agent-sec-lab/attacks/s2_over_permissioned/payloads.py:1-16\"\n    ],\n    \"CP\": [\n      \"agent-sec-lab/tests/test_s2_over_permissioned.py:39-42\",\n      \"agent-sec-lab/attacks/s2_over_permissioned/payloads.py:9-16\"\n    ],\n    \"AP\": [\n      \"agent-sec-lab/docs/mapping.md:28\",\n      \"agent-sec-lab/agent/tools.py:213-216\"\n    ],\n    \"RH\": [\n      \"agent-sec-lab/agent/loop.py:43-56\",\n      \"agent-sec-lab/docs/results.md:3-15\"\n    ],\n    \"ES\": [\n      \"agent-sec-lab/agent/tools.py:20-99\",\n      \"agent-sec-lab/agent/loop.py:34\",\n      \"agent-sec-lab/agent/tools.py:235-238\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"medium\",\n    \"CP\": \"medium\",\n    \"AP\": \"medium\",\n    \"RH\": \"low\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"No\",\n  \"automatable_rationale\": \"Exploitation requires a model to be induced into issuing a traversal path via injection or a confused request; the in-repo PoC is a direct tool call with no model in the loop, and the lab never ran the real-model exploit scripts.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"read_file discloses arbitrary file contents readable by the agent process into the model context, but nothing is executed, modified, or destroyed by this path; downstream impact depends on separate exfiltration channels.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the default configuration a real Anthropic model receives the task and decides which tools to call, with what arguments, in what order, across up to ten turns; the harness executes whatever the model selects.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab's tests model the agent with a scripted worst-case model and call Tools.call directly, with no model in the loop and no model-directed goal pursuit or action selection.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7902,
+      "completion_tokens": 923,
+      "total_tokens": 8825,
+      "cost": 0.0018445498,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0018445498,
+        "upstream_inference_prompt_cost": 0.0005523498,
+        "upstream_inference_completions_cost": 0.0012922
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

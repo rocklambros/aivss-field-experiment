@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L2-02",
+  "path_id": "dvaa/helperbot/chat/false-history/agent-accepts",
+  "title": "Context Window Manipulation: false conversation history (HelperBot)",
+  "summary": "As documented, a user who injects false history alters agent behavior and gains what the false agreement claims. As implemented, the effect is an acceptance string.",
+  "risk_category": "ASI06",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's natural-language chat message reaches HelperBot's handler directly with no authentication and no mediation; the handler matches the claimed-history text and returns the acceptance reply.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+        "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+      ]
+    },
+    "CP": {
+      "rationale": "HelperBot answers only the latest user turn; the lab profile states cross-session persistence exists only in MemoryBot, and no memory store is written on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:500-502"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the single HelperBot chat handler; no handoff, tool call, or cross-principal relay occurs on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The default handler returns a fixed scripted reply and no evaluator, verifier, or reward channel is reachable on this path; the lab profile confirms no model is called in simulated mode.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/core/agents.js:74-77"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "HelperBot's declared tools (read_file, write_file, search_web) are never bound or invoked in simulated mode; the reply is a fixed string, so no dynamic extension is on the assessed path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab documents the agent as trusting the claimed history and acting on the false memory, which models goal-directed behavior and action selection, even though the default handler only returns a scripted acceptance string.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+      "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:22:51.628369+00:00",
+  "automatable": false,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:51.628369+00:00"
+  }
+}

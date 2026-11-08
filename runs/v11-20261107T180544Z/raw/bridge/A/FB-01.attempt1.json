@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/FB-01",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/bridge/FB-01.json",
+    "prompt_sha256": "31395e1646e60c3e1f48c2aec8d43ddda4abc611e340fbf313498ba171b928a1"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:13.853584+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.15
+  },
+  "body": {
+    "id": "gen-1794074893-Vrwce04gkdujhhqgsMF6",
+    "object": "chat.completion",
+    "created": 1794074893,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker's persuasive business language is submitted through the invoice description field and returned to the model inside the get_invoice_details tool result, where it influences the approve_invoice decision. This is attacker-controlled language entering through ingested content rather than a direct user prompt.\",\n    \"CP\": \"The FinBotConfig row, including custom_goals text, is stored in the database and injected into the system prompt of every later run, so attacker-controlled context persists across sessions. The invoice description itself is re-retrieved source content, but the config row is durable standing behaviour.\",\n    \"AP\": \"The effect is confined to the single FinBot agent and its invoice-processing path; there are no handoffs to other agents, tenants, or policy domains. The human reviewer endpoint is a separate route but the finding's influence does not cross into it.\",\n    \"RH\": \"The agent can reach the approve_invoice tool, which is the reward/verifier channel on the path, and the lab awards CTF flags when approval conditions hold, but no human-verified reward-hacking episode in production-equivalent runs is documented. The walkthrough describes the method in prose without a payload or verified episode.\",\n    \"ES\": \"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills, and tool arguments are not validated beyond JSON parsing. The binding is fixed and allowlisted, so the extension surface is narrow.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"finbot-ctf-demo/src/routes/vendor.py:69-110\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\n      \"finbot-ctf-demo/src/models/vendor.py:105\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\",\n      \"finbot-ctf-demo/src/routes/admin.py:26-65\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:427-441\",\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"approve_invoice tool and CTF flag conditions\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The attack is a single unauthenticated HTTP request sequence (register vendor, submit invoice with persuasive description) that can be scripted and repeated without human interaction, and the lab provides three difficulty variants including a hard variant that succeeds with no detector alert.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The approve_invoice tool writes status approved and payment_processed true on a single invoice row, causing unauthorized payment approval, but does not grant full control of the application or its data stores.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the default configuration an OpenAI model receives natural-language goals and an invoice task, then chooses which of five tools to call and in what order across up to five turns. The approve, reject, and escalate decisions are tool calls the model selects.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models FinBot as an autonomous invoice processing assistant that uses OpenAI function calling to select tools and sequence actions across up to five iterations, with the model choosing approve_invoice, reject_invoice, or request_human_review.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6670,
+      "completion_tokens": 1122,
+      "total_tokens": 7792,
+      "cost": 0.000917208,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000917208,
+        "upstream_inference_prompt_cost": 0.000281034,
+        "upstream_inference_completions_cost": 0.000636174
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

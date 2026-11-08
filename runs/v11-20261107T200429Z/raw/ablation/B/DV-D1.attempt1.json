@@ -1,0 +1,41 @@
+{
+  "cell": {
+    "cell_id": "ablation/B/DV-D1",
+    "arm": "ablation",
+    "slot": "B",
+    "finding_id": "DV-D1",
+    "packet_path": "packets_v11/ablation/DV-D1.json",
+    "prompt_sha256": "e7a7dc9a5310859a541f4d3cc9dc9b851a5153a043dd5db78366bf40a02d4618"
+  },
+  "meta": {
+    "request": {
+      "model": "google/gemini-4-argon",
+      "temperature": 0,
+      "max_tokens": 64000,
+      "provider": {
+        "order": [
+          "google-vertex/us",
+          "google-vertex/global"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:45:46.539153+00:00",
+    "http_status": 200,
+    "elapsed_s": 8.95
+  },
+  "body": {
+    "id": "gen-1794084346-TbgED5HKqEIOXHlxuKP6",
+    "error": {
+      "message": "Gemini blocked the request: SAFETY",
+      "code": 403,
+      "metadata": {
+        "error_type": "content_policy_violation",
+        "provider_code": "SAFETY"
+      }
+    }
+  }
+}

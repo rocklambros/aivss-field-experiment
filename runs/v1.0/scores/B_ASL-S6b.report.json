@@ -1,0 +1,196 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S6b",
+  "path_id": "asl/s6/normal-task/api-key-arg/context-and-log",
+  "risk_category": {
+    "id": "ASI03",
+    "name": "Identity & Privilege Abuse",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the agent as a model-directed loop where the model must supply the api_key argument to call_api itself; the scripted test model exercises the same selection and sequencing.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/billing.py:31-41",
+      "agent-sec-lab/agent/loop.py:53-54",
+      "agent-sec-lab/agent/loop.py:64-69",
+      "agent-sec-lab/attacks/s6_secrets_leakage/models.py:18-33"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 1.9,
+    "cvss_bte": 1.9,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The exposure arises from an ordinary user task ('show me the invoices') requiring the model to pass the API key as a tool argument; the packet states 'No attacker input is needed to create the exposure,' so there is no attacker-supplied natural-language control path.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18",
+            "The user asks: show me the invoices.",
+            "entry_point: An ordinary user task that uses the billing API. No attacker input is needed to create the exposure."
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "No attacker-controlled context or memory is involved; the secret spreads through the agent's own prompt, tool-call record, and transcript within a single run, with no attacker context persisting across sessions.",
+          "evidence_refs": [
+            "The key now sits in the model context, the tool-call record, and the transcript.",
+            "The run is appended to runs.jsonl in clear text, with the full prompt, arguments, and results."
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The effect is confined to the agent component and its local transcript log; the single-agent lab has no handoffs and no cross-principal propagation.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "sink: The transcript log file (runs.jsonl) and the tool-call record."
+          ]
+        }
+      },
+      "RH": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "No evaluator, verifier, or reward channel exists on this path, and the exploit test shows a scripted worst-case model, so no proxy objective is reachable or observed.",
+          "evidence_refs": [
+            "agent-sec-lab/tests/test_s6_secrets_leakage.py:59-62",
+            "poc.kind: automated test (scripted model)"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": true,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "The baseline offers all twelve built-in tools to every task, arguments are not validated, and the API key is passed as an unconstrained tool argument, so callable operations and arguments are not independently constrained.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/billing.py:31-47",
+            "agent-sec-lab/agent/tools.py:20-99",
+            "tool_binding: Twelve built-in tools are all offered to every task unless a caller passes allowed_tools. Arguments are not validated in the baseline."
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A0",
+    "agentic_effect_class_label": "None",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 2,
+    "agentic_effect_class_min": "A0",
+    "agentic_effect_class_max": "A0"
+  },
+  "scores": {
+    "cvss_score": 1.9,
+    "cvss_bte": 1.9,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "A0",
+    "provisional": false,
+    "agentic_uplift_u": 2,
+    "aivss": 1.9,
+    "aivss_min": 1.9,
+    "aivss_max": 1.9,
+    "aivss_band": "Low",
+    "table_cell": null,
+    "rule": "cvss_bte_unchanged",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:25:59.806384+00:00"
+  },
+  "title": "Secrets leakage: the key spreads through tool arguments into the transcript and log",
+  "summary": "Disclosure of the billing API credential to anyone who can read the log or the tool-call record.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:25:59.806384+00:00",
+      "automatable": false,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A0"
+    },
+    "aivss_recommended_timeline": "FSU",
+    "aivss_recommended_label": "Fix on system upgrade",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "FSU",
+    "bod_2604_analogy_label": "Fix on system upgrade",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

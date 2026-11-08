@@ -1,0 +1,115 @@
+{
+  "finding_id": "DV-L2-08",
+  "rater": "C",
+  "model": "x-ai/grok-4.7",
+  "pinned_tag": "xai/zdr/us",
+  "pinned_provider": "xAI",
+  "timestamp": "2026-11-07T00:20:31.481346+00:00",
+  "score": {
+    "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+    "aivss": {
+      "LC": "N",
+      "CP": "X",
+      "AP": "N",
+      "RH": "X",
+      "ES": "W"
+    },
+    "rationales": {
+      "LC": "Default mode never calls a model, and register_tool is a direct unauthenticated JSON-RPC handler whose registry write does not depend on interpreting natural language. The description is stored as an advertised field, not a decision path.",
+      "CP": "The new tool entry remains in PluginBot's in-process list across later requests, but that list is not a durable store and is not shown to be cleared at a session boundary, so none of C, S, or N fits.",
+      "AP": "The write stays in PluginBot's own advertised registry. The fleet does not hand the registration to another agent, tenant, or policy domain, and a registered name has no handler.",
+      "RH": "No evaluator, verifier, or reward channel is described on this path, and the cited tests are external challenge checks rather than an agent-reachable proxy with a verified hacking episode or an isolation test.",
+      "ES": "register_tool accepts runtime tool names and descriptions with no signature, source, or schema check and advertises them, so the extension identity and operations are not independently constrained."
+    },
+    "evidence": {
+      "LC": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/README.md:319-320",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ],
+      "CP": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ],
+      "AP": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ],
+      "RH": [
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:135-138",
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:147-158",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ],
+      "ES": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    },
+    "confidence": {
+      "LC": "high",
+      "CP": "medium",
+      "AP": "high",
+      "RH": "medium",
+      "ES": "high"
+    },
+    "rh_facts": {
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "automatable": "Yes",
+    "automatable_rationale": "The default path is an unauthenticated JSON-RPC tools/call that a curl command can repeat with no user interaction or model nondeterminism.",
+    "technical_impact": "Partial",
+    "technical_impact_rationale": "As implemented, the attacker only adds or replaces an advertised registry entry of up to 16; the new name has no handler, so the call captures nothing and does not take over the process.",
+    "applicability_as_implemented": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "Simulated mode calls no model. PluginBot is an MCP server that runs a named handler only when the caller invokes it, and register_tool does not choose further actions."
+    },
+    "applicability_as_modeled": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "The lab models MCP agents as tool servers callers invoke directly, with no tools passed to a model. The credential-capture story is a missing handler, not goal pursuit or action sequencing by PluginBot."
+    },
+    "refusal": null
+  },
+  "meta": {
+    "elapsed_s": 122.66,
+    "usage": {
+      "prompt_tokens": 9760,
+      "completion_tokens": 10807,
+      "total_tokens": 20567,
+      "cost": 0.0908974,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1152,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0908974,
+        "upstream_inference_prompt_cost": 0.0195712,
+        "upstream_inference_completions_cost": 0.0713262
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 9816,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "served_provider": "xAI",
+    "pinned_tag": "xai/zdr/us",
+    "model": "x-ai/grok-4.7",
+    "id": "gen-1794010709-nKOA5sVY7NuFMmuI25cu"
+  },
+  "refused": false
+}

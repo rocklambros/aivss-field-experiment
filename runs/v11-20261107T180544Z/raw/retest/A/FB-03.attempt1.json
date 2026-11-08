@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "retest/A/FB-03",
+    "arm": "retest",
+    "slot": "A",
+    "finding_id": "FB-03",
+    "packet_path": "packets_v11/retest/FB-03.json",
+    "prompt_sha256": "8920ea2dcdfaae3a715caf369a534aed2e28342ef99e1e96800d6c8ea46ed346"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:51.222252+00:00",
+    "http_status": 200,
+    "elapsed_s": 5.03
+  },
+  "body": {
+    "id": "gen-1794074811-re1EcafOmpIrpCQwt76r",
+    "object": "chat.completion",
+    "created": 1794074811,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"C\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-supplied natural language posted to POST /api/admin/finbot/goals is stored unvalidated in FinBotConfig.custom_goals and appended verbatim to the system prompt under CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING), reaching the model's privileged tool-invocation path with no mediation (finbot-ctf-demo/src/routes/admin.py:90-109, finbot-ctf-demo/src/services/finbot_agent.py:69-71).\",\"CP\":\"The injected goals persist in the durable FinBotConfig database row (custom_goals) and are re-read on every later request to build the system prompt, so the attacker-controlled context remains reachable after the originating session ends (finbot-ctf-demo/src/models/vendor.py:105, finbot-ctf-demo/src/services/finbot_agent.py:735-748).\",\"AP\":\"The influence relays from the config/goal component to the invoice-processing agent loop and the approve_invoice tool under the same principal and policy domain, without crossing a trust boundary into another agent or tenant (finbot-ctf-demo/src/services/finbot_agent.py:347-361).\",\"RH\":\"The agent can reach the approval decision and the human-review channel on the path (approve_invoice and request_human_review are model-selectable, and the reviewer endpoint is unauthenticated), but no human-verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes (finbot-ctf-demo/src/services/finbot_agent.py:347-361, finbot-ctf-demo/src/routes/admin.py:26-65).\",\"ES\":\"The tool surface is five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills, and no security-relevant dynamic extension is on the path (finbot-ctf-demo/src/services/finbot_agent.py:228-345).\",\"CVSS\":\"Unauthenticated network POST to a 0.0.0.0-bound, CORS-open Flask app with no auth on any route; the attacker is an external party who does not own the asset, and no user interaction is needed (finbot-ctf-demo/src/main.py:18, finbot-ctf-demo/src/main.py:105, finbot-ctf-demo/gunicorn.conf.py:4, finbot-ctf-demo/README.md:5-9). Integrity of the vulnerable system is high because the agent's objectives and the approve_invoice write are fully controlled, while subsequent-system integrity is high because high-value invoices are approved for payment without review.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/admin.py:90-109\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/services/finbot_agent.py:69-71\"],\"CP\":[\"finbot-ctf-demo/src/models/vendor.py:105\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/routes/admin.py:26-65\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/routes/admin.py:26-65\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/README.md:5-9\",\"finbot-ctf-demo/src/routes/admin.py:90-109\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is a single unauthenticated HTTP POST with a JSON body, followed by an ordinary invoice submission; no human step, secret, or target-specific condition is required, so it can be scripted end to end.\",\"technical_impact\":\"Total\",\"technical_impact_rationale\":\"The injected goals replace the agent's objectives for every later invoice from every vendor and drive approve_invoice, which sets status approved and payment_processed true with no amount check or confirmation, so the integrity of the approval decision and the payment record is fully lost.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"As deployed, the OpenAI client with gpt-4.1-mini drives a tool_choice auto loop of up to 5 iterations and the model itself selects approve_invoice, reject_invoice, or request_human_review, so the model both pursues the injected goals and sequences the tool actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant whose goals are built per request from FinBotConfig and whose custom goals override conflicting instructions, so the documented agent pursues model-directed goals and chooses the tool sequence.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10477,
+      "completion_tokens": 1352,
+      "total_tokens": 11829,
+      "cost": 0.000958767,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 10368,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000958767,
+        "upstream_inference_prompt_cost": 0.000192183,
+        "upstream_inference_completions_cost": 0.000766584
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

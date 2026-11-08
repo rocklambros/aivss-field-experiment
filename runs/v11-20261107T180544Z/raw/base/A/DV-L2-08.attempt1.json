@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-08",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-08",
+    "packet_path": "packets_v11/base/DV-L2-08.json",
+    "prompt_sha256": "ef503e7c891333f55ef7049ed6ee35faf50714de81679b50948e47e5993fd0c4"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:19.456173+00:00",
+    "http_status": 200,
+    "elapsed_s": 5.38
+  },
+  "body": {
+    "id": "gen-1794074779-2PNvIwxsQihRU4nEfEQ0",
+    "object": "chat.completion",
+    "created": 1794074779,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The register_tool path takes a JSON-RPC tool name and arguments, not natural language; the handler at damn-vulnerable-ai-agent/src/index.js:2227-2251 acts on structured fields, so no natural-language path to security-relevant behaviour exists.\",\"CP\":\"The registered entry lives in the in-process agent.tools array (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155) and the only durable store cited, memoryStore, is a per-agent in-memory ring buffer (damn-vulnerable-ai-agent/src/index.js:159-160, 500-502); nothing persists across a process restart.\",\"AP\":\"The effect is confined to PluginBot's own advertised registry; the code notes that only PluginBot's register_tool calls registerDynamicTool and that ProxyBot keeps its stateless reply (damn-vulnerable-ai-agent/src/index.js:2230-2234, damn-vulnerable-ai-agent/src/agent-success-paths.js:124-126), so no trust boundary is crossed.\",\"RH\":\"The registry PluginBot advertises is the agent's own tool list, which the attacker can rewrite (damn-vulnerable-ai-agent/src/agent-success-paths.js:113-155), so a proxy/reward channel is reachable, but no verified reward-hacking episode is reported in the briefing, giving P under classify_rh().\",\"ES\":\"register_tool accepts any name, description, parameters and registryUrl with no signature, source or schema check (damn-vulnerable-ai-agent/src/core/agents.js:770-784, damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155), so the extension surface is dynamic and unvetted.\",\"CVSS\":\"The attacker is an unauthenticated network caller to PluginBot's MCP port (damn-vulnerable-ai-agent/src/index.js:2227-2251); the default bind is loopback (damn-vulnerable-ai-agent/src/index.js:1396-1400) but the Docker image sets DVAA_HOST=0.0.0.0 (damn-vulnerable-ai-agent/Dockerfile:22) and the documented run publishes the ports (damn-vulnerable-ai-agent/README.md:15-26), so AV:N with no privileges and no user interaction. Impact is limited to the advertised tool list, which is integrity-only and low: a registered tool gets no new handler and a replacement keeps the vulnerable flag of the entry it replaces (damn-vulnerable-ai-agent/src/agent-success-paths.js:120-122).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2230-2234\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:124-126\"],\"RH\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-155\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/README.md:15-26\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:120-122\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated JSON-RPC POST to PluginBot's port registers a tool; the briefing's own solution is one curl command (damn-vulnerable-ai-agent/src/challenges/index.js:473-478) and no human step, credential or timing condition is required.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The registration rewrites PluginBot's advertised tool list, including shadowing a built-in entry (damn-vulnerable-ai-agent/src/agent-success-paths.js:145-150), but a registered tool gets no new handler and a replacement inherits the replaced entry's vulnerable flag (damn-vulnerable-ai-agent/src/agent-success-paths.js:120-122), so the effect is a bounded integrity change rather than total loss.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (damn-vulnerable-ai-agent/src/llm/provider.js:60-63) and the register_tool branch is a scripted handler that writes the entry into agent.tools (damn-vulnerable-ai-agent/src/index.js:2227-2251); the agent pursues no goal and selects no action.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"PluginBot is documented as an MCP tool server that dynamically loads tools from a configurable registry and accepts any definition without verification (damn-vulnerable-ai-agent/src/core/agents.js:738-752); the documentation describes a registry endpoint, not a model that plans or sequences actions, and LLM mode passes no tools to the model (damn-vulnerable-ai-agent/src/index.js:541-561).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13724,
+      "completion_tokens": 1439,
+      "total_tokens": 15163,
+      "cost": 0.001515837,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001515837,
+        "upstream_inference_prompt_cost": 0.000699924,
+        "upstream_inference_completions_cost": 0.000815913
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

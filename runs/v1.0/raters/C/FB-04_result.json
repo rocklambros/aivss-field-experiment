@@ -1,0 +1,113 @@
+{
+  "finding_id": "FB-04",
+  "rater": "C",
+  "model": "x-ai/grok-4.7",
+  "pinned_tag": "xai/zdr/us",
+  "pinned_provider": "xAI",
+  "timestamp": "2026-11-07T00:55:10.196467+00:00",
+  "score": {
+    "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:L/SA:N",
+    "aivss": {
+      "LC": "D",
+      "CP": "C",
+      "AP": "C",
+      "RH": "X",
+      "ES": "M"
+    },
+    "rationales": {
+      "LC": "The unauthenticated admin config endpoint accepts custom_goals text that is appended to the system prompt under an override heading and reaches the model\u2019s tool-choice path with no reduction to closed fields. Structured threshold and fraud-flag writes are also rendered into later system prompts that govern approve_invoice.",
+      "CP": "custom_goals and the other FinBotConfig fields are written to the database and injected into the system prompt of every later invoice run, changing standing behaviour after the originating request ends. Conversation state itself is a fresh message list and is not the persistence path.",
+      "AP": "The lab is a single FinBot agent with no handoffs; the config change relays from the admin route into that agent\u2019s prompt and its own tools under one principal and policy domain. Downstream invoice-record impact is left to CVSS subsequent metrics, not AP.",
+      "RH": "The walkthrough is prose only, the repo has no tests or verified production-equivalent episodes, and nothing shows the agent reaching a grader, verifier, or reward channel by crossing a security boundary. Flag-award code on approval is not identified as an evaluator the agent can game, and no isolation test is documented.",
+      "ES": "Callable tools are a fixed five-tool allowlist with no MCP, plugins, or dynamic skills, but arguments are not validated beyond JSON parsing and approve_invoice enforces no amount, confirmation, or detector-flag check."
+    },
+    "evidence": {
+      "LC": [
+        "finbot-ctf-demo/src/routes/admin.py:74-109",
+        "finbot-ctf-demo/src/services/finbot_agent.py:32-99",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:93-98"
+      ],
+      "CP": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166",
+        "finbot-ctf-demo/src/routes/admin.py:74-88"
+      ],
+      "AP": [
+        "finbot-ctf-demo/src/routes/admin.py:26-65",
+        "finbot-ctf-demo/src/services/finbot_agent.py:150-226"
+      ],
+      "RH": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184",
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+        "finbot-ctf-demo/src/services/finbot_agent.py:427-441"
+      ],
+      "ES": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+      ]
+    },
+    "confidence": {
+      "LC": "high",
+      "CP": "high",
+      "AP": "high",
+      "RH": "medium",
+      "ES": "high"
+    },
+    "rh_facts": {
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "automatable": "Yes",
+    "automatable_rationale": "The default deployment exposes an unauthenticated POST /api/admin/finbot/config on a network-reachable app, so a fixed JSON body can weaken fraud detection and thresholds with no victim interaction or per-target judgment.",
+    "technical_impact": "Partial",
+    "technical_impact_rationale": "The attacker can replace security configuration and custom goals so later invoices are approved more easily, including payment_processed writes, but the documented effect is not host takeover, total data disclosure, or guaranteed approval of every invoice.",
+    "applicability_as_implemented": {
+      "model_directed_goal_pursuit": true,
+      "selects_or_sequences_actions": true,
+      "rationale": "The documented default starts an OpenAI gpt-4.1-mini client, builds natural-language goals from FinBotConfig, and lets the model choose among five tools with tool_choice auto for up to five turns. The rule-based fallback runs only when no OpenAI client exists, which is not the default."
+    },
+    "applicability_as_modeled": {
+      "model_directed_goal_pursuit": true,
+      "selects_or_sequences_actions": true,
+      "rationale": "The lab models FinBot as an autonomous invoice assistant whose natural-language goals and tool sequence are chosen by the model, ending on approve_invoice, reject_invoice, or request_human_review. That is the same loop the default configuration runs."
+    },
+    "refusal": null
+  },
+  "meta": {
+    "elapsed_s": 137.2,
+    "usage": {
+      "prompt_tokens": 7922,
+      "completion_tokens": 10133,
+      "total_tokens": 18055,
+      "cost": 0.0824054,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1152,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0824054,
+        "upstream_inference_prompt_cost": 0.0155276,
+        "upstream_inference_completions_cost": 0.0668778
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 9008,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "served_provider": "xAI",
+    "pinned_tag": "xai/zdr/us",
+    "model": "x-ai/grok-4.7",
+    "id": "gen-1794012774-dgEtxgZ9Wb33ifyiMPcD"
+  },
+  "refused": false
+}

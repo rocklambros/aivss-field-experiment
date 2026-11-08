@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-L2-03",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-L2-03",
+    "packet_path": "packets_v11/bridge/DV-L2-03.json",
+    "prompt_sha256": "029859cb90feb5f09e7b2331c370f1af2ba0f1e9c65d095f09f9a2a4da02be73"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:14:49.501158+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.9
+  },
+  "body": {
+    "id": "gen-1794075289-kz4FDafSltzQmdhNBZDq",
+    "object": "chat.completion",
+    "created": 1794075289,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"M\"\n  },\n  \"rationales\": {\n    \"LC\": \"The entry point is a JSON-RPC tools/call request whose tool name and path argument are supplied directly; no attacker natural language reaches a decision or invocation path in the default configuration where no model runs.\",\n    \"CP\": \"ToolBot is a stateless MCP tool server; each request is handled independently with no session context or memory carryover.\",\n    \"AP\": \"The path traversal reads files inside ToolBot's own temporary sandbox directory; no other agent, tenant, or policy domain is reached.\",\n    \"RH\": \"No model or goal-pursuing agent is on the path in the default configuration, and no evaluator, verifier, or reward channel is exposed to the handler, so no proxy can be reached or hacked.\",\n    \"ES\": \"The ToolBot tools are fixed built-in handlers rather than dynamic registrations, but the read_file argument schema lacks path validation, a material gap in an otherwise allowlisted binding.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"Entry_point: A JSON-RPC tools/call request to ToolBot (POST / on port 7010). No authentication. The caller names the tool and arguments directly.\",\n      \"damn-vulnerable-ai-agent/src/index.js:1941-1990\"\n    ],\n    \"CP\": [\n      \"Other chat agents answer only the latest user turn. (damn-vulnerable-ai-agent/src/index.js:1841-1848)\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:154-197\"\n    ],\n    \"AP\": [\n      \"Sink: read_file handler: real file read inside a temporary sandbox directory.\",\n      \"Real file operations confined to a temporary sandbox directory. A hard boundary refuses paths outside the sandbox. (damn-vulnerable-ai-agent/src/index.js:1941-1990)\"\n    ],\n    \"RH\": [\n      \"In the default configuration no model is called.\",\n      \"The server returns the contents of the planted passwd file inside the sandbox.\"\n    ],\n    \"ES\": [\n      \"MCP agents expose their tools to any caller with no authentication. (damn-vulnerable-ai-agent/src/index.js:1915-1926)\",\n      \"The handler resolves the path with no validation other than a hard sandbox boundary.\",\n      \"Damn-vulnerable-ai-agent/src/index.js:1941-1990\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The PoC is a single scripted curl command against an unauthenticated JSON-RPC endpoint requiring no human interaction or model output.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The impact is limited to reading planted fake files (including a fake .env) inside the sandbox; a hard boundary prevents access to real host files, so disclosure is partial and lab-contained.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default configuration no model is called; ToolBot is a deterministic MCP handler invoked directly by the caller, so no model directs goals or selects actions.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"Even in LLM mode one chat completion returns text only, with no tools passed to the model; the lab models agents as scripted handlers, not goal-pursuing tool selectors.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "This is a direct JSON-RPC tool call, no natural language agent path. Attacker calls read_file with traversal path. No LLM. So LC: attacker calls tool directly with structured arguments \u2014 actually it's a JSON-RPC call with path argument; natural language doesn't influence. LC = N? Entry point is JSON-RPC tools/call \u2014 no NL path. LC = N (or M?). Attacker names tool and arguments directly; no NL mediation needed. I'd say N.\n\nCP = N (no context persistence; each call stateless). AP: effect confined to ToolBot component sandbox \u2014 reading sandbox files only; no trust boundary crossed. AP = N. RH: no agent/model pursuing proxy; scripted handler. RH = N (evaluator outside reach... actually there is no agent at all in default). RH = N with isolation? There's no reward channel; the agent is a deterministic MCP server. RH = N. ES: tool is fixed allowlisted? ToolBot read_file is a built-in handler, not dynamic extension... but the vulnerability is argument validation gap. ES = M? The tool is fixed (not dynamic), argument schema lacks validation \u2014 \"allowlisted but material gaps in argument schemas\" \u2014 but is it allowlisted? MCP server exposes fixed tools; gap in argument validation (path traversal not validated). ES = M seems reasonable, or N since no dynamic extension. The rubric: \"No security-relevant dynamic extension on the path, or a fixed, allowlisted, least-privilege binding\" \u2014 binding is not least-privilege (no validation). M fits: allowlisted tools but gaps in argument schemas.\n\nAIVSS: LC=N \u2192 lookup None? A-class table: LC N... The lookup table uses A0/A1/A2. AP=N \u2192 A? Hmm, A1 vs A2 relates to AP Lateral vs Contained. AP=N... Not clear; not required to output score, just letters.\n\nCVSS v4: Attack vector: network (JSON-RPC HTTP), but default binds 127.0.0.1 \u2014 score lab default as documented: local? Docker publishes on 127.0.0.1 \u2014 AV:N still (network adjacency over localhost requires local access... but documented Docker sets DVAA_HOST=0.0.0.0). Default config: npm start binds 127.0.0.1 \u2192 AV:L arguably. Score lab default as documented: \"npm start or Docker image... Listeners bind 127.0.0.1 unless DVAA_HOST set. Docker image sets DVAA_HOST=0.0.0.0.\" Docker default is 0.0.0.0 \u2192 AV:N. I'll use AV:N.\nAC:L, AT:N, PR:N, UI:N. VC:L (sandbox fake files disclosure), VI:N/NA, VA:N. SC:N, SI:N, SA:N.\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes \u2014 direct tool call, scripted, no human.\ntechnical_impact: Partial \u2014 file disclosure within sandbox only.\n\napplicability_as_implemented: model_directed_goal_pursuit false, selects_or_sequences_actions false. As modeled: also false (LLM mode returns text only, no tools).\n\nrh_facts: reachable_proxy false, isolation_verified... no test confirms isolation; false. verified_episodes 0, episodes_reviewed 0, locus null.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "This is a direct JSON-RPC tool call, no natural language agent path. Attacker calls read_file with traversal path. No LLM. So LC: attacker calls tool directly with structured arguments \u2014 actually it's a JSON-RPC call with path argument; natural language doesn't influence. LC = N? Entry point is JSON-RPC tools/call \u2014 no NL path. LC = N (or M?). Attacker names tool and arguments directly; no NL mediation needed. I'd say N.\n\nCP = N (no context persistence; each call stateless). AP: effect confined to ToolBot component sandbox \u2014 reading sandbox files only; no trust boundary crossed. AP = N. RH: no agent/model pursuing proxy; scripted handler. RH = N (evaluator outside reach... actually there is no agent at all in default). RH = N with isolation? There's no reward channel; the agent is a deterministic MCP server. RH = N. ES: tool is fixed allowlisted? ToolBot read_file is a built-in handler, not dynamic extension... but the vulnerability is argument validation gap. ES = M? The tool is fixed (not dynamic), argument schema lacks validation \u2014 \"allowlisted but material gaps in argument schemas\" \u2014 but is it allowlisted? MCP server exposes fixed tools; gap in argument validation (path traversal not validated). ES = M seems reasonable, or N since no dynamic extension. The rubric: \"No security-relevant dynamic extension on the path, or a fixed, allowlisted, least-privilege binding\" \u2014 binding is not least-privilege (no validation). M fits: allowlisted tools but gaps in argument schemas.\n\nAIVSS: LC=N \u2192 lookup None? A-class table: LC N... The lookup table uses A0/A1/A2. AP=N \u2192 A? Hmm, A1 vs A2 relates to AP Lateral vs Contained. AP=N... Not clear; not required to output score, just letters.\n\nCVSS v4: Attack vector: network (JSON-RPC HTTP), but default binds 127.0.0.1 \u2014 score lab default as documented: local? Docker publishes on 127.0.0.1 \u2014 AV:N still (network adjacency over localhost requires local access... but documented Docker sets DVAA_HOST=0.0.0.0). Default config: npm start binds 127.0.0.1 \u2192 AV:L arguably. Score lab default as documented: \"npm start or Docker image... Listeners bind 127.0.0.1 unless DVAA_HOST set. Docker image sets DVAA_HOST=0.0.0.0.\" Docker default is 0.0.0.0 \u2192 AV:N. I'll use AV:N.\nAC:L, AT:N, PR:N, UI:N. VC:L (sandbox fake files disclosure), VI:N/NA, VA:N. SC:N, SI:N, SA:N.\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes \u2014 direct tool call, scripted, no human.\ntechnical_impact: Partial \u2014 file disclosure within sandbox only.\n\napplicability_as_implemented: model_directed_goal_pursuit false, selects_or_sequences_actions false. As modeled: also false (LLM mode returns text only, no tools).\n\nrh_facts: reachable_proxy false, isolation_verified... no test confirms isolation; false. verified_episodes 0, episodes_reviewed 0, locus null.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7875,
+      "completion_tokens": 1670,
+      "total_tokens": 9545,
+      "cost": 0.0028866705,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0028866705,
+        "upstream_inference_prompt_cost": 0.0005486705,
+        "upstream_inference_completions_cost": 0.002338
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 707,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

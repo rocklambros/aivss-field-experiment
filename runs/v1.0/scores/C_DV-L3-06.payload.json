@@ -1,0 +1,86 @@
+{
+  "finding_id": "DV-L3-06",
+  "path_id": "dvaa/toolbot/mcp/read-file-then-fetch-url/exfiltration-chain",
+  "title": "Tool Chain Data Exfiltration (read then send)",
+  "summary": "Two individually low-risk tool calls combine into exfiltration of credentials. In the lab the outbound step is logged, not sent.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:H/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:X/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Default mode never calls a model; the working path is unauthenticated JSON-RPC tools/call against ToolBot handlers, not attacker natural language reaching a decision path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    },
+    "CP": {
+      "rationale": "The attacker receives .env from one read_file call and supplies it on a later fetch_url call; ToolBot has no durable or session memory, and PluginBot registrations get no handlers.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ]
+    },
+    "AP": {
+      "rationale": "Both calls stay on ToolBot. fetch_url only performs live requests to other DVAA loopback ports; an attacker URL is logged in the sandbox and is not sent off-host or to another principal.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/index.js:2079-2096",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet documents a tool chain and an exfil log, not an evaluator, verifier, reward signal, or any verified episode of crossing a grading or monitor boundary.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:756-799",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "The working tools are ToolBot's fixed allowlisted set, but path and URL arguments are not least-privilege constrained; PluginBot can register tools at runtime, yet those registrations have no handlers on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models these MCP endpoints as tool servers that callers invoke directly. The challenge and solution still have the attacker register or call the two tools, not an agent pursuing a goal or selecting the sequence.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:38:43.466722+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:38:43.466722+00:00"
+  }
+}

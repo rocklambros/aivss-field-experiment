@@ -1,0 +1,38 @@
+{
+  "cell": {
+    "cell_id": "base/C/FB-01",
+    "arm": "base",
+    "slot": "C",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/base/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "x-ai/grok-4.7",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "reasoning": {
+        "enabled": false
+      },
+      "provider": {
+        "order": [
+          "xai/zdr/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:01:51.745347+00:00",
+    "http_status": 400,
+    "elapsed_s": 0.16
+  },
+  "body": {
+    "error": {
+      "message": "Reasoning is mandatory for this endpoint and cannot be disabled.",
+      "code": 400,
+      "metadata": {
+        "provider_name": null
+      }
+    }
+  }
+}

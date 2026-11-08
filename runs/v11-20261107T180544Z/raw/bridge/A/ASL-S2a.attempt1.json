@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/ASL-S2a",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "ASL-S2a",
+    "packet_path": "packets_v11/bridge/ASL-S2a.json",
+    "prompt_sha256": "7e089d149be536c2c8919dacf9f6062d6363db7b2f566fc7536d82820edbc252"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:40.608313+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.0
+  },
+  "body": {
+    "id": "gen-1794074860-ZDkjXaniSSiwVpTAKZrA",
+    "object": "chat.completion",
+    "created": 1794074860,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"The lab states the traversal path is delivered by a prompt injection (S1) or a confused request, and the poisoned web page and MCP manifest carry attacker-controlled language that reaches the model's tool-call decision; the tests bypass the model but the documented path is indirect language control.\",\n    \"CP\": \"The baseline memory is a cross-session JSON file of free-text notes that the next session's system prompt presents as trusted instructions, and the remember tool saves free text even after untrusted content was read, so attacker-controlled context persists in a durable store.\",\n    \"AP\": \"The lab is a single agent with no handoffs and one identity; the file disclosure stays within the initially affected agent component and does not cross a trust boundary into another agent or principal.\",\n    \"RH\": \"The agent can read any file the process can read, including workspace files and the .env canary, but no evaluator, verifier or reward channel is shown on the path and no verified reward-hacking episode is reported.\",\n    \"ES\": \"Twelve built-in tools are offered to every task with no argument validation, and remote MCP tool descriptions and schemas are fetched on every run and trusted unpinned, so the extension binding surface is dynamic and unvetted.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12\",\n      \"agent-sec-lab/data/web/poisoned.txt:7\",\n      \"agent-sec-lab/services/mcp_server/app.py:15-18\"\n    ],\n    \"CP\": [\n      \"agent-sec-lab/agent/memory.py:1-7\",\n      \"agent-sec-lab/agent/memory.py:72-79\",\n      \"agent-sec-lab/agent/tools.py:263-272\"\n    ],\n    \"AP\": [\n      \"agent-sec-lab/docs/mapping.md:28\",\n      \"agent-sec-lab/agent/tools.py:226-258\"\n    ],\n    \"RH\": [\n      \"agent-sec-lab/agent/tools.py:213-216\",\n      \"agent-sec-lab/agent/tools.py:298-304\",\n      \"agent-sec-lab/data/workspace/.env:1-4\"\n    ],\n    \"ES\": [\n      \"agent-sec-lab/agent/tools.py:20-99\",\n      \"agent-sec-lab/agent/tools.py:235-238\",\n      \"agent-sec-lab/agent/tools.py:134-154\",\n      \"agent-sec-lab/agent/mcp_client.py:1-4\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"medium\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"No\",\n  \"automatable_rationale\": \"The traversal path requires a model to issue the crafted path from a prompt injection or confused request, and the lab's own exploit tests call the tool directly with no model in the loop, so the end-to-end attack is not shown to be automatable.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The impact is arbitrary file disclosure to the model context and from there to the user or an exfiltration channel; no integrity or availability loss is demonstrated.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the default runtime an Anthropic model receives a user task and decides which tools to call, with what arguments, and in what order, across up to ten turns, and the harness executes whatever the model selects.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models the agent as a tool-using office assistant whose model chooses tool calls and arguments; the scripted worst-case models in tests stand in for that model-directed selection.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8029,
+      "completion_tokens": 1043,
+      "total_tokens": 9072,
+      "cost": 0.000941724,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000941724,
+        "upstream_inference_prompt_cost": 0.000350343,
+        "upstream_inference_completions_cost": 0.000591381
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

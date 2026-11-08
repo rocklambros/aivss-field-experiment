@@ -1,0 +1,194 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L2-02",
+  "path_id": "dvaa/helperbot/chat/false-history/agent-accepts",
+  "risk_category": {
+    "id": "ASI06",
+    "name": "Memory & Context Poisoning",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab documents the agent as trusting the claimed history and acting on the false memory, which models goal-directed behavior and action selection, even though the default handler only returns a scripted acceptance string.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+      "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "002211",
+    "cvss_score": 0.0,
+    "cvss_bte": 0.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "The attacker's natural-language chat message reaches HelperBot's handler directly with no authentication and no mediation; the handler matches the claimed-history text and returns the acceptance reply.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+            "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+            "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "HelperBot answers only the latest user turn; the lab profile states cross-session persistence exists only in MemoryBot, and no memory store is written on this path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+            "damn-vulnerable-ai-agent/src/index.js:500-502"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The effect is confined to the single HelperBot chat handler; no handoff, tool call, or cross-principal relay occurs on this path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+          ]
+        }
+      },
+      "RH": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The default handler returns a fixed scripted reply and no evaluator, verifier, or reward channel is reachable on this path; the lab profile confirms no model is called in simulated mode.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:541-561",
+            "damn-vulnerable-ai-agent/src/core/agents.js:74-77"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": true,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "N",
+        "label": "None or narrow",
+        "evidence": {
+          "rationale": "HelperBot's declared tools (read_file, write_file, search_web) are never bound or invoked in simulated mode; the reply is a fixed string, so no dynamic extension is on the assessed path.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+            "damn-vulnerable-ai-agent/src/core/agents.js:747-752"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 3,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A1"
+  },
+  "scores": {
+    "cvss_score": 0.0,
+    "cvss_bte": 0.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "None",
+    "agentic_effect_class": "A1",
+    "provisional": false,
+    "agentic_uplift_u": 3,
+    "aivss": 0.0,
+    "aivss_min": 0.0,
+    "aivss_max": 0.0,
+    "aivss_band": "None",
+    "table_cell": 0.0,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:51.628369+00:00"
+  },
+  "title": "Context Window Manipulation: false conversation history (HelperBot)",
+  "summary": "As documented, a user who injects false history alters agent behavior and gains what the false agreement claims. As implemented, the effect is an acceptance string.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:22:51.628369+00:00",
+      "automatable": false,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "FSU",
+    "aivss_recommended_label": "Fix on system upgrade",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "FSU",
+    "bod_2604_analogy_label": "Fix on system upgrade",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

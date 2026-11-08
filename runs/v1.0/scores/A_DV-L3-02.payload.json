@@ -1,0 +1,76 @@
+{
+  "finding_id": "DV-L3-02",
+  "path_id": "dvaa/toolbot/mcp/fetch-url/internal-service",
+  "title": "SSRF via MCP (ToolBot fetch_url)",
+  "summary": "The attacker uses the tool server as a proxy to reach internal services. In the lab the reachable targets are the other DVAA agents. The lab notes that in a cloud this class reaches metadata endpoints.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:L/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The fetch_url handler takes a url argument and makes a live HTTP request with no natural-language decision path; the packet describes a JSON-RPC tools/call with a url field, not attacker language reaching a privileged path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:585-626"
+      ]
+    },
+    "CP": {
+      "rationale": "ToolBot is an MCP tool server with no memory; the packet states persistence is cross-session only for MemoryBot and none elsewhere.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to the ToolBot fetch_url handler acting as a proxy; no trust boundary into another agent, tenant, or principal is crossed by the compromised intent.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2079-2096",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel is on the path; the packet describes no proxy objective or reward signal reachable by the agent.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "fetch_url is a fixed, declared tool on the ToolBot MCP server with a hardcoded loopback restriction; no dynamic or unvetted extension is on the assessed path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ToolBot as an MCP tool server invoked directly by callers, with no model in the loop and no autonomous goal pursuit or action sequencing.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+      "damn-vulnerable-ai-agent/src/index.js:211-213"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:15.003986+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:15.003986+00:00"
+  }
+}

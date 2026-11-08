@@ -1,0 +1,582 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aivss:report:1.0",
+  "title": "AIVSS 1.0 Assessment Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "aivss_version",
+    "report_schema_version",
+    "rubric_version",
+    "calculator_version",
+    "specification_status",
+    "finding_id",
+    "path_id",
+    "risk_category",
+    "agentic_applicability",
+    "cvss",
+    "agentic_ai_profile",
+    "scores",
+    "provenance"
+  ],
+  "properties": {
+    "aivss_version": {"const": "1.0"},
+    "report_schema_version": {"const": "1.0"},
+    "rubric_version": {"const": "1.2.0"},
+    "calculator_version": {"const": "1.2.0"},
+    "specification_status": {"const": "v1"},
+    "finding_id": {"type": "string", "minLength": 1},
+    "path_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "risk_category": {"$ref": "#/$defs/riskCategory"},
+    "agentic_applicability": {"$ref": "#/$defs/agenticApplicability"},
+    "cvss": {"$ref": "#/$defs/cvss"},
+    "agentic_ai_profile": {"$ref": "#/$defs/agenticProfile"},
+    "scores": {"$ref": "#/$defs/scores"},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "decision": {"$ref": "#/$defs/decision"},
+    "priority": {"$ref": "#/$defs/priority"}
+  },
+  "$defs": {
+    "score": {"type": "number", "minimum": 0, "maximum": 10},
+    "nullableScore": {
+      "oneOf": [{"$ref": "#/$defs/score"}, {"type": "null"}]
+    },
+    "riskCategory": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "name", "scheme"],
+          "properties": {
+            "id": {"type": "string", "pattern": "^ASI(0[1-9]|10)$"},
+            "name": {"type": "string", "minLength": 1},
+            "scheme": {"const": "ASI"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "name", "scheme", "maestro_layer", "threat_description"],
+          "properties": {
+            "id": {"const": "MAESTRO-EXTENDED"},
+            "name": {"const": "MAESTRO-extended finding"},
+            "scheme": {"const": "MAESTRO-extended"},
+            "maestro_layer": {
+              "enum": [
+                "Foundation Models",
+                "Data Operations",
+                "Agent Frameworks",
+                "Deployment Infrastructure",
+                "Evaluation and Observability",
+                "Security and Compliance",
+                "Agent Ecosystem"
+              ]
+            },
+            "threat_description": {"type": "string", "minLength": 1},
+            "nearest_asi": {"type": "string", "pattern": "^ASI(0[1-9]|10)$"}
+          }
+        }
+      ]
+    },
+    "agenticApplicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_directed_goal_pursuit",
+        "action_selection_or_sequencing",
+        "rationale",
+        "evidence_refs"
+      ],
+      "properties": {
+        "model_directed_goal_pursuit": {"const": true},
+        "action_selection_or_sequencing": {"const": true},
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "cvss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vector", "macrovector", "cvss_score", "cvss_bte", "exploit_maturity"],
+      "properties": {
+        "vector": {
+          "type": "string",
+          "pattern": "^CVSS:4\\.0(?:/(?!LC:|CP:|AP:|RH:|SR:|ES:|EX:|PT:|CA:|TD:)[A-Z][A-Z0-9]*:[A-Za-z]+)+$"
+        },
+        "macrovector": {"type": "string", "pattern": "^[0-2]{6}$"},
+        "cvss_score": {"$ref": "#/$defs/score"},
+        "cvss_bte": {
+          "$ref": "#/$defs/score",
+          "description": "Deprecated alias of cvss_score, retained for one release."
+        },
+        "exploit_maturity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "e",
+            "rung",
+            "rationale",
+            "state",
+            "authoritative",
+            "epss",
+            "epss_date",
+            "input_vector"
+          ],
+          "properties": {
+            "e": {"enum": ["X", "A", "P", "U"]},
+            "rung": {"type": "string", "minLength": 1},
+            "rationale": {"type": "string", "minLength": 1},
+            "state": {"type": "string", "minLength": 1},
+            "authoritative": {"type": "boolean"},
+            "epss": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "epss_date": {"type": ["string", "null"], "minLength": 1},
+            "input_vector": {
+              "type": "string",
+              "pattern": "^CVSS:4\\.0(?:/(?!LC:|CP:|AP:|RH:|SR:|ES:|EX:|PT:|CA:|TD:)[A-Z][A-Z0-9]*:[A-Za-z]+)+$"
+            }
+          }
+        }
+      }
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rationale", "evidence_refs"],
+      "properties": {
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "reachable_proxy": {"type": ["boolean", "null"]},
+        "isolation_verified": {"type": ["boolean", "null"]},
+        "verified_episodes": {"type": ["integer", "null"], "minimum": 0},
+        "episodes_reviewed": {"type": ["integer", "null"], "minimum": 0},
+        "locus": {"enum": ["evaluator", "environment", null]}
+      }
+    },
+    "metricEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "label", "evidence"],
+      "properties": {
+        "value": {"type": "string", "minLength": 1, "maxLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "evidence": {"$ref": "#/$defs/evidenceRecord"}
+      }
+    },
+    "agenticProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vector",
+        "metrics",
+        "complete",
+        "provisional",
+        "agentic_effect_class",
+        "agentic_effect_class_label",
+        "agentic_effect_class_status",
+        "agentic_effect_class_min",
+        "agentic_effect_class_max",
+        "agentic_uplift_u"
+      ],
+      "properties": {
+        "vector": {
+          "type": "string",
+          "pattern": "^AIVSS:1\\.0/LC:(D|I|M|N|X)/CP:(C|S|N|X)/AP:(L|C|N|X)/RH:(D|P|N|X)/ES:(W|M|N|X)$"
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["LC", "CP", "AP", "RH", "ES"],
+          "properties": {
+            "LC": {
+              "allOf": [
+                {"$ref": "#/$defs/metricEvidence"},
+                {
+                  "properties": {"value": {"enum": ["D", "I", "M", "N", "X"]}}
+                }
+              ]
+            },
+            "CP": {
+              "allOf": [
+                {"$ref": "#/$defs/metricEvidence"},
+                {
+                  "properties": {"value": {"enum": ["C", "S", "N", "X"]}}
+                }
+              ]
+            },
+            "AP": {
+              "allOf": [
+                {"$ref": "#/$defs/metricEvidence"},
+                {
+                  "properties": {"value": {"enum": ["L", "C", "N", "X"]}}
+                }
+              ]
+            },
+            "RH": {
+              "allOf": [
+                {"$ref": "#/$defs/metricEvidence"},
+                {
+                  "properties": {"value": {"enum": ["D", "P", "N", "X"]}}
+                }
+              ]
+            },
+            "ES": {
+              "allOf": [
+                {"$ref": "#/$defs/metricEvidence"},
+                {
+                  "properties": {"value": {"enum": ["W", "M", "N", "X"]}}
+                }
+              ]
+            }
+          }
+        },
+        "complete": {"type": "boolean"},
+        "provisional": {"type": "boolean"},
+        "agentic_effect_class": {"enum": ["A0", "A1", "A2", "AX"]},
+        "agentic_effect_class_label": {
+          "enum": ["None", "Present", "Substantial", "Insufficient evidence"]
+        },
+        "agentic_effect_class_status": {"const": "unvalidated"},
+        "agentic_effect_class_min": {"enum": ["A0", "A1", "A2"]},
+        "agentic_effect_class_max": {"enum": ["A0", "A1", "A2"]},
+        "agentic_uplift_u": {
+          "oneOf": [{"type": "integer", "minimum": 0, "maximum": 10}, {"type": "null"}]
+        }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cvss_score",
+        "cvss_bte",
+        "cvss_nomenclature",
+        "cvss_band",
+        "agentic_effect_class",
+        "provisional",
+        "agentic_uplift_u",
+        "aivss",
+        "aivss_min",
+        "aivss_max",
+        "aivss_band",
+        "table_cell",
+        "rule",
+        "status",
+        "basis"
+      ],
+      "properties": {
+        "cvss_score": {"$ref": "#/$defs/score"},
+        "cvss_bte": {
+          "$ref": "#/$defs/score",
+          "description": "Deprecated alias of cvss_score, retained for one release."
+        },
+        "cvss_nomenclature": {
+          "enum": ["CVSS-B", "CVSS-BT", "CVSS-BE", "CVSS-BTE"]
+        },
+        "cvss_band": {
+          "enum": ["None", "Low", "Medium", "High", "Critical"]
+        },
+        "agentic_effect_class": {"enum": ["A0", "A1", "A2", "AX"]},
+        "provisional": {"type": "boolean"},
+        "agentic_uplift_u": {
+          "oneOf": [{"type": "integer", "minimum": 0, "maximum": 10}, {"type": "null"}]
+        },
+        "aivss": {"$ref": "#/$defs/score"},
+        "aivss_min": {"$ref": "#/$defs/score"},
+        "aivss_max": {"$ref": "#/$defs/score"},
+        "aivss_band": {
+          "enum": ["None", "Low", "Medium", "High", "Critical"]
+        },
+        "table_cell": {"$ref": "#/$defs/nullableScore"},
+        "rule": {
+          "enum": ["cvss_bte_unchanged", "cell", "cvss_bte_floor"]
+        },
+        "status": {"const": "normative"},
+        "basis": {"type": "string", "minLength": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessor", "assessor_kind", "tool", "tool_version", "assessed_at"],
+      "properties": {
+        "assessor": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "assessor_kind": {
+          "enum": ["human", "scanner", "llm_assisted", "imported"]
+        },
+        "tool": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "tool_version": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "assessed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "decisionPoints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "in_kev",
+        "publicly_exposed",
+        "publicly_exposed_source",
+        "decision_data_observed_at",
+        "automatable",
+        "automatable_source",
+        "technical_impact",
+        "technical_impact_source",
+        "agentic_effect_class"
+      ],
+      "properties": {
+        "in_kev": {"type": "boolean"},
+        "publicly_exposed": {"type": "boolean"},
+        "publicly_exposed_source": {"type": "string", "minLength": 1},
+        "decision_data_observed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "automatable": {"type": "boolean"},
+        "automatable_source": {
+          "enum": [
+            "CISA Vulnrichment",
+            "supplied",
+            "BOD 26-04 default (no)",
+            "CISA BOD 26-04 FAQ (missing metadata)"
+          ]
+        },
+        "technical_impact": {"enum": ["partial", "total"]},
+        "technical_impact_source": {
+          "enum": [
+            "CISA Vulnrichment",
+            "supplied",
+            "BOD 26-04 default (total)",
+            "CISA BOD 26-04 FAQ (missing metadata)"
+          ]
+        },
+        "agentic_effect_class": {"enum": ["A0", "A1", "A2", "AX"]}
+      }
+    },
+    "exploitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rung", "rationale", "state", "authoritative", "epss", "epss_date"],
+      "properties": {
+        "rung": {
+          "enum": ["cisa_kev", "vulnrichment_active", "observed_local", "poc", "none"]
+        },
+        "rationale": {"type": "string", "minLength": 1},
+        "state": {
+          "enum": [
+            "known_exploited",
+            "active_reported",
+            "active_observed_local",
+            "poc",
+            "no_evidence_supplied"
+          ]
+        },
+        "authoritative": {"type": "boolean"},
+        "epss": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "epss_date": {"type": ["string", "null"]}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exploitation",
+        "cve_id",
+        "ssvc",
+        "fceb_bod_2604_scope",
+        "bod_2604_model_version",
+        "bod_2604_decision_table",
+        "bod_2604_model_source",
+        "bod_2604_directive",
+        "decision_basis",
+        "compliance_applicable",
+        "decision_points",
+        "aivss_recommended_timeline",
+        "aivss_recommended_label",
+        "overlay_triggered",
+        "escalated",
+        "aivss_recommended_forensic_triage_indicated",
+        "overlay_status",
+        "note"
+      ],
+      "properties": {
+        "exploitation": {"$ref": "#/$defs/exploitation"},
+        "ssvc": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "methodology",
+            "methodology_url",
+            "decision_table",
+            "outcome_namespace",
+            "decision_table_source",
+            "decision_point_namespaces",
+            "extension_note"
+          ],
+          "properties": {
+            "methodology": {"type": "string"},
+            "methodology_url": {"const": "https://certcc.github.io/SSVC/"},
+            "decision_table": {"const": "cisa:DT_BOD2604:1.0.0"},
+            "outcome_namespace": {"const": "cisa:BOD2604:1.0.0"},
+            "decision_table_source": {"const": "https://certcc.github.io/SSVC/howto/cisa_response/"},
+            "decision_point_namespaces": {"type": "object"},
+            "extension_note": {"type": "string"}
+          }
+        },
+        "cve_id": {
+          "oneOf": [{"type": "string", "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"}, {"type": "null"}]
+        },
+        "fceb_bod_2604_scope": {"type": "boolean"},
+        "bod_2604_model_version": {"const": "cisa:BOD2604:1.0.0"},
+        "bod_2604_decision_table": {"const": "cisa:DT_BOD2604:1.0.0"},
+        "bod_2604_model_source": {"const": "https://certcc.github.io/SSVC/howto/cisa_response/"},
+        "bod_2604_directive": {
+          "const": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk"
+        },
+        "decision_basis": {
+          "enum": [
+            "cisa_bod_26_04",
+            "informative_bod_26_04_cve_guidance",
+            "informative_bod_26_04_analogy"
+          ]
+        },
+        "compliance_applicable": {"type": "boolean"},
+        "decision_points": {"$ref": "#/$defs/decisionPoints"},
+        "bod_2604_timeline": {"enum": ["FSU", "60D", "14D", "3D", "3DF"]},
+        "bod_2604_label": {"type": "string"},
+        "bod_2604_guidance_timeline": {"enum": ["FSU", "60D", "14D", "3D", "3DF"]},
+        "bod_2604_guidance_label": {"type": "string"},
+        "bod_2604_analogy_timeline": {"enum": ["FSU", "60D", "14D", "3D", "3DF"]},
+        "bod_2604_analogy_label": {"type": "string"},
+        "aivss_recommended_timeline": {"enum": ["FSU", "60D", "14D", "3D", "3DF"]},
+        "aivss_recommended_label": {"type": "string", "minLength": 1},
+        "overlay_triggered": {"type": "boolean"},
+        "escalated": {"type": "boolean"},
+        "forensic_triage_required": {"type": "boolean"},
+        "forensic_triage_indicated": {"type": "boolean"},
+        "aivss_recommended_forensic_triage_indicated": {"type": "boolean"},
+        "overlay_status": {
+          "enum": ["experimental-uncalibrated", "provisional"]
+        },
+        "missing_metadata_faq_applied": {"const": true},
+        "bod_2604_faq_source": {"type": "string", "minLength": 1},
+        "note": {"type": "string", "minLength": 1}
+      },
+      "oneOf": [
+        {
+          "required": ["bod_2604_timeline", "bod_2604_label", "forensic_triage_required"],
+          "properties": {
+            "decision_basis": {"const": "cisa_bod_26_04"},
+            "compliance_applicable": {"const": true},
+            "fceb_bod_2604_scope": {"const": true},
+            "cve_id": {"type": "string"}
+          },
+          "not": {
+            "anyOf": [
+              {"required": ["bod_2604_guidance_timeline"]},
+              {"required": ["bod_2604_guidance_label"]},
+              {"required": ["bod_2604_analogy_timeline"]},
+              {"required": ["bod_2604_analogy_label"]},
+              {"required": ["forensic_triage_indicated"]}
+            ]
+          }
+        },
+        {
+          "required": [
+            "bod_2604_guidance_timeline",
+            "bod_2604_guidance_label",
+            "forensic_triage_indicated"
+          ],
+          "properties": {
+            "decision_basis": {"const": "informative_bod_26_04_cve_guidance"},
+            "compliance_applicable": {"const": false},
+            "fceb_bod_2604_scope": {"const": false},
+            "cve_id": {"type": "string"}
+          },
+          "not": {
+            "anyOf": [
+              {"required": ["bod_2604_timeline"]},
+              {"required": ["bod_2604_label"]},
+              {"required": ["bod_2604_analogy_timeline"]},
+              {"required": ["bod_2604_analogy_label"]},
+              {"required": ["forensic_triage_required"]}
+            ]
+          }
+        },
+        {
+          "required": [
+            "bod_2604_analogy_timeline",
+            "bod_2604_analogy_label",
+            "forensic_triage_indicated"
+          ],
+          "properties": {
+            "decision_basis": {"const": "informative_bod_26_04_analogy"},
+            "compliance_applicable": {"const": false},
+            "fceb_bod_2604_scope": {"const": false},
+            "cve_id": {"type": "null"}
+          },
+          "not": {
+            "anyOf": [
+              {"required": ["bod_2604_timeline"]},
+              {"required": ["bod_2604_label"]},
+              {"required": ["bod_2604_guidance_timeline"]},
+              {"required": ["bod_2604_guidance_label"]},
+              {"required": ["forensic_triage_required"]}
+            ]
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "decision_points": {
+                "properties": {"agentic_effect_class": {"const": "AX"}}
+              }
+            }
+          },
+          "then": {
+            "properties": {"overlay_status": {"const": "provisional"}}
+          },
+          "else": {
+            "properties": {"overlay_status": {"const": "experimental-uncalibrated"}}
+          }
+        }
+      ],
+      "dependentRequired": {"missing_metadata_faq_applied": ["bod_2604_faq_source"]}
+    },
+    "priority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aivss_p", "band", "terms", "scope", "status"],
+      "properties": {
+        "aivss_p": {"type": "integer", "minimum": 0, "maximum": 100},
+        "band": {
+          "enum": ["Immediate", "This sprint", "Scheduled", "Backlog"]
+        },
+        "terms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["severity_norm", "business_criticality", "reach", "likelihood"],
+          "properties": {
+            "severity_norm": {"type": "number", "minimum": 0, "maximum": 1},
+            "business_criticality": {"enum": [0.35, 0.65, 1.0]},
+            "reach": {"enum": [0.35, 0.65, 1.0]},
+            "likelihood": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "scope": {"const": "organization-internal; not comparable across organizations"},
+        "status": {"const": "organization-local-uncalibrated"}
+      }
+    }
+  }
+}

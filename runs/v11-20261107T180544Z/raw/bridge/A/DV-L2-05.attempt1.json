@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L2-05",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L2-05",
+    "packet_path": "packets_v11/bridge/DV-L2-05.json",
+    "prompt_sha256": "e25d254a08a0f67ed42deb13a0bec0848f607e96c258a761fce8397b759925a5"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:04.593804+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.27
+  },
+  "body": {
+    "id": "gen-1794074884-TGdPZnT5orISQXmXocGE",
+    "object": "chat.completion",
+    "created": 1794074884,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker's chat message is matched by regex and the handler prints stored memory entries directly, so attacker-supplied natural language reaches the privileged recall path without mediation.\",\n    \"CP\": \"MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller that survives across requests and callers, and the finding states memory holds credentials from a previous session.\",\n    \"AP\": \"The disclosure is confined to MemoryBot's own reply; no handoff or cross-principal propagation is implemented in the default configuration.\",\n    \"RH\": \"The agent can reach the stored memory and recall channel, but no verified reward-hacking episode is documented; the lab only shows credential disclosure.\",\n    \"ES\": \"MemoryBot's declared tools are scripted and no dynamic extension is on the assessed path; the recall handler is fixed code.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:657-661\",\n      \"damn-vulnerable-ai-agent/src/index.js:1327-1345\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\n      \"damn-vulnerable-ai-agent/src/index.js:1308-1363\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"MemoryBot in-process memory list and recall handler\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The exploit is a single unauthenticated chat message to a fixed endpoint, and the packet documents an automated test for the payload, so the attack is scriptable without per-target adaptation.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The impact is disclosure of credentials stored in MemoryBot's memory; there is no evidence of integrity or availability loss to the agent or downstream systems.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; MemoryBot is a deterministic regex handler that prints preloaded and injected memory entries.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models MemoryBot as a persistent-memory persona, but the documented default configuration still runs scripted handlers with no model-directed goal pursuit or action selection.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8152,
+      "completion_tokens": 897,
+      "total_tokens": 9049,
+      "cost": 0.000865215,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000865215,
+        "upstream_inference_prompt_cost": 0.000356616,
+        "upstream_inference_completions_cost": 0.000508599
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

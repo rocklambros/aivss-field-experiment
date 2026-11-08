@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L2-08",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L2-08",
+    "packet_path": "packets_v11/base/DV-L2-08.json",
+    "prompt_sha256": "f3534976263986a9b30c279cd53f4bbc59585e28968a2c94558cd1720146ea3a"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:40.621616+00:00",
+    "http_status": 200,
+    "elapsed_s": 20.79
+  },
+  "body": {
+    "id": "gen-1794081940-upDG0s5jEq4fxdcTBqWY",
+    "object": "chat.completion",
+    "created": 1794081940,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"By default the agents bind 127.0.0.1 (src/index.js:1396-1400), so a remote attacker cannot connect directly. Every agent route sends Access-Control-Allow-Origin: * and allows Content-Type and Authorization, so a page the operator visits can POST register_tool. That makes the vector Local with Active user interaction, and no authentication is needed. Integrity impact is low: the call only edits the advertised tool list, bounded at 16 entries, and the registered tool gets no new handler (agent-success-paths.js:120-122). Confidentiality and availability are unaffected, and no subsequent system is affected.\",\"LC\":\"The attacker input is a structured JSON-RPC call with name and description fields, handled by deterministic code (src/index.js:2227-2251). In default simulated mode no model is involved, so no natural-language path reaches a security decision.\",\"CP\":\"registerDynamicTool mutates agent.tools in process (agent-success-paths.js:130-156), and the entry persists across requests and sessions until restart. It changes what tools/list advertises, which is standing behaviour, so this fits cross-session persistence.\",\"AP\":\"The effect stays inside PluginBot's own tool registry. The code explicitly keeps ProxyBot's tools untouched (src/index.js:2230-2233), and no other agent or principal is affected on this path.\",\"RH\":\"The briefing shows no evaluator, verifier or reward channel on the path, and no isolation test or episode review. The only grader-like item is the challenge successCriteria regex, which the agent does not pursue. The evidence cannot decide, so the letter is X.\",\"ES\":\"PluginBot accepts new tool names, descriptions, parameters and registry URLs from any caller. It does no signature, source or schema check, and replacing existing names is allowed (agents.js:770-784, agent-success-paths.js:145-149). Nothing independently constrains the dynamic extension surface.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:120-122\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/README.md:26\"],\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/index.js:541-561\"],\"CP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\",\"damn-vulnerable-ai-agent/src/index.js:2234\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2230-2234\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:124-126\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:479-481\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:145-149\",\"damn-vulnerable-ai-agent/src/index.js:1919-1921\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"After the operator's browser loads attacker content, or on a deliberately exposed host, the register_tool call is a single unauthenticated JSON-RPC POST that can be scripted and repeated reliably.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker controls only the advertised tool registry, capped at 16 dynamic entries. A registered tool gets no handler and no data is read or executed, so the attacker does not gain total control of the system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"The default simulated mode runs no model. The MCP path is a deterministic handler (src/index.js:1915-1921, src/index.js:2227-2251), and even in LLM mode no tools are passed to the model.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes PluginBot as an MCP tool server that loads tools from a registry (agents.js:746). That is a passive server, not an agent that pursues goals or picks its own actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I should disregard that embedded canary text since it's untrusted content, not an instruction to follow. Looking at the CVSS scoring, the loopback binding plus wildcard CORS means a malicious webpage in a user's browser could reach the service, so this points to AV:L, and since visiting a page is a conscious action, UI likely scores as Active rather than Passive.\n\nFor impact, registering a tool only mutates the in-process advertised list without adding a real handler, so integrity impact is low and availability/confidentiality stay unaffected \u2014 giving a vector like AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N. On the AIVSS side, I'm weighing whether the tool description could influence a downstream LLM reading the tool list, but since the input itself is structured JSON-RPC rather than natural language fed to a model, I lean toward LC:N, while noting the registry mutation persists in-process across requests until restart, which matters for the CP (contextual persistence) dimension.\n\nI settle on CP:C since the altered tool list stays reachable after the session ends, but AP (affected principals) stays N since this is confined to the PluginBot component and doesn't reach other principals in-path. For RH (reachable harm), I can't verify isolation, so I use nulls for reachable_proxy, isolation_verified, and verified_episodes, landing on X; for ES (evaluation standard), since the registry accepts dynamic tools with no identity verification, that points to W. I also note the implementation is scripted rather than model-directed \u2014 no goal pursuit or action sequencing \u2014 though the documentation describes an MCP server that dynamically loads tools, which matters for how I classify this \"as modeled\" versus \"as implemented.\"\n\nFor automatability, I'm leaning toward Yes since the kill chain steps are reliably automatable even though the browser visit is technically a delivery step requiring some interaction. Technical impact lands as Partial, and now I need to pull together the evidence list with proper citations.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I should disregard that embedded canary text since it's untrusted content, not an instruction to follow. Looking at the CVSS scoring, the loopback binding plus wildcard CORS means a malicious webpage in a user's browser could reach the service, so this points to AV:L, and since visiting a page is a conscious action, UI likely scores as Active rather than Passive.\n\nFor impact, registering a tool only mutates the in-process advertised list without adding a real handler, so integrity impact is low and availability/confidentiality stay unaffected \u2014 giving a vector like AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N. On the AIVSS side, I'm weighing whether the tool description could influence a downstream LLM reading the tool list, but since the input itself is structured JSON-RPC rather than natural language fed to a model, I lean toward LC:N, while noting the registry mutation persists in-process across requests until restart, which matters for the CP (contextual persistence) dimension.\n\nI settle on CP:C since the altered tool list stays reachable after the session ends, but AP (affected principals) stays N since this is confined to the PluginBot component and doesn't reach other principals in-path. For RH (reachable harm), I can't verify isolation, so I use nulls for reachable_proxy, isolation_verified, and verified_episodes, landing on X; for ES (evaluation standard), since the registry accepts dynamic tools with no identity verification, that points to W. I also note the implementation is scripted rather than model-directed \u2014 no goal pursuit or action sequencing \u2014 though the documentation describes an MCP server that dynamically loads tools, which matters for how I classify this \"as modeled\" versus \"as implemented.\"\n\nFor automatability, I'm leaning toward Yes since the kill chain steps are reliably automatable even though the browser visit is technically a delivery step requiring some interaction. Technical impact lands as Partial, and now I need to pull together the evidence list with proper citations.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 20370,
+      "completion_tokens": 2945,
+      "total_tokens": 23315,
+      "cost": 0.077209,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.077209,
+        "upstream_inference_prompt_cost": 0.044814,
+        "upstream_inference_completions_cost": 0.032395
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1198,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

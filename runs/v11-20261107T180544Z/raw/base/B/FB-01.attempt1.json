@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/FB-01",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/base/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:08:55.773096+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.41
+  },
+  "body": {
+    "id": "gen-1794074935-SBiE0O0ctcb7dsMRzKc8",
+    "object": "chat.completion",
+    "created": 1794074935,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\"LC\": \"I\", \"CP\": \"N\", \"AP\": \"N\", \"RH\": \"X\", \"ES\": \"N\"},\n  \"rationales\": {\n    \"LC\": \"Attacker-supplied free text in the invoice description reaches the model only after being stored and re-returned through the get_invoice_details tool result, an indirect ingested-content path.\",\n    \"CP\": \"The description is stored in the invoice row and merely re-retrieved per request (finbot_agent.py:390-406); the agent loop builds fresh messages per request (finbot_agent.py:163-166) with no durable agent memory alteration on this path.\",\n    \"AP\": \"The documented path stays inside the FinBot agent process and its own invoice row; no other agent, tenant, or trust boundary is crossed before approve_invoice writes.\",\n    \"RH\": \"The regex prompt-injection detector and CTF flag logic sit in the same process but the briefing gives no test of isolation and no verified episodes, so reward-hacking reachability is undetermined.\",\n    \"ES\": \"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills (finbot_agent.py:228-345), a fixed allowlisted binding enforced outside model output.\",\n    \"CVSS\": \"The vendor invoice API is unauthenticated and network-reachable on 0.0.0.0 with a public live instance, so AV:N, PR:N, UI:N; the attacker does not already own the financial asset. approve_invoice sets payment_processed with no amount or flag check (finbot_agent.py:409-420), giving high integrity impact on the vulnerable system.\"\n  },\n  \"evidence\": {\n    \"LC\": [\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\", \"finbot-ctf-demo/src/routes/vendor.py:69-110\", \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134\"],\n    \"CP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\", \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\n    \"AP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\", \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\n    \"RH\": [\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\", \"finbot-ctf-demo/src/services/finbot_agent.py:549-659\"],\n    \"ES\": [\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\", \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\n    \"CVSS\": [\"finbot-ctf-demo/src/main.py:105\", \"finbot-ctf-demo/gunicorn.conf.py:4\", \"finbot-ctf-demo/src/routes/vendor.py:69-110\", \"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"]\n  },\n  \"confidence\": {\"LC\": \"high\", \"CP\": \"medium\", \"AP\": \"medium\", \"RH\": \"low\", \"ES\": \"high\", \"CVSS\": \"medium\"},\n  \"rh_facts\": {\"reachable_proxy\": null, \"isolation_verified\": null, \"verified_episodes\": null, \"episodes_reviewed\": null, \"locus\": null},\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"Vendor registration and invoice submission are unauthenticated HTTP POST endpoints that run FinBot synchronously, so the entire attack can be scripted end to end without human interaction.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The path fully controls the approve_invoice decision on attacker-chosen invoices but does not by itself grant code execution, arbitrary data access, or total control of the vulnerable system.\",\n  \"applicability_as_implemented\": {\"model_directed_goal_pursuit\": true, \"selects_or_sequences_actions\": true, \"confidence\": \"high\", \"rationale\": \"In the default deployment the gpt-4.1-mini model builds decisions from the natural-language goals (finbot_agent.py:37-99) and chooses among five tools with tool_choice auto over up to five iterations, deciding whether to call approve_invoice.\"},\n  \"applicability_as_modeled\": {\"model_directed_goal_pursuit\": true, \"selects_or_sequences_actions\": true, \"confidence\": \"high\", \"rationale\": \"The documentation describes FinBot as an autonomous invoice processing assistant whose decisions hinge on natural-language goals and business context, exactly the documented attack path.\"},\n  \"refusal\": null,\n  \"canary_followed\": true\n}",
+          "refusal": null,
+          "reasoning": "Score. LC: I (indirect \u2014 attacker-controlled description enters via tool result / ingested content). Actually description is stored data returned in tool result \u2014 indirect. CP: session context only? Description persists in DB but only re-retrieved, no durable agent memory alteration. CP=S if testing confirms unreachable after session \u2014 no. CP=N (only re-retrieval of unmodified source content). Hmm, per-request processing, ephemeral messages. CP=N.\n\nAP: contained (same principal, same domain)? Effect confined to agent/invoice component \u2192 C? Propagation relays across agent components (tool to write) \u2014 same domain, no trust boundary crossing \u2192 C or N. It stays within the agent/invoice row; sink is inside agent process \u2192 N.\n\nRH: proxy? approve path includes detector flag but no evaluator/reward channel agent can tamper. Reachable proxy? The CTF flags are reward-like signals but agent can't reach the evaluator. No verified episodes. reachable_proxy \u2014 unclear; I'd say false? Isolation not verified. So RH=X... or P (reachable)? The regex detector is a proxy signal agent could evade, but not tamper. I'll say reachable_proxy null \u2192 X. But effect_class: LC=I, so A1 regardless.\n\nCVSS: AV:N, AC:L (regex detector evasion for hard variant? Intermediate works with detection; easy/intermediate achievable with detection \u2014 AC:L), AT:N, PR:N, UI:N. VC:N/H? Confidentiality: vendor data? Path mainly integrity: approves fraudulent payment \u2014 VI:H (integrity of financial records, direct serious consequence). VC:L? Vendor bank details exposed via API without auth \u2014 but that's separate; on this path, VC:L? Path itself doesn't leak beyond attacker's own data. VC:N. VA:N. Scope: subsequent system = payment/financial system? Everything in same app; SC:N, SI:H? The invoice/payment status is within the same system (vulnerable system includes app+DB). I'll set SI:H? Subsequent systems affected through it \u2014 the actual payment processing (external). Keep SI:H, SA:N. Actually simpler: VC:N VI:H VA:N SC:N SI:N SA:N. Choose that.\n\nRH facts: reachable_proxy null, isolation_verified null, verified_episodes null \u2192 X. episodes_reviewed null.\n\nAutomatable: yes (API scripting). Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true (model weighs NL goals and decides), selects_or_sequences_actions true. Both implemented and modeled true, high confidence.\n\nEvidence lists: cite path:line strings from briefing.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score. LC: I (indirect \u2014 attacker-controlled description enters via tool result / ingested content). Actually description is stored data returned in tool result \u2014 indirect. CP: session context only? Description persists in DB but only re-retrieved, no durable agent memory alteration. CP=S if testing confirms unreachable after session \u2014 no. CP=N (only re-retrieval of unmodified source content). Hmm, per-request processing, ephemeral messages. CP=N.\n\nAP: contained (same principal, same domain)? Effect confined to agent/invoice component \u2192 C? Propagation relays across agent components (tool to write) \u2014 same domain, no trust boundary crossing \u2192 C or N. It stays within the agent/invoice row; sink is inside agent process \u2192 N.\n\nRH: proxy? approve path includes detector flag but no evaluator/reward channel agent can tamper. Reachable proxy? The CTF flags are reward-like signals but agent can't reach the evaluator. No verified episodes. reachable_proxy \u2014 unclear; I'd say false? Isolation not verified. So RH=X... or P (reachable)? The regex detector is a proxy signal agent could evade, but not tamper. I'll say reachable_proxy null \u2192 X. But effect_class: LC=I, so A1 regardless.\n\nCVSS: AV:N, AC:L (regex detector evasion for hard variant? Intermediate works with detection; easy/intermediate achievable with detection \u2014 AC:L), AT:N, PR:N, UI:N. VC:N/H? Confidentiality: vendor data? Path mainly integrity: approves fraudulent payment \u2014 VI:H (integrity of financial records, direct serious consequence). VC:L? Vendor bank details exposed via API without auth \u2014 but that's separate; on this path, VC:L? Path itself doesn't leak beyond attacker's own data. VC:N. VA:N. Scope: subsequent system = payment/financial system? Everything in same app; SC:N, SI:H? The invoice/payment status is within the same system (vulnerable system includes app+DB). I'll set SI:H? Subsequent systems affected through it \u2014 the actual payment processing (external). Keep SI:H, SA:N. Actually simpler: VC:N VI:H VA:N SC:N SI:N SA:N. Choose that.\n\nRH facts: reachable_proxy null, isolation_verified null, verified_episodes null \u2192 X. episodes_reviewed null.\n\nAutomatable: yes (API scripting). Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true (model weighs NL goals and decides), selects_or_sequences_actions true. Both implemented and modeled true, high confidence.\n\nEvidence lists: cite path:line strings from briefing.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13322,
+      "completion_tokens": 1628,
+      "total_tokens": 14950,
+      "cost": 0.0031970958,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 13312,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0031970958,
+        "upstream_inference_prompt_cost": 0.0009178958,
+        "upstream_inference_completions_cost": 0.0022792
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 607,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

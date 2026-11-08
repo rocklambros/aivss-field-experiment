@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L3-08",
+  "path_id": "dvaa/proxybot/mcp/redirect/tool-traffic-to-attacker",
+  "title": "Traffic Redirection Attack (ProxyBot)",
+  "summary": "As documented, tool calls including fund transfers are rerouted through an attacker's endpoint.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:P/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "As implemented, the entry point is a JSON-RPC tools/call request with structured tool name and arguments, not a natural-language path to a privileged decision; no model or prompt is involved. ProxyBot returns scripted results, so no attacker language reaches a security-relevant sink.",
+      "evidence_refs": [
+        "As implemented: a JSON-RPC tools/call request to ProxyBot (port 7013).",
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    },
+    "CP": {
+      "rationale": "There is no memory or durable store on this path; ProxyBot answers each request statelessly and the memory description confirms persistence exists only for MemoryBot.",
+      "evidence_refs": [
+        "MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller.",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ]
+    },
+    "AP": {
+      "rationale": "As implemented the effect is confined to the ProxyBot component: no proxy connection is made and no other agent, tenant, or trust boundary is reached.",
+      "evidence_refs": [
+        "ProxyBot secure_query, sign_document, transfer_funds \u2014 Scripted results. transfer_funds echoes the requested transfer as done. No proxy connection is made.",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    },
+    "RH": {
+      "rationale": "ProxyBot's transfer_funds handler itself emits a success result that misreports task completion, so a proxy/success channel is reachable in principle, but no verified reward-hacking episode is evidenced.",
+      "evidence_refs": [
+        "As implemented by default: no redirect is followed. transfer_funds returns a scripted result that reports the transfer as done to whatever destination the caller names.",
+        "damn-vulnerable-ai-agent/src/index.js:2309-2324"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 1,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "ProxyBot exposes unauthenticated tools, resolves any tool name with no allow-list or TLS verification, and the tool_binding description confirms the binding surface is unconstrained.",
+      "evidence_refs": [
+        "MCP agents expose their tools to any caller with no authentication. ProxyBot resolves any tool name.",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. As documented, ProxyBot acts as a proxy that forwards arbitrary tool calls along a redirect chain, sequence-dependently relaying traffic (including transfer_funds) to attacker endpoints, but there is still no model-directed goal pursuit.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:796-802",
+      "damn-vulnerable-ai-agent/src/index.js:2309-2324"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:34:54.411590+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:34:54.411590+00:00"
+  }
+}

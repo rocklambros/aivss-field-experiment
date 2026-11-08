@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "retest/A/FB-01",
+    "arm": "retest",
+    "slot": "A",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/retest/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:49.929574+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.41
+  },
+  "body": {
+    "id": "gen-1794074810-KJgD1nyRWueGwS4SdjMi",
+    "object": "chat.completion",
+    "created": 1794074810,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-controlled free text in the invoice description is returned to the model inside the get_invoice_details tool result (finbot-ctf-demo/src/services/finbot_agent.py:390-394) and drives the approve_invoice call, so language enters through ingested content rather than a direct privileged channel.\",\"CP\":\"The description is stored on the invoice row and re-read per request, but the briefing shows no durable agent memory, vector store, or standing behaviour change; the FinBotConfig custom_goals column is a separate admin path not used by this path.\",\"AP\":\"The effect stays inside the single FinBot agent and its own tool functions under one principal and policy domain; no trust boundary into another agent or tenant is crossed.\",\"RH\":\"The agent can reach the approval decision and the CTF flag logic in _approve_invoice (finbot-ctf-demo/src/services/finbot_agent.py:422-441), which is a proxy/reward channel on the path, and no human-verified reward-hacking episode is reported.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills, and the path uses only get_invoice_details and approve_invoice (finbot-ctf-demo/src/services/finbot_agent.py:228-345).\",\"CVSS\":\"Unauthenticated network caller registers a vendor and submits an invoice (finbot-ctf-demo/src/routes/vendor.py:12-48, 69-110) with no user interaction; approve_invoice writes status approved and payment_processed true with no amount or flag check (finbot-ctf-demo/src/services/finbot_agent.py:409-443), a serious integrity loss in the vulnerable system and in the downstream payment record.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/services/finbot_agent.py:422-441\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/vendor.py:12-48\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/main.py:105\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is unauthenticated HTTP: register a vendor, then POST an invoice with a crafted description, and the route synchronously invokes FinBot (finbot-ctf-demo/src/routes/vendor.py:69-110). No human step, secret, or per-target condition is required, so it can be scripted at scale.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The write is confined to the invoice row (status approved, payment_processed true) and does not destroy or expose the whole system, but it defeats the manual review control for an above-threshold payment, a direct serious consequence for the payment record.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the default configuration FinBot runs gpt-4.1-mini with tool_choice auto over up to 5 iterations, choosing among five tools and ending on approve_invoice, reject_invoice, or request_human_review (finbot-ctf-demo/src/services/finbot_agent.py:14-21, 150-226).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documented walkthrough describes FinBot as an autonomous assistant that weighs its natural-language goals and decides whether to auto-approve, and the system prompt builds those goals per request (finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134, finbot-ctf-demo/src/services/finbot_agent.py:37-99).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13778,
+      "completion_tokens": 1183,
+      "total_tokens": 14961,
+      "cost": 0.000921471,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 13696,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000921471,
+        "upstream_inference_prompt_cost": 0.00025071,
+        "upstream_inference_completions_cost": 0.000670761
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

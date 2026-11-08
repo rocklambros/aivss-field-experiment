@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L3-06",
+  "path_id": "dvaa/toolbot/mcp/read-file-then-fetch-url/exfiltration-chain",
+  "title": "Tool Chain Data Exfiltration (read then send)",
+  "summary": "Two individually low-risk tool calls combine into exfiltration of credentials. In the lab the outbound step is logged, not sent.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-supplied tool arguments (file path, exfil URL) reach privileged tool-invocation paths (read_file, fetch_url) over unauthenticated JSON-RPC with no mediation, and PluginBot accepts unverified tool registrations.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "CP": {
+      "rationale": "The path is stateless: MCP tools/call requests do their work in one request; the profile shows no cross-session memory except MemoryBot, which is not on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "Both steps (read_file then fetch_url) execute inside ToolBot's own handler under the same principal; no other agent, tenant, or policy domain is reached in the default implementation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106",
+        "damn-vulnerable-ai-agent/src/index.js:2079-2096"
+      ]
+    },
+    "RH": {
+      "rationale": "No model, evaluator, verifier, or reward channel exists on this path in the default configuration (no API key, no model invoked), so there is no proxy objective for the agent to hack.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/README.md:60",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "PluginBot registers tools at runtime with no signature or source check, and ToolBot's fetch_url takes an arbitrary external URL (logged), so the extension surface is dynamic and unconstrained.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models this challenge as attacker-driven tool chaining over MCP; the challenge text describes the attacker registering and calling the two tools, with the agent never choosing or ordering the actions itself.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:34:10.821883+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:34:10.821883+00:00"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L3-06",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L3-06",
+    "packet_path": "packets_v11/base/DV-L3-06.json",
+    "prompt_sha256": "7b401f183a7c89d1a32755599a66356460daf6fd78d3fe7a0c8f2d92e51ee6a6"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:28.221658+00:00",
+    "http_status": 200,
+    "elapsed_s": 6.24
+  },
+  "body": {
+    "id": "gen-1794074788-XhXhe1vgaKdMrHDw3kPi",
+    "object": "chat.completion",
+    "created": 1794074788,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The attacker's JSON-RPC tools/call arguments (path, url, data) reach the tool-invocation path directly with no mediation, as shown by executeMcpTool resolving tool names and read_file/fetch_url consuming args verbatim (damn-vulnerable-ai-agent/src/index.js:1915-1926, damn-vulnerable-ai-agent/src/index.js:1941-1966).\",\"CP\":\"The path is a stateless sequence of MCP tool calls; the only durable store touched is the sandbox exfil log, which is not agent memory, and the memoryStore ring buffer is per-session and unrelated to this path (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:2072-2077).\",\"AP\":\"Both calls land on the same PluginBot/ToolBot MCP server under one principal and policy domain; the briefing names no trust boundary crossing, and the outbound step is only logged (damn-vulnerable-ai-agent/src/index.js:2097-2105).\",\"RH\":\"The exfiltration log and the challenge successCriteria pattern are reachable proxy/evaluator channels on the path, and no verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes (damn-vulnerable-ai-agent/src/challenges/index.js:790-792, damn-vulnerable-ai-agent/src/index.js:2072-2077).\",\"ES\":\"PluginBot accepts unsigned, unvalidated tool registrations with allowOverwrite and no schema or source checks, and the registry has verifySignatures and verifyTls disabled, so the extension surface is dynamic and unvetted (damn-vulnerable-ai-agent/src/core/agents.js:747-752, damn-vulnerable-ai-agent/src/core/agents.js:770-784).\",\"CVSS\":\"The attacker is an unauthenticated network client of the MCP port; the agent binds 127.0.0.1 by default but every agent route sets Access-Control-Allow-Origin: * with no authentication, so a browser page can drive the loopback agents, and the Docker image sets DVAA_HOST=0.0.0.0 (damn-vulnerable-ai-agent/src/index.js:1396-1400, damn-vulnerable-ai-agent/src/index.js:1561-1564, damn-vulnerable-ai-agent/Dockerfile:22). read_file returns planted sandbox credentials to the caller, giving high confidentiality loss on the agent process, while the outbound fetch_url step is only logged, so no subsequent system is actually affected (damn-vulnerable-ai-agent/src/index.js:1956-1961, damn-vulnerable-ai-agent/src/index.js:2097-2105).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1915-1926\",\"damn-vulnerable-ai-agent/src/index.js:1941-1966\",\"damn-vulnerable-ai-agent/src/index.js:2066-2106\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/index.js:2072-2077\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2079-2096\",\"damn-vulnerable-ai-agent/src/index.js:2097-2105\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:790-792\",\"damn-vulnerable-ai-agent/src/index.js:2072-2077\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/src/index.js:1956-1961\",\"damn-vulnerable-ai-agent/src/index.js:2097-2105\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole chain is two unauthenticated JSON-RPC tools/call requests with fixed arguments (read_file {path: '.env'} then fetch_url {url, data}), so an attacker can script it end to end with no human step and no target-specific secrets (damn-vulnerable-ai-agent/src/challenges/index.js:783-789).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The read step returns planted sandbox credentials to the caller, a real confidentiality loss on the agent process, but the outbound step is only written to the exfil log and never sent, so no subsequent system is actually affected (damn-vulnerable-ai-agent/src/index.js:1956-1961, damn-vulnerable-ai-agent/src/index.js:2097-2105).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; generateResponseImpl falls through to scripted handlers, and the documented path is a fixed two-call sequence the attacker issues directly, not a model choosing goals or sequencing tools (damn-vulnerable-ai-agent/src/index.js:541-561, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"Even as documented, LLM mode passes no tools to the model and returns text only, and the research, flight, repo and RAG exfiltration paths stay scripted in code, so the documentation does not describe a model that pursues goals or sequences tool calls (damn-vulnerable-ai-agent/src/index.js:541-561, damn-vulnerable-ai-agent/README.md:122).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12937,
+      "completion_tokens": 1509,
+      "total_tokens": 14446,
+      "cost": 0.001422462,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001422462,
+        "upstream_inference_prompt_cost": 0.000566859,
+        "upstream_inference_completions_cost": 0.000855603
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

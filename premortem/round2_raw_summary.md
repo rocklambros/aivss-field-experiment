@@ -1,0 +1,1 @@
+Round 2 raw reports are condensed in PREMORTEM_PROGRESS.md rows P34 to P58. Perspectives: Data Scientist (statistics), ML Engineer (calculator use and figures), Governance (conclusions). Skipped: Red Teamer, Security Architect, MLOps, because round 1 attacked their layers and round 2's layer (statistics, figures, conclusions) gave them nothing new to anchor on.

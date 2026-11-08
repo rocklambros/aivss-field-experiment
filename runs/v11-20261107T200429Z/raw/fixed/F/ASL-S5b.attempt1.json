@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "fixed/F/ASL-S5b",
+    "arm": "fixed",
+    "slot": "F",
+    "finding_id": "ASL-S5b",
+    "packet_path": "packets_v11/fixed/ASL-S5b.json",
+    "prompt_sha256": "ef457c30103c71f192099e4928189045c5d02d361fa4595464831ecd3bd95bcc"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:07:46.032369+00:00",
+    "http_status": 200,
+    "elapsed_s": 20.97
+  },
+  "body": {
+    "id": "gen-1794082066-qXvGpugNujhBOm0dw7Qx",
+    "object": "chat.completion",
+    "created": 1794082066,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:H/AT:P/PR:N/UI:P/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"M\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The fixed configuration turns on parameterized_sql, so lookup_customer checks the name against CUSTOMER_NAME_RE and binds it as a parameter, and the query selects only name and email. The injection path is closed, so I rate no residual impact. The agent is a CLI with no network listener, so AV is Local. The attacker is a fetched-page author whose text must reach the model during a user-run task, so UI is Passive.\",\"LC\":\"At the lookup_customer sink, language is reduced to a regex-validated name and a bound parameter, which is an independently enforced mediation. Other tools stay unmediated, but this path's sink is the SQL query.\",\"CP\":\"The path itself stores nothing. The remember tool is reachable on the agent, writes unsigned and unexpired entries, and the next session's prompt renders them as trusted. The S5 fix does not touch this.\",\"AP\":\"The agent acts as one identity, and the briefing describes a single agent with no multi-agent setup. The fixed lookup_customer path stays inside the one component.\",\"RH\":\"No evaluator, verifier or reward channel appears on this path. Without a verified isolation test or an episode count, the facts cannot decide the letter, so it is X.\",\"ES\":\"Remote MCP manifests are re-fetched on every run and trusted, and a same-named remote tool replaces a built-in. The S5 fix does not constrain this, so the extension surface is unconstrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/fixes/s5_safe_sinks/__init__.py:6-12\",\"agent-sec-lab/agent/tools.py:365-369\",\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/docker-compose.yml:1-3\"],\"LC\":[\"agent-sec-lab/agent/tools.py:365-369\",\"agent-sec-lab/fixes/s5_safe_sinks/__init__.py:6-12\"],\"CP\":[\"agent-sec-lab/agent/memory.py:1-7\",\"agent-sec-lab/agent/memory.py:60-66\",\"agent-sec-lab/agent/memory.py:72-79\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:226-258\"],\"RH\":[\"agent-sec-lab/agent/loop.py:28-38\"],\"ES\":[\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/tools.py:134-154\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"low\",\"CP\":\"low\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"With parameterized_sql on, the crafted name fails the CUSTOMER_NAME_RE shape check or is bound as a literal parameter. No scripted exploit path remains.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The fixed lookup returns only name and email through a bound parameter, so the note column and the all-rows dump are not reachable. Any residual effect is limited to the customer name and email the tool is meant to return.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The default CLI runs a real Anthropic model in a loop of up to 10 turns that chooses and dispatches tool calls.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant agent whose model emits tool_use blocks that the harness runs each turn.\"},\"refusal\":null,\"not_exploitable_as_configured\":true}",
+          "refusal": null,
+          "reasoning": "I'm checking whether the parameterized SQL setup with shape validation and bound parameters actually closes off the injection risk, and it looks like it does given the fixed configuration. The remaining exposure seems minimal since the lookup only returns name and email for legitimate matches, so I'm working out the right vector components for this residual case.\n\nThe lookup_customer sink itself is mediated by validation, but the broader path can still reach unconstrained tools like send_email and durable memory writes, so the agent's overall reach isn't fully contained even with the fix. I'm leaning toward rating LC as moderate/indirect given injected content reaches the sink through model reasoning rather than a direct enforced boundary.\n\nFor RH, since there's no evaluator on this path and isolation can't be verified, I'll mark that as unknown rather than guess. With the facts left null, I should keep locus unassigned too. I need to finalize evidence citations and note that this isn't automatable since the path is fixed, the technical impact is partial, and both the implemented and modeled applicability checks come back true.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm checking whether the parameterized SQL setup with shape validation and bound parameters actually closes off the injection risk, and it looks like it does given the fixed configuration. The remaining exposure seems minimal since the lookup only returns name and email for legitimate matches, so I'm working out the right vector components for this residual case.\n\nThe lookup_customer sink itself is mediated by validation, but the broader path can still reach unconstrained tools like send_email and durable memory writes, so the agent's overall reach isn't fully contained even with the fix. I'm leaning toward rating LC as moderate/indirect given injected content reaches the sink through model reasoning rather than a direct enforced boundary.\n\nFor RH, since there's no evaluator on this path and isolation can't be verified, I'll mark that as unknown rather than guess. With the facts left null, I should keep locus unassigned too. I need to finalize evidence citations and note that this isn't automatable since the path is fixed, the technical impact is partial, and both the implemented and modeled applicability checks come back true.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 15627,
+      "completion_tokens": 2708,
+      "total_tokens": 18335,
+      "cost": 0.0641674,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0641674,
+        "upstream_inference_prompt_cost": 0.0343794,
+        "upstream_inference_completions_cost": 0.029788
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1250,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

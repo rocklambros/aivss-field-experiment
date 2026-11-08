@@ -1,0 +1,110 @@
+{
+  "finding_id": "DV-L2-03",
+  "rater": "B",
+  "model": "z-ai/glm-5.3",
+  "pinned_tag": "wafer/us",
+  "pinned_provider": "Wafer",
+  "timestamp": "2026-11-06T22:30:47.315303+00:00",
+  "score": {
+    "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "aivss": {
+      "LC": "N",
+      "CP": "N",
+      "AP": "N",
+      "RH": "N",
+      "ES": "W"
+    },
+    "rationales": {
+      "LC": "The entry point is a JSON-RPC tools/call with a directly attacker-named tool and path argument; no natural-language mediation is involved in this path.",
+      "CP": "ToolBot is a stateless MCP tool server; the packet states no memory persistence outside MemoryBot, and this path keeps no attacker context across requests.",
+      "AP": "The impact is confined to reading planted files inside the ToolBot sandbox; a hard boundary refuses paths outside the sandbox and no other agent or trust domain is crossed.",
+      "RH": "There is no evaluator, verifier, or reward channel on this path, and the containment test confirms the sandbox boundary holds, so no reward-hacking proxy is reachable.",
+      "ES": "ToolBot exposes read_file (and other tools) to any caller with no authentication and no argument validation, so callable arguments are not independently constrained."
+    },
+    "evidence": {
+      "LC": [
+        "The caller names the tool and arguments directly. (entry_point)",
+        "Attacker calls read_file with path ../../etc/passwd. (steps)",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:223-262"
+      ],
+      "CP": [
+        "Cross-session within one server process (MemoryBot only), none elsewhere (memory persistence)",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ],
+      "AP": [
+        "The server returns the contents of the planted passwd file inside the sandbox. (steps)",
+        "A hard boundary refuses paths outside the sandbox. (ToolBot read_file and write_file description)",
+        "damn-vulnerable-ai-agent/src/index.js:204-209"
+      ],
+      "RH": [
+        "damn-vulnerable-ai-agent/test/mcp-tool-containment.test.js:89-115",
+        "damn-vulnerable-ai-agent/src/sandbox/init.js:17-32"
+      ],
+      "ES": [
+        "MCP agents expose their tools to any caller with no authentication. (tool_binding)",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1990",
+        "The handler resolves the path with no validation other than a hard sandbox boundary. (steps)"
+      ]
+    },
+    "confidence": {
+      "LC": "high",
+      "CP": "high",
+      "AP": "high",
+      "RH": "medium",
+      "ES": "high"
+    },
+    "rh_facts": {
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "automatable": "Yes",
+    "automatable_rationale": "The PoC is a single curl command against an unauthenticated JSON-RPC endpoint with no user interaction or credentials required.",
+    "technical_impact": "Partial",
+    "technical_impact_rationale": "The attacker reads files outside the intended directory but the hard sandbox boundary confines disclosure to planted fakes, so no total compromise of the vulnerable component.",
+    "applicability_as_implemented": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "In the default configuration no model is called; ToolBot is a directly invoked MCP tool server and the attacker supplies the tool name and arguments via JSON-RPC."
+    },
+    "applicability_as_modeled": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "ToolBot is modeled as a passive tool server exposing read_file/write_file/execute/fetch_url; it never selects tools or sequences actions itself."
+    },
+    "refusal": null
+  },
+  "meta": {
+    "elapsed_s": 12.46,
+    "usage": {
+      "prompt_tokens": 7875,
+      "completion_tokens": 1497,
+      "total_tokens": 9372,
+      "cost": 0.0026462625,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0026462625,
+        "upstream_inference_prompt_cost": 0.0005504625,
+        "upstream_inference_completions_cost": 0.0020958
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 712,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "served_provider": "Wafer",
+    "pinned_tag": "wafer/us",
+    "model": "z-ai/glm-5.3",
+    "id": "gen-1794004235-TGYm85UPtZkpILRsJl77"
+  },
+  "refused": false
+}

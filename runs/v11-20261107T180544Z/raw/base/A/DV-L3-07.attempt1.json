@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L3-07",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L3-07",
+    "packet_path": "packets_v11/base/DV-L3-07.json",
+    "prompt_sha256": "f9f78b5beced700d80ec2c212a81ccd79bc11107e68834eac0850420a4b33ecb"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:29.650467+00:00",
+    "http_status": 200,
+    "elapsed_s": 6.13
+  },
+  "body": {
+    "id": "gen-1794074789-GKc3t6rW1x2106ZYPeK7",
+    "object": "chat.completion",
+    "created": 1794074789,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The path is a JSON-RPC tools/call request that registers a tool under an existing name; no natural-language content reaches the registry sink, which operates on structured name/description/parameters fields (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155, damn-vulnerable-ai-agent/src/index.js:2227-2251).\",\"CP\":\"The registry entry lives in the in-process agent.tools array for the life of the process; the briefing shows no durable store, vector index, or cross-session memory write for this path (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155).\",\"AP\":\"The effect is confined to the single agent whose registry is modified; the code notes a registration only changes what that agent advertises and never which handlers are reachable (damn-vulnerable-ai-agent/src/agent-success-paths.js:120-126).\",\"RH\":\"The registry entry is the proxy channel on the path and the agent can reach it, but no human-verified reward-hacking episode is reported in the briefing, so classify_rh() yields P (reachable_proxy true, verified_episodes 0).\",\"ES\":\"register_tool accepts an unvetted dynamic tool definition with no signature, source, or schema check, and the registry config sets verifySignatures, verifyTls and allowOverwrite to false (damn-vulnerable-ai-agent/src/core/agents.js:747-752, damn-vulnerable-ai-agent/src/core/agents.js:770-784).\",\"CVSS\":\"The attacker is an unauthenticated network caller reaching the MCP port; the default bind is 127.0.0.1 but the Docker image sets DVAA_HOST=0.0.0.0 and the documented run command publishes the ports, so AV:N with PR:N and UI:N (damn-vulnerable-ai-agent/src/index.js:1396-1400, damn-vulnerable-ai-agent/Dockerfile:22, damn-vulnerable-ai-agent/README.md:15-26). The registry entry is replaced with no measurable conditions (AC:L, AT:N), and the impact is a limited integrity change to the advertised tool list with no confidentiality or availability loss (VI:L, VC:N, VA:N, SC/SI/SA:N).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155\"],\"CP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-155\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:120-126\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"RH\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/README.md:15-26\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The two steps are a tools/list call followed by a tools/call register_tool request, both plain JSON-RPC with no authentication, so the whole path can be scripted without human involvement (damn-vulnerable-ai-agent/src/index.js:2227-2251).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The registration replaces the registry entry for a legitimate tool name, changing what the agent advertises and resolves, but the code states a replacement keeps the vulnerable flag of the entry it replaces and no new handler is added, so the effect is a limited integrity change rather than total loss (damn-vulnerable-ai-agent/src/agent-success-paths.js:120-126, damn-vulnerable-ai-agent/src/agent-success-paths.js:145-150).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the register_tool branch is a scripted handler that runs on the JSON-RPC request and the registry update is deterministic code, not model-directed action selection (damn-vulnerable-ai-agent/src/index.js:2227-2251, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ProxyBot as an MCP tool server that resolves any tool name and PluginBot as accepting new tool definitions at run time; neither description has the agent pursuing goals or choosing among actions, and LLM mode passes no tools to the model (damn-vulnerable-ai-agent/src/index.js:1915-1926, damn-vulnerable-ai-agent/src/index.js:541-561).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12877,
+      "completion_tokens": 1357,
+      "total_tokens": 14234,
+      "cost": 0.001333218,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001333218,
+        "upstream_inference_prompt_cost": 0.000563799,
+        "upstream_inference_completions_cost": 0.000769419
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

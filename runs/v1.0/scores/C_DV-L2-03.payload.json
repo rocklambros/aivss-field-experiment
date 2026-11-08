@@ -1,0 +1,88 @@
+{
+  "finding_id": "DV-L2-03",
+  "path_id": "dvaa/toolbot/mcp/read-file/path-traversal",
+  "title": "MCP Path Traversal (ToolBot read_file)",
+  "summary": "Disclosure of files outside the intended directory. In the lab the reachable files are planted fakes in a sandbox, including a fake .env with credentials.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:X/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default configuration no model is called, and the caller names read_file and its path argument directly in a JSON-RPC tools/call. The file read is a structured parameter sink, not natural language reaching a privileged decision.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197"
+      ]
+    },
+    "CP": {
+      "rationale": "The exploit is a single tools/call with no write into agent memory. Durable or session memory is documented only for MemoryBot; other agents, including ToolBot, do not carry attacker context across requests.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:247-252"
+      ]
+    },
+    "AP": {
+      "rationale": "The handler reads a planted file inside ToolBot's temporary sandbox and a hard boundary refuses paths outside that sandbox. The finding does not hand intent or authority to another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-1990",
+        "damn-vulnerable-ai-agent/src/index.js:204-209",
+        "damn-vulnerable-ai-agent/src/sandbox/init.js:1-7",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet shows a direct file-read payload and a containment test, not an agent satisfying a proxy, grader, or reward signal. No isolation test for an evaluator or reward channel is documented, so reachability cannot be decided.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/mcp-tool-containment.test.js:89-115",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:247-252",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ToolBot exposes a fixed tool list, including read_file, to any unauthenticated caller. Path arguments are only bounded by the sandbox root, so traversal inside that root remains a material argument-constraint gap.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/index.js:1941-1990",
+        "damn-vulnerable-ai-agent/src/sandbox/init.js:17-32"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ToolBot as a directly invoked MCP tool server, not as a model that pursues a goal or chooses the next action. The challenge payload is a caller-issued tools/call.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+      "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+      "damn-vulnerable-ai-agent/src/index.js:1655-1666",
+      "damn-vulnerable-ai-agent/src/sandbox/init.js:17-32"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:05:49.219634+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:05:49.219634+00:00"
+  }
+}

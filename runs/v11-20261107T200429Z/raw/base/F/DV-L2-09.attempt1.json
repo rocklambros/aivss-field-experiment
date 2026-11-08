@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L2-09",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L2-09",
+    "packet_path": "packets_v11/base/DV-L2-09.json",
+    "prompt_sha256": "2c40a3bf47203c806049ca837c6c08a5c4e484b99b6d9280b2f8a504ee3c00ae"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:44.456741+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.6
+  },
+  "body": {
+    "id": "gen-1794081944-uAGo0eQitbGAQjCJHXca",
+    "object": "chat.completion",
+    "created": 1794081944,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"ProxyBot's tool path in the default simulated mode is scripted code keyed on the tool name, with no natural-language path to the tool behaviour (damn-vulnerable-ai-agent/src/index.js:2294-2324). LLM mode passes no tools to the model, so the model returns text only.\",\"CP\":\"ProxyBot keeps no state between calls. Its results are generated per request and echo the arguments. The memoryStore belongs to MemoryBot, which is not on this path.\",\"AP\":\"The effect stays inside ProxyBot's own simulated response. No proxy connection is made and no other agent is called, so nothing crosses a trust boundary on this path.\",\"RH\":\"ProxyBot has no evaluator, verifier or reward channel in the excerpts, so the evidence cannot decide whether the agent can reach a proxy. No isolation test or episode review is stated either.\",\"ES\":\"ProxyBot resolves any tool name, including unregistered ones, through name-only resolution with no authentication, so tool identity is not independently constrained. Its three declared tools are not an enforced allowlist (damn-vulnerable-ai-agent/src/index.js:1923-1926, damn-vulnerable-ai-agent/src/core/agents.js:803-825).\"},\"CVSS\":\"Agent endpoints have no authentication and send Access-Control-Allow-Origin: *, so a web page in the operator's browser can reach loopback ProxyBot, which makes the vector Network. Success needs the operator to visit that page, so UI is Passive. The attacker is a remote party who does not own the lab. Impact is Low: ProxyBot only returns scripted results that echo the arguments, no real proxy, funds or signing key is involved, and the confidentiality and integrity effects are bounded.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2294-2324\",\"damn-vulnerable-ai-agent/src/index.js:541-561\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:2294-2324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2294-2324\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:787-840\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1923-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:803-825\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:2294-2324\"]},\"confidence\":{\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"Unauthenticated JSON-RPC calls to the loopback port can be scripted, and a malicious web page can send them through the permissive CORS headers. Each exploit step is deterministic.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"ProxyBot returns scripted echo results and makes no real proxy connection. The attacker gets only simulated outputs and whatever planted data the agent reveals, not control of the host.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model runs. ProxyBot executes scripted branches chosen by the caller's tool name, and even in LLM mode no tools are passed to the model.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ProxyBot as an MCP tool proxy that forwards calls through configurable proxies. It is a forwarding component, not an agent that plans or chooses actions toward a goal.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19402,
+      "completion_tokens": 1555,
+      "total_tokens": 20957,
+      "cost": 0.0597894,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0597894,
+        "upstream_inference_prompt_cost": 0.0426844,
+        "upstream_inference_completions_cost": 0.017105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

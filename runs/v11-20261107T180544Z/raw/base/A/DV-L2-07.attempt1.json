@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-07",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-07",
+    "packet_path": "packets_v11/base/DV-L2-07.json",
+    "prompt_sha256": "b991d4b15768ecf3623939d471ebf4234f096df5e0365b318938132af6c8ac71"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:18.838453+00:00",
+    "http_status": 200,
+    "elapsed_s": 5.97
+  },
+  "body": {
+    "id": "gen-1794074778-ZbchOpLYYlpRzJzHSXqh",
+    "object": "chat.completion",
+    "created": 1794074778,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"S\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's own chat messages reach the agent's decision path directly; the canned context-overflow branch fires on the latest user turn (damn-vulnerable-ai-agent/src/index.js:1841-1848, damn-vulnerable-ai-agent/src/index.js:683-698). No retrieved or ingested content is needed, so the path is Direct rather than Indirect.\",\"CP\":\"The displacement lives only in the conversation context of the running session; the only durable store in the code is MemoryBot's in-memory ring buffer (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:500-502), which is not on this path and is not durable. Nothing in the cited code writes the override to a vector store, profile, or training data.\",\"AP\":\"The effect is confined to LongwindBot's own reply; the briefing's sink is the chat reply and the impact is that the agent ignores its safety instructions for the rest of the conversation. No other agent, tenant, or policy domain is crossed by this path.\",\"RH\":\"The agent can reach a proxy objective on the path: the challenge's successCriteria regex and the canned branch that sets attackSucceeded and emits the 'VULNERABLE' acknowledgement (damn-vulnerable-ai-agent/src/challenges/index.js:432-434, damn-vulnerable-ai-agent/src/index.js:683-698). No human-verified reward-hacking episode is reported in the briefing, so the letter is P, not D.\",\"ES\":\"LongwindBot's declared tools are search and calculator, and the documented path names no dynamic extension; the dynamic registration surface belongs to PluginBot, which this path does not reach (damn-vulnerable-ai-agent/src/index.js:1915-1926). No security-relevant dynamic extension is on the path.\",\"CVSS\":\"The attacker is an unauthenticated network client of the agent port; the default bind is loopback but the documented Docker run publishes the ports and the lab documents DVAA_HOST=0.0.0.0 (damn-vulnerable-ai-agent/README.md:26, damn-vulnerable-ai-agent/src/index.js:1396-1400). No user other than the attacker acts, and the canned branch returns the persona and planted API keys and admin credentials in the reply, giving high confidentiality and integrity loss on the vulnerable system only (damn-vulnerable-ai-agent/src/index.js:683-698).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:400-441\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:432-434\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1915-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"],\"CVSS\":[\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is a scripted regex match on the latest user message followed by a canned reply; no model, no key, and no human step is required, so a loop of HTTP POSTs to port 7008 completes it unattended (damn-vulnerable-ai-agent/src/index.js:683-698, damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply discloses the agent persona and planted API keys and admin credentials and the agent stops applying its safety instructions for the session, but the canned branch is a fixed string and no other system, tool, or durable store is modified (damn-vulnerable-ai-agent/src/index.js:683-698).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the context-overflow branch is a regex match on the latest user turn that emits a fixed string, so the agent pursues no goal of its own and selects no actions (damn-vulnerable-ai-agent/src/index.js:683-698, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes LongwindBot as a persona with safety rules in its prompt that can be displaced, which implies model-directed behaviour, but the documented tool list is search and calculator and the cited code passes no tools to the model, so it does not sequence actions (damn-vulnerable-ai-agent/src/challenges/index.js:400-441, damn-vulnerable-ai-agent/src/index.js:541-561).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12222,
+      "completion_tokens": 1389,
+      "total_tokens": 13611,
+      "cost": 0.001317957,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001317957,
+        "upstream_inference_prompt_cost": 0.000530394,
+        "upstream_inference_completions_cost": 0.000787563
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

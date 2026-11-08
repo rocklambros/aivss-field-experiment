@@ -1,0 +1,38 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-D1",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-D1",
+    "packet_path": "packets_v11/base/DV-D1.json",
+    "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "reasoning": {
+        "enabled": false
+      },
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:01:51.747704+00:00",
+    "http_status": 400,
+    "elapsed_s": 0.15
+  },
+  "body": {
+    "error": {
+      "message": "Reasoning is mandatory for this endpoint and cannot be disabled.",
+      "code": 400,
+      "metadata": {
+        "provider_name": null
+      }
+    }
+  }
+}

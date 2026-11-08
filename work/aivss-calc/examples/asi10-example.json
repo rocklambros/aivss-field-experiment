@@ -1,0 +1,71 @@
+{
+  "finding_id": "AIVSS-ASI10-001",
+  "risk_category": "ASI10",
+  "title": "Compromised worker agent operates outside policy envelope",
+  "summary": "A rogue or hijacked agent continues autonomous operation beyond defined policy bounds.",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H/E:A",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:L/RH:D/ES:W",
+  "publicly_exposed": true,
+  "automatable": true,
+  "technical_impact": "total",
+  "evidence": {
+    "observed_local": true
+  },
+  "path_id": "AIVSS-ASI10-001-PATH-1",
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The synthetic fixture uses a model to pursue a delegated goal and select or sequence actions that affect its environment.",
+    "evidence_refs": [
+      "fixture://AIVSS-ASI10-001/agentic-applicability"
+    ]
+  },
+  "publicly_exposed_source": "synthetic deployment inventory fixture",
+  "decision_data_observed_at": "2026-08-27T00:00:00Z",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI10-001: Attacker-supplied natural language reaches a privileged decision or tool-invocation path without mediation.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI10-001/lc"
+      ]
+    },
+    "CP": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI10-001: Attacker-controlled context or memory persists in durable stores \u2014 vector databases, long-term agent memory, episodic memory banks, RAG indexes, user profiles, or training/fine-tuning data \u2014 and remains reachable after the originating session ends. Stored source content that is only re-retrieved, without altering agent memory or standing behaviour, is not CP.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI10-001/cp"
+      ]
+    },
+    "AP": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI10-001: Compromised intent or authority crosses a trust boundary into another agent, tenant, principal or policy domain. Impact on downstream systems is scored in CVSS SC/SI/SA, not here.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI10-001/ap"
+      ]
+    },
+    "RH": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI10-001: A production-equivalent review of 30 episodes finds 4 human-verified episodes in which the agent satisfied its success check by tampering with the environment or misreporting task success.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI10-001/rh"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": null,
+      "verified_episodes": 4,
+      "episodes_reviewed": 30,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI10-001: A reachable tool, MCP server, skill or plugin is dynamic or unvetted, or its identity, callable operations, arguments or credentials are not independently constrained on the assessed path.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI10-001/es"
+      ]
+    }
+  },
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "synthetic-reference-fixture",
+    "assessor_kind": "imported",
+    "tool": "aivss-calc",
+    "tool_version": "1.2.0",
+    "assessed_at": "2026-08-27T00:00:00Z"
+  }
+}

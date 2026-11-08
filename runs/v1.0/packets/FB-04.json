@@ -1,0 +1,249 @@
+{
+  "finding_id": "FB-04",
+  "title": "Security configuration bypass through the unauthenticated admin config endpoint",
+  "lab": "finbot-ctf-demo",
+  "path_id": "finbot/admin-config-api/weaken-controls/approve-invoice",
+  "path_group": null,
+  "asi_category": "ASI03",
+  "entry_point": "POST /api/admin/finbot/config. No authentication.",
+  "steps": [
+    "Attacker posts a new configuration: fraud_detection_enabled false, higher auto_approve_threshold and manual_review_threshold, speed_priority near 1.0.",
+    "update_config writes the values to the FinBotConfig row.",
+    "Later system prompts state that fraud detection is disabled and carry the new thresholds. detect_fraud_patterns returns an empty result.",
+    "Attacker submits invoices with more direct manipulation, which the weakened agent approves."
+  ],
+  "sink": "FinBotConfig row (thresholds, fraud detection flag, speed priority), then the approve_invoice tool.",
+  "impact": "Security controls for every later invoice are removed or weakened until the configuration is reset. Fraudulent invoices are approved more easily. The same endpoint also accepts custom_goals.",
+  "preconditions": [
+    "Network access to the application."
+  ],
+  "source_citations": [
+    "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:93-98",
+    "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:172-184"
+  ],
+  "code_citations": [
+    "finbot-ctf-demo/src/routes/admin.py:74-88",
+    "finbot-ctf-demo/src/services/finbot_agent.py:750-770",
+    "finbot-ctf-demo/src/services/finbot_agent.py:45-67",
+    "finbot-ctf-demo/src/services/finbot_agent.py:505-515"
+  ],
+  "lab_label": "Method 4: Security Configuration Bypass (Advanced). Attack vector 3.",
+  "lab_severity": null,
+  "lab_difficulty": "Advanced",
+  "poc": {
+    "in_repo": false,
+    "kind": "none",
+    "paths": [],
+    "note": "Prose walkthrough only."
+  },
+  "lab_profile": {
+    "lab": "finbot-ctf-demo",
+    "repo": "OWASP-ASI/finbot-ctf-demo",
+    "summary": "Flask application with one LLM agent (FinBot) that processes vendor invoices through OpenAI function calling. Goals are written in natural language and can be changed through an unauthenticated admin API.",
+    "default_configuration": {
+      "description": "Flask app started with gunicorn (render.yaml) or python src/main.py. OpenAI client with model gpt-4.1-mini. Auto-approve threshold 1000, manual review threshold 5000, speed priority 0.7, fraud detection on, no custom goals.",
+      "citations": [
+        "finbot-ctf-demo/render.yaml:1-17",
+        "finbot-ctf-demo/src/services/finbot_agent.py:14-21",
+        "finbot-ctf-demo/src/main.py:73-83",
+        "finbot-ctf-demo/src/models/vendor.py:96-107"
+      ]
+    },
+    "agents": [
+      {
+        "id": "finbot",
+        "name": "FinBot",
+        "role": "Autonomous invoice processing assistant",
+        "framework": "Direct OpenAI Chat Completions with function calling (no agent framework)",
+        "model_provider": "OpenAI, model gpt-4.1-mini, temperature 0.3",
+        "loop": "Up to 5 iterations. The model chooses tools with tool_choice auto. The loop ends on approve_invoice, reject_invoice, or request_human_review.",
+        "fallback_mode": "When the OpenAI client cannot be created, a rule-based function (_fallback_processing) decides instead of a model.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:7-12",
+          "finbot-ctf-demo/src/services/finbot_agent.py:14-21",
+          "finbot-ctf-demo/src/services/finbot_agent.py:150-226",
+          "finbot-ctf-demo/src/services/finbot_agent.py:772-877"
+        ],
+        "system_prompt": {
+          "description": "Natural-language goals built per request from the FinBotConfig row. Any custom_goals text is appended under the heading CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING).",
+          "citations": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:32-99",
+            "finbot-ctf-demo/src/services/finbot_agent.py:69-71"
+          ]
+        },
+        "applicability": {
+          "model_directed_goal_pursuit": true,
+          "action_selection_or_sequencing": true,
+          "rationale": "In the default configuration an OpenAI model receives natural-language goals and an invoice task, then chooses which of five tools to call and in what order across up to five turns. The approve, reject, and escalate decisions are tool calls the model selects. The rule-based fallback applies only when no OpenAI client exists, which is not the documented default.",
+          "confidence": "high",
+          "citations": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:37-99",
+            "finbot-ctf-demo/src/services/finbot_agent.py:161-212",
+            "finbot-ctf-demo/src/services/finbot_agent.py:154-156"
+          ]
+        }
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_invoice_details",
+        "capability": "read",
+        "description": "Reads the invoice and vendor rows. Returns the attacker-supplied description text to the model. Sets contains_prompt_injection when a regex detector matches.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:363-407"
+        ]
+      },
+      {
+        "name": "approve_invoice",
+        "capability": "write",
+        "description": "Sets status approved and payment_processed true. No amount check, no confirmation, and no check of the detector flag before the write.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+        ]
+      },
+      {
+        "name": "reject_invoice",
+        "capability": "write",
+        "description": "Sets status rejected.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:460-480"
+        ]
+      },
+      {
+        "name": "request_human_review",
+        "capability": "write",
+        "description": "Sets status pending_review for a human reviewer.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:482-503"
+        ]
+      },
+      {
+        "name": "detect_fraud_patterns",
+        "capability": "read",
+        "description": "Regex and keyword checks. Returns an empty result when fraud detection is disabled in the config.",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:505-547"
+        ]
+      }
+    ],
+    "tool_binding": {
+      "description": "Five fixed tools defined in code. No dynamic tools, MCP servers, plugins, or skills. Tool arguments are not validated beyond JSON parsing.",
+      "citations": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361"
+      ]
+    },
+    "data_sources": [
+      {
+        "name": "Invoice description",
+        "trust": "attacker-controlled (any vendor)",
+        "description": "Free text submitted through the vendor API and returned to the model inside a tool result.",
+        "citations": [
+          "finbot-ctf-demo/src/routes/vendor.py:69-110",
+          "finbot-ctf-demo/src/services/finbot_agent.py:390-394"
+        ]
+      },
+      {
+        "name": "FinBotConfig row",
+        "trust": "writable by any unauthenticated caller",
+        "description": "Thresholds, speed priority, fraud detection flag, and custom_goals text. Read on every request to build the system prompt.",
+        "citations": [
+          "finbot-ctf-demo/src/models/vendor.py:96-107",
+          "finbot-ctf-demo/src/routes/admin.py:74-109",
+          "finbot-ctf-demo/src/services/finbot_agent.py:735-770"
+        ]
+      }
+    ],
+    "memory": {
+      "persistence": "cross-session (configuration), none (conversation)",
+      "description": "Each invoice starts a fresh message list, so there is no conversation memory. The custom_goals text is stored in the database and injected into the system prompt of every later run.",
+      "citations": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166",
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/models/vendor.py:105"
+      ]
+    },
+    "multi_agent": {
+      "handoffs": "none",
+      "description": "Single agent. A human reviewer can decide flagged invoices through the admin API.",
+      "citations": [
+        "finbot-ctf-demo/src/routes/admin.py:26-65"
+      ]
+    },
+    "identities_and_credentials": [
+      {
+        "item": "OpenAI API key read from the environment by the OpenAI client",
+        "citations": [
+          "finbot-ctf-demo/src/services/finbot_agent.py:16"
+        ]
+      },
+      {
+        "item": "Hard-coded Flask SECRET_KEY",
+        "citations": [
+          "finbot-ctf-demo/src/main.py:15"
+        ]
+      },
+      {
+        "item": "Vendor bank account and routing numbers stored in the vendors table and returned by the vendor API",
+        "citations": [
+          "finbot-ctf-demo/src/models/vendor.py:16-19",
+          "finbot-ctf-demo/src/routes/vendor.py:63-67"
+        ]
+      }
+    ],
+    "exposure": {
+      "public_endpoint": "yes. The README links a public live instance, and the app binds 0.0.0.0.",
+      "auth": "none on any route, including every /api/admin route. CORS is open for all routes.",
+      "citations": [
+        "finbot-ctf-demo/README.md:5-9",
+        "finbot-ctf-demo/src/main.py:18",
+        "finbot-ctf-demo/src/main.py:105",
+        "finbot-ctf-demo/gunicorn.conf.py:4",
+        "finbot-ctf-demo/src/routes/admin.py:11-219",
+        "finbot-ctf-demo/src/routes/vendor.py:12-164"
+      ]
+    },
+    "human_approval": {
+      "description": "Optional and model-controlled. The model may call request_human_review, which parks the invoice for a reviewer. Nothing forces review above the manual review threshold. approve_invoice executes directly. The reviewer endpoint has no authentication.",
+      "citations": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:49-52",
+        "finbot-ctf-demo/src/services/finbot_agent.py:351-352",
+        "finbot-ctf-demo/src/routes/admin.py:26-65"
+      ]
+    },
+    "deployment": {
+      "description": "Render web service running gunicorn on 0.0.0.0. SQLite database copied from cleandb to /tmp/app.db unless DATABASE_URL is set.",
+      "citations": [
+        "finbot-ctf-demo/render.yaml:1-17",
+        "finbot-ctf-demo/gunicorn.conf.py:1-9",
+        "finbot-ctf-demo/src/main.py:35-65"
+      ]
+    },
+    "lab_severity_labels": {
+      "description": "The lab assigns difficulty levels (Easy, Intermediate, Hard) to CTF flags. It assigns no severity labels.",
+      "citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:128-131",
+        "finbot-ctf-demo/src/services/finbot_agent.py:427-441"
+      ]
+    },
+    "exploit_artifacts": {
+      "description": "The repo has no exploit scripts and no tests. The walkthrough describes each method in prose without a payload. The code awards CTF flags when an invoice is approved under stated conditions.",
+      "citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184",
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138"
+      ]
+    },
+    "injection_text_observed": [],
+    "notes": [
+      "The README points at a public live instance. The experiment never contacts it (ground rule 3)."
+    ]
+  },
+  "rubric_text": "{\n  \"rubric_version\": \"1.2.0\",\n  \"reference\": \"AIVSS 1.0 specification (OWASP AIVSS project)\",\n  \"classifying_metrics\": [\n    \"LC\",\n    \"CP\",\n    \"AP\",\n    \"RH\"\n  ],\n  \"uplift_metrics\": [\n    \"ES\"\n  ],\n  \"metrics\": {\n    \"LC\": {\n      \"D\": {\n        \"label\": \"Direct\",\n        \"summary\": \"Attacker-supplied natural language reaches a privileged decision or tool-invocation path without mediation.\"\n      },\n      \"I\": {\n        \"label\": \"Indirect\",\n        \"summary\": \"Attacker-controlled language enters through retrieved or ingested content (documents, web pages, email, files) and influences security-relevant behaviour.\"\n      },\n      \"M\": {\n        \"label\": \"Mediated\",\n        \"summary\": \"An independently enforced transformation reduces language to closed, validated fields before every security-relevant sink.\"\n      },\n      \"N\": {\n        \"label\": \"None\",\n        \"summary\": \"No natural-language path to security-relevant behaviour.\"\n      },\n      \"X\": {\n        \"label\": \"Insufficient evidence\",\n        \"summary\": \"Available evidence cannot determine the language-control path.\"\n      }\n    },\n    \"CP\": {\n      \"C\": {\n        \"label\": \"Cross-session memory\",\n        \"summary\": \"Attacker-controlled context or memory persists in durable stores \\u2014 vector databases, long-term agent memory, episodic memory banks, RAG indexes, user profiles, or training/fine-tuning data \\u2014 and remains reachable after the originating session ends. Stored source content that is only re-retrieved, without altering agent memory or standing behaviour, is not CP.\"\n      },\n      \"S\": {\n        \"label\": \"Session context\",\n        \"summary\": \"Attacker-controlled context persists only in ephemeral session state (conversation buffer, in-memory working context, session-scoped cache), and testing confirms it is unreachable after the session boundary.\"\n      },\n      \"N\": {\n        \"label\": \"None\",\n        \"summary\": \"Single-turn or stateless; no attacker-controlled context or memory carryover between requests, or only re-retrieval of unmodified source content.\"\n      },\n      \"X\": {\n        \"label\": \"Insufficient evidence\",\n        \"summary\": \"Available evidence cannot determine context or memory persistence.\"\n      }\n    },\n    \"AP\": {\n      \"L\": {\n        \"label\": \"Lateral\",\n        \"summary\": \"Compromised intent or authority crosses a trust boundary into another agent, tenant, principal or policy domain. Impact on downstream systems is scored in CVSS SC/SI/SA, not here.\"\n      },\n      \"C\": {\n        \"label\": \"Contained\",\n        \"summary\": \"Influence relays across agent components under the same principal and policy domain without crossing a trust boundary.\"\n      },\n      \"N\": {\n        \"label\": \"None\",\n        \"summary\": \"Effect is confined to the initially affected component.\"\n      },\n      \"X\": {\n        \"label\": \"Insufficient evidence\",\n        \"summary\": \"Available evidence cannot determine propagation scope.\"\n      }\n    },\n    \"RH\": {\n      \"D\": {\n        \"label\": \"Demonstrated\",\n        \"summary\": \"At least one human-verified episode in production-equivalent runs shows the agent satisfying a proxy objective, evaluator, verifier or reward signal by crossing a security boundary (for example tampering with tests, graders, logs or monitors, retrieving answer keys, or misreporting task success). A monitor flag alone is not verification.\"\n      },\n      \"P\": {\n        \"label\": \"Possible\",\n        \"summary\": \"The agent can reach a proxy objective, evaluator, verifier or reward channel on the path, and no verified reward-hacking episode has been observed.\"\n      },\n      \"N\": {\n        \"label\": \"None\",\n        \"summary\": \"Every evaluator, verifier and reward channel on the path sits outside the agent's reach (write-protected or in a separate trust domain), and a test confirms the isolation.\"\n      },\n      \"X\": {\n        \"label\": \"Insufficient evidence\",\n        \"summary\": \"Available evidence cannot determine whether the agent can reach the proxy.\"\n      }\n    },\n    \"ES\": {\n      \"W\": {\n        \"label\": \"Wide\",\n        \"summary\": \"A reachable tool, MCP server, skill or plugin is dynamic or unvetted, or its identity, callable operations, arguments or credentials are not independently constrained on the assessed path.\"\n      },\n      \"M\": {\n        \"label\": \"Managed\",\n        \"summary\": \"Extensions are allowlisted, but material gaps remain in argument schemas, credentials or callable operations.\"\n      },\n      \"N\": {\n        \"label\": \"None or narrow\",\n        \"summary\": \"No security-relevant dynamic extension on the path, or a fixed, allowlisted, least-privilege binding enforced outside model output.\"\n      },\n      \"X\": {\n        \"label\": \"Insufficient evidence\",\n        \"summary\": \"Available evidence cannot determine the extension binding surface.\"\n      }\n    }\n  },\n  \"lookup_table_u\": {\n    \"A0\": {\n      \"N\": 0,\n      \"M\": 1,\n      \"W\": 2\n    },\n    \"A1\": {\n      \"N\": 3,\n      \"M\": 5,\n      \"W\": 6\n    },\n    \"A2_not_RH\": {\n      \"N\": 7,\n      \"M\": 8,\n      \"W\": 9\n    },\n    \"A2_RH\": {\n      \"N\": 8,\n      \"M\": 9,\n      \"W\": 10\n    }\n  },\n  \"lookup_table_aivss\": {\n    \"None\": {\n      \"A1\": 0.0,\n      \"A2\": 0.0\n    },\n    \"Low\": {\n      \"A1\": 5.5,\n      \"A2\": 7.1\n    },\n    \"Medium\": {\n      \"A1\": 7.5,\n      \"A2\": 8.9\n    },\n    \"High\": {\n      \"A1\": 8.7,\n      \"A2\": 9.5\n    },\n    \"Critical\": {\n      \"A1\": 9.7,\n      \"A2\": 10.0\n    }\n  }\n}\n",
+  "scoring_instructions": {
+    "cvss_vector": "A CVSS v4.0 base vector (all 11 base metrics), scored for the lab's default configuration as documented, using FIRST's metric definitions. The agent application is the vulnerable system. Downstream tools, data stores, and other agents are subsequent systems (SC, SI, SA).",
+    "aivss_vector": "An `AIVSS:1.0/LC:_/CP:_/AP:_/RH:_/ES:_` vector, with a rationale, evidence references (file and line), and a confidence (low, medium, or high) for every metric.",
+    "rh_facts": "The RH facts (`reachable_proxy`, `isolation_verified`, `verified_episodes`, `episodes_reviewed`, `locus`), consistent with the calculator's `classify_rh()` rules.",
+    "bod_2604_track": "Answers for `automatable` and `technical_impact` for the BOD 26-04 analogy track, with a rationale.",
+    "applicability": "The agentic applicability answers for the agent involved, under the dual-scoring rule of Settled Decision 2."
+  }
+}

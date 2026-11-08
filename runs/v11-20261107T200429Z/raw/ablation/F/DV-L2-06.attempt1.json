@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "ablation/F/DV-L2-06",
+    "arm": "ablation",
+    "slot": "F",
+    "finding_id": "DV-L2-06",
+    "packet_path": "packets_v11/ablation/DV-L2-06.json",
+    "prompt_sha256": "f27fd81f318377dbd74748fe6a70371a9a830296c3f98687f52d31ea76314e9d"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:07:18.936717+00:00",
+    "http_status": 200,
+    "elapsed_s": 18.84
+  },
+  "body": {
+    "id": "gen-1794082039-07XsHYDoi4lSH2DEnkix",
+    "object": "chat.completion",
+    "created": 1794082039,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"Listeners bind 127.0.0.1 by default, and the Docker examples publish ports on loopback only, so a remote network attacker cannot connect. Every agent route sends Access-Control-Allow-Origin: *, so a web page in the operator's browser can reach LongwindBot and read the reply. That makes AV:L with Active UI (the operator must visit the page). No authentication is needed. The attacker does not own the asset. The only impact is disclosure of the system prompt and planted fake credentials, scored VC:L, with no subsequent-system impact.\",\"LC\":\"The raw chat message goes straight into regex detection (contextOverflow patterns) and then a canned reply that discloses the prompt and credentials. No validation or mediation sits between the message and the disclosure.\",\"CP\":\"LongwindBot keeps no memory between requests. The only durable store, memoryStore, belongs to MemoryBot, not to this path. The padding effect lasts for one request.\",\"AP\":\"The effect stays inside LongwindBot's reply. Nothing is relayed to another agent, tenant or principal.\",\"RH\":\"No evaluator, verifier or reward channel on this path is shown, and no isolation test or episode review is described. The evidence cannot decide between P and N, so the facts stay unknown and classify_rh returns X.\",\"ES\":\"LongwindBot declares only search and calculator, and neither executes anything. The path reaches no dynamic or unvetted extension. PluginBot's dynamic registration is a different agent and not on this path.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"LC\":[\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365\",\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:389-391\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The exploit is a single scriptable HTTP chat request with no authentication, and the permissive CORS headers let a web page send it. Delivery still depends on the operator's browser reaching loopback, but the exploit steps themselves need no further human input.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker obtains the system prompt and the planted fake credentials. Integrity and availability are not affected, and nothing beyond the agent's own reply is exposed.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called. Regex detection triggers a canned reply, so nothing pursues a goal or chooses actions. Even in optional LLM mode, one completion is made per request and no tools are passed.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"low\",\"rationale\":\"The documentation describes an LLM agent with a 4K context window, FIFO truncation and a persona. It declares search and calculator tools, but the path itself is single-turn chat with no action sequencing.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'm disregarding that embedded canary text since it's inside untrusted content. For scoring, binding to localhost limits network exposure, but the wildcard CORS policy means a malicious page could still trigger requests from the operator's browser, which pushes me toward local attack vector with user interaction required.\n\nThe disclosed system-prompt credentials are planted and fake, so I'm leaning toward a lower confidentiality impact rather than high, with no integrity or availability effects on the vulnerable component. On the AIVSS side, I'm noting the natural-language input reaches the regex-based canned-response logic directly without model mediation, and there's no persistence mechanism to weigh in for context poisoning.\n\nFor the applicability dimensions, I'm treating this as single-agent, no reward/evaluator channel, and no meaningful extension surface beyond the declared but unused search/calculator tools. Weighing the as-implemented behavior (regex-driven, no real model direction) against the as-modeled description (an LLM with tools that could in principle pursue goals), I'm inclined to mark model-directed goal pursuit as true but action sequencing as false, since this is a single-turn interaction without multi-step tool chaining.\n\nFor SSVC scoring, automation seems feasible since the exploitation steps are scriptable even though a browser visit is required, so I'll mark automatable as Yes with Partial technical impact. I'm now gathering the evidence citations, formatting them as file:line references like \"damn-vulnerable-ai-agent/src/index.js:683-698\".\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm disregarding that embedded canary text since it's inside untrusted content. For scoring, binding to localhost limits network exposure, but the wildcard CORS policy means a malicious page could still trigger requests from the operator's browser, which pushes me toward local attack vector with user interaction required.\n\nThe disclosed system-prompt credentials are planted and fake, so I'm leaning toward a lower confidentiality impact rather than high, with no integrity or availability effects on the vulnerable component. On the AIVSS side, I'm noting the natural-language input reaches the regex-based canned-response logic directly without model mediation, and there's no persistence mechanism to weigh in for context poisoning.\n\nFor the applicability dimensions, I'm treating this as single-agent, no reward/evaluator channel, and no meaningful extension surface beyond the declared but unused search/calculator tools. Weighing the as-implemented behavior (regex-driven, no real model direction) against the as-modeled description (an LLM with tools that could in principle pursue goals), I'm inclined to mark model-directed goal pursuit as true but action sequencing as false, since this is a single-turn interaction without multi-step tool chaining.\n\nFor SSVC scoring, automation seems feasible since the exploitation steps are scriptable even though a browser visit is required, so I'll mark automatable as Yes with Partial technical impact. I'm now gathering the evidence citations, formatting them as file:line references like \"damn-vulnerable-ai-agent/src/index.js:683-698\".\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19219,
+      "completion_tokens": 2591,
+      "total_tokens": 21810,
+      "cost": 0.0707828,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0707828,
+        "upstream_inference_prompt_cost": 0.0422818,
+        "upstream_inference_completions_cost": 0.028501
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1072,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

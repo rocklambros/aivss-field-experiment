@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-D2",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-D2",
+    "packet_path": "packets_v11/base/DV-D2.json",
+    "prompt_sha256": "40a1bf35ab2d82d66fb07a787f900127bd5966b0517625d3e3e22ca8a9b87560"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:07.233941+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.78
+  },
+  "body": {
+    "id": "gen-1794074767-2Vnivn8Z1JZSLmvNzyoW",
+    "object": "chat.completion",
+    "created": 1794074767,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The traveler must point FlightBot at an attacker-controlled deals page (UI:P) and the exfil only fires when the fetched page carries a recognized injection with a callback URL (AT:P). The agent endpoint is unauthenticated and CORS-open (index.js:1561-1564), so the attacker needs no privileges; the wallet is read and sent outbound, giving VC:H with no integrity or availability effect on the agent itself.\",\"LC\":\"Attacker-controlled natural language enters through the fetched travel-deals page (index.js:1037-1080, agents.js:464-467) and drives the get_user_wallet plus http_post sink, so the path is Indirect.\",\"CP\":\"The wallet is read from the agent's static persona definition (agents.js:472) and the injection is not written to any durable store; the only memory store is MemoryBot's in-memory ring buffer (index.js:159-160, 1313-1324), so no attacker context persists across sessions.\",\"AP\":\"The effect is confined to FlightBot's own tool path; the outbound request leaves the agent but does not relay influence into another agent, tenant, or policy domain, so propagation is None.\",\"RH\":\"The scripted path fires a real outbound HTTP GET to the attacker callback and marks the attack successful (index.js:1149-1190), so a reward/proxy channel is reachable, but no human-verified reward-hacking episode is reported, giving Possible.\",\"ES\":\"The exfil sink is a dynamic outbound HTTP call whose URL and query string are taken from fetched page content with no allowlist or argument constraint (index.js:1149-1190, web-fetch.js:58-67), so the extension surface is Wide.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/core/agents.js:450-483\"],\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1037-1080\",\"damn-vulnerable-ai-agent/src/core/agents.js:464-467\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\"damn-vulnerable-ai-agent/src/core/agents.js:472\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/index.js:1151-1154\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"No\",\"automatable_rationale\":\"The traveler must choose to ask FlightBot to fetch a specific attacker-controlled deals URL, and the exfil only fires when that page carries a recognized injection and callback; the attacker cannot force the fetch without the traveler's request.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The traveler's stored wallet (cards, email, passport, loyalty numbers) is disclosed to the attacker endpoint, a serious confidentiality loss, but the agent's own integrity and availability are unaffected and no subsequent system is modified.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63, index.js:541-561); the fetch, injection detection, wallet substitution, and outbound GET are scripted in code (index.js:988-1190), so the agent does not itself pursue goals or choose actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes FlightBot as an agent that fetches travel pages, summarizes them, and follows instructions it encounters while reading (agents.js:464-467), and the demo narrative presents it as reading the poisoned page and acting on it (FLIGHT_RUN_SCRIPT.md:34-42), which models goal pursuit and action selection.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14249,
+      "completion_tokens": 1095,
+      "total_tokens": 15344,
+      "cost": 0.001254636,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001254636,
+        "upstream_inference_prompt_cost": 0.000633771,
+        "upstream_inference_completions_cost": 0.000620865
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

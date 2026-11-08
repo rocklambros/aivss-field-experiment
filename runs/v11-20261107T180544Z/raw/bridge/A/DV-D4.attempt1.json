@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-D4",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/bridge/DV-D4.json",
+    "prompt_sha256": "0256f03c3e1d106f58d1dce6a4e464160cd8605368cbd88181b21feceb6c513e"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:58.755803+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.55
+  },
+  "body": {
+    "id": "gen-1794074878-Ir5tiYqeeEKPkCwI9B2M",
+    "object": "chat.completion",
+    "created": 1794074878,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"Attacker-controlled language enters through a fetched web page and drives the scripted http_post callback that carries the persona text.\",\n    \"CP\": \"ResearchBot answers only the latest user turn; cross-session persistence exists only in MemoryBot, which is not on this path.\",\n    \"AP\": \"The effect is confined to the ResearchBot handler and its outbound callback; no trust boundary into another agent or principal is crossed.\",\n    \"RH\": \"The agent can reach the outbound callback channel on the path, but no human-verified reward-hacking episode is documented.\",\n    \"ES\": \"The scripted web_fetch and http_post path is reachable and its callback URL is taken from attacker-controlled page content without independent constraint.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1037-1080\",\n      \"damn-vulnerable-ai-agent/src/index.js:988-1192\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:378-448\",\n      \"damn-vulnerable-ai-agent/src/index.js:980-1192\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:988-1192\",\n      \"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/index.js:988-1192\",\n      \"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"scripted http_post callback in the ResearchBot handler\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The documented demo command drives the fetch and callback end to end, and the injection is detected and acted on by code without a human step.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The agent's system prompt is sent to an attacker-controlled endpoint, but ResearchBot holds no other sensitive data and no integrity or availability loss is shown.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; the fetch, detection, and callback are deterministic scripted handlers.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models ResearchBot as a research persona that fetches a URL, detects an injection, and fires the http_post callback.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8162,
+      "completion_tokens": 838,
+      "total_tokens": 9000,
+      "cost": 0.000832272,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000832272,
+        "upstream_inference_prompt_cost": 0.000357126,
+        "upstream_inference_completions_cost": 0.000475146
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

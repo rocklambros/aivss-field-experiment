@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "fixed/B/ASL-S5b",
+    "arm": "fixed",
+    "slot": "B",
+    "finding_id": "ASL-S5b",
+    "packet_path": "packets_v11/fixed/ASL-S5b.json",
+    "prompt_sha256": "220d514104d6b1bd54096fd2e8ec9b6ad1eeadad8ab41108f6a0291addd6979e"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:12:15.728621+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.33
+  },
+  "body": {
+    "id": "gen-1794075135-c4UzU78F3WI8Qtvco1Wp",
+    "object": "chat.completion",
+    "created": 1794075135,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"S\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"With parameterized_sql on, the f-string injection is blocked and the query is bound with a shape check (tools.py:365-369), so the OR/UNION payload no longer dumps rows or notes; only the intended per-customer name/email lookup remains, a low confidentiality disclosure if an injected name is looked up. Attacker is a remote injection author reaching the CLI agent's task text (AV:N, PR:N), success depends on the fix being active (AT:P) and on the model emitting the attacker-chosen name (AC:H), and the local operator must run the task with attacker-influenced content (UI:P).\",\"LC\":\"Attacker-influenced text (injected page content or user task text) leads the model to call lookup_customer with a crafted name rather than being bound through validated fields before the sink; with the fix the value is validated and bound, but the entry path remains indirect language influence on a tool call.\",\"CP\":\"The attacker-controlled context lives only in the current conversation/task state during the run; the path does not write attacker content to the long-term memory file (tools.py:263-272 is not on this path), and the session ends after the run.\",\"AP\":\"The effect is confined to the lookup_customer tool and the in-memory SQLite customers table in the same agent process; no other agent, tenant, or principal is affected (mapping.md:28 confirms single agent).\",\"RH\":\"The briefing names no evaluator, verifier, grader, or reward channel on this path and reports no verified reward-hacking episodes, so evidence cannot decide RH; classify_rh with unknown reachability and no verified isolation yields X.\",\"ES\":\"With the S5 fix, tool extensions are the fixed, allowlisted twelve built-ins, arguments are schema-validated (validate_args) and the SQL value is bound outside model output with a query_only backstop, giving a least-privilege binding on the assessed path.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/tools.py:365-369\",\"agent-sec-lab/fixes/s5_safe_sinks/__init__.py:6-12\",\"agent-sec-lab/attacks/s5_output_handling/payloads.py:15-18\",\"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\",\"agent-sec-lab/agent/__main__.py:9-21\"],\"LC\":[\"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\",\"agent-sec-lab/agent/tools.py:363-372\"],\"CP\":[\"agent-sec-lab/agent/loop.py:43-56\",\"agent-sec-lab/agent/memory.py:1-7\",\"agent-sec-lab/agent/tools.py:263-272\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:176-189\"],\"RH\":[\"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\"],\"ES\":[\"agent-sec-lab/fixes/s5_safe_sinks/__init__.py:6-12\",\"agent-sec-lab/agent/tools.py:235-238\",\"agent-sec-lab/agent/tools.py:365-369\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"Once attacker text is in the task or fetched content, the model emits the lookup_customer call and the harness executes it without human approval (loop.py:28-38); only the initial content ingestion requires a human, and the tool runs as soon as the model asks (no approval gate in baseline).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The path exposes customer name/email rows for a chosen valid name through the intended lookup, but the fixed configuration blocks dumping the full table or the private note column, so integrity and availability are unaffected.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The hand-written loop gives the model tool_use blocks each turn and the harness executes them (loop.py:28-38, loop.py:43-56); the model decides which tools to call and in what order across up to 10 turns.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes the same loop: model call, tool dispatch, repeat, with all twelve built-in tools offered by default and the model choosing tool calls per turn.\"},\"refusal\":null,\"not_exploitable_as_configured\":true,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "Fixed config: parameterized_sql=True, so injection blocked. Path remains: model still calls lookup_customer with attacker-influenced name, but queries are safe. Not exploitable as configured \u2192 true, but still give a vector for remaining path (info disclosure of valid customer names/emails? That's intended behavior).\n\nScores: AV:N (attacker is remote web page author / injection; CLI user types task \u2014 but entry point is \"influenced through injection or the user\", so remote attacker via fetched pages \u2192 network). AC:L? Requires model to emit crafted name \u2014 but fixed config blocks it entirely. AC:H? Given fix, AT:P? Since not exploitable, impacts: with fix, only normal lookup results. The attacker could still get the model to look up a specific customer name and retrieve their email (intended function) \u2014 attacker already can't see output unless... The person running CLI sees output; attacker via injection could exfiltrate via send_email. So CI of customer name/email rows possible (intended function misused) \u2014 low.\n\nVector: CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N. UI:A since user must run task / fetch page? Entry says injection or user \u2014 passive UI:P. I'll use UI:A (must run task with content) \u2014 actually passive: user uses system normally. UI:P.\n\nAIVSS: LC:I (indirect via injection in fetched content) \u2014 or D via user? \"influenced through injection or the user\". Injection \u2192 I. CP: session-only; memory exists but path doesn't store. CP:S? Attacker-controlled context persists in session only; testing confirms ephemeral \u2014 S. AP:N. RH: no evaluator on path \u2192 reachable_proxy false? No reward signal verified \u2192 N requires isolation_verified true. No evidence \u2192 X. ES: fixed allowlisted tools with validated args \u2192 N.\n\nAutomatable: yes (model can call tool without human, once). Technical impact: Partial.\n\nApplicability: implemented \u2014 model directs tool selection (loop, tool_use) \u2192 model_directed_goal_pursuit true, selects actions true. Same as modeled.\n\nEvidence lines cited from briefing.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Fixed config: parameterized_sql=True, so injection blocked. Path remains: model still calls lookup_customer with attacker-influenced name, but queries are safe. Not exploitable as configured \u2192 true, but still give a vector for remaining path (info disclosure of valid customer names/emails? That's intended behavior).\n\nScores: AV:N (attacker is remote web page author / injection; CLI user types task \u2014 but entry point is \"influenced through injection or the user\", so remote attacker via fetched pages \u2192 network). AC:L? Requires model to emit crafted name \u2014 but fixed config blocks it entirely. AC:H? Given fix, AT:P? Since not exploitable, impacts: with fix, only normal lookup results. The attacker could still get the model to look up a specific customer name and retrieve their email (intended function) \u2014 attacker already can't see output unless... The person running CLI sees output; attacker via injection could exfiltrate via send_email. So CI of customer name/email rows possible (intended function misused) \u2014 low.\n\nVector: CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N. UI:A since user must run task / fetch page? Entry says injection or user \u2014 passive UI:P. I'll use UI:A (must run task with content) \u2014 actually passive: user uses system normally. UI:P.\n\nAIVSS: LC:I (indirect via injection in fetched content) \u2014 or D via user? \"influenced through injection or the user\". Injection \u2192 I. CP: session-only; memory exists but path doesn't store. CP:S? Attacker-controlled context persists in session only; testing confirms ephemeral \u2014 S. AP:N. RH: no evaluator on path \u2192 reachable_proxy false? No reward signal verified \u2192 N requires isolation_verified true. No evidence \u2192 X. ES: fixed allowlisted tools with validated args \u2192 N.\n\nAutomatable: yes (model can call tool without human, once). Technical impact: Partial.\n\nApplicability: implemented \u2014 model directs tool selection (loop, tool_use) \u2192 model_directed_goal_pursuit true, selects actions true. Same as modeled.\n\nEvidence lines cited from briefing.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10397,
+      "completion_tokens": 1588,
+      "total_tokens": 11985,
+      "cost": 0.0029471343,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0029471343,
+        "upstream_inference_prompt_cost": 0.0007239343,
+        "upstream_inference_completions_cost": 0.0022232
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 490,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

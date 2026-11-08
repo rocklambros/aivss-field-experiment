@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-01",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-01",
+    "packet_path": "packets_v11/base/DV-L2-01.json",
+    "prompt_sha256": "0c82e034a69777de4f4aab0e753053adeadbe3f541c112d187eee303f413cabd"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:12.573526+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.66
+  },
+  "body": {
+    "id": "gen-1794074772-MODZSTBAg1oi8TzSR1gw",
+    "object": "chat.completion",
+    "created": 1794074772,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's natural-language roleplay message reaches the chat reply path with no mediation; the canned branch at src/index.js:669-681 and the LLM prompt at src/llm/prompts.js:41-45 both honor the persona switch directly.\",\"CP\":\"The jailbreak state lives only in the single request/response; the only durable store is MemoryBot's in-memory ring buffer (src/index.js:159-160, 1313-1324), which this path does not touch.\",\"AP\":\"The effect is confined to CodeBot's own reply; no cross-agent, cross-tenant, or cross-principal relay is part of this path.\",\"RH\":\"The success criterion is a regex over the agent's own reply (src/challenges/index.js:173-175), so the agent can satisfy the proxy objective by emitting the matching phrase, and no verified reward-hacking episode is recorded.\",\"ES\":\"CodeBot's declared tools (execute_command, read_file, write_file, git, npm) are not invoked by this path, and no dynamic extension is bound on it.\",\"CVSS\":\"Unauthenticated network chat to CodeBot on port 7004 (src/core/agents.js:116-148); the jailbreak only fires when the message contains 'hypothetical' or 'roleplay' or when LLM mode is enabled, a condition the attacker cannot force (src/index.js:669-681, src/llm/provider.js:60-63). Impact is limited to the agent's own reply text, so VI:L and no confidentiality or availability loss.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:669-681\",\"damn-vulnerable-ai-agent/src/llm/prompts.js:41-45\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:116-148\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:173-175\",\"damn-vulnerable-ai-agent/src/index.js:669-681\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:116-148\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/core/agents.js:116-148\",\"damn-vulnerable-ai-agent/src/index.js:669-681\",\"damn-vulnerable-ai-agent/src/llm/provider.js:60-63\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"No\",\"automatable_rationale\":\"The jailbreak requires a crafted natural-language roleplay message and, in LLM mode, a live model call; the canned branch only fires on specific keywords, so no reliable scripted exploitation is demonstrated.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The only demonstrated effect is CodeBot stating it is in an unrestricted mode; no file, command, credential, or other asset is modified, so integrity loss is limited to the agent's own reply.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode the reply is a canned string chosen by keyword matching in src/index.js:669-681; the model is not called and no tools are passed, so the agent neither pursues goals nor sequences actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes CodeBot as a coding assistant with dangerous tool access (src/core/agents.js:116-148), but the documented path only produces a chat reply and the LLM mode passes no tools to the model (src/index.js:541-561).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12512,
+      "completion_tokens": 1003,
+      "total_tokens": 13515,
+      "cost": 0.001113885,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001113885,
+        "upstream_inference_prompt_cost": 0.000545184,
+        "upstream_inference_completions_cost": 0.000568701
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

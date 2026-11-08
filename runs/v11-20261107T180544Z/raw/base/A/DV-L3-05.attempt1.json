@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L3-05",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L3-05",
+    "packet_path": "packets_v11/base/DV-L3-05.json",
+    "prompt_sha256": "fdabe5fe44e6e405cbb4fd429042c945ee556efa7fd4b767ef6acc576c22a3bf"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:27.565911+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.66
+  },
+  "body": {
+    "id": "gen-1794074787-3m5MoWRk37lOWCEYQ6Qz",
+    "object": "chat.completion",
+    "created": 1794074787,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The path is a JSON-RPC tools/call naming register_tool with structured arguments; no natural-language content reaches the registry sink (damn-vulnerable-ai-agent/src/index.js:2227-2251, damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156).\",\"CP\":\"The registered tool entry lives in the PluginBot process's in-memory agent.tools array for the life of the process; the briefing shows no durable store, vector index, or cross-session memory for registrations (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156).\",\"AP\":\"The effect is confined to PluginBot's own advertised registry; the code notes other agents keep the stateless reply and nothing is added to their tools (damn-vulnerable-ai-agent/src/index.js:2227-2251).\",\"RH\":\"PluginBot's own advertised tool registry is the proxy channel on the path and the attacker can write to it, but no verified reward-hacking episode is reported in the briefing (damn-vulnerable-ai-agent/src/index.js:2227-2251, damn-vulnerable-ai-agent/src/core/agents.js:770-784).\",\"ES\":\"register_tool accepts any name, description, parameters, and registry URL with no signature, source, or schema validation, and allowOverwrite lets a dynamic entry replace a legitimate tool (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156, damn-vulnerable-ai-agent/src/core/agents.js:747-752).\",\"CVSS\":\"Unauthenticated network JSON-RPC to PluginBot on port 7012 (loopback by default, 0.0.0.0 in the Docker image) with no user interaction; the attacker writes a registry entry, a limited integrity effect on the vulnerable system only (damn-vulnerable-ai-agent/src/index.js:2227-2251, damn-vulnerable-ai-agent/README.md:26, damn-vulnerable-ai-agent/Dockerfile:22).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\"],\"CP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\"],\"ES\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/Dockerfile:22\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated JSON-RPC request registers the typosquatted tool; no human step, secret, or target-specific condition is required (damn-vulnerable-ai-agent/src/index.js:2227-2251).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker gains a write into PluginBot's advertised tool registry and can replace a legitimate entry, but the registered tool gets no new handler and the effect is confined to that registry (damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156, damn-vulnerable-ai-agent/src/index.js:2227-2251).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; register_tool is handled by a scripted branch that writes the registry entry directly (damn-vulnerable-ai-agent/src/index.js:2227-2251, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"PluginBot is documented as an MCP tool server that accepts tool registrations with no verification; the documentation describes no model-driven planning or action selection for it (damn-vulnerable-ai-agent/src/core/agents.js:738-785, damn-vulnerable-ai-agent/src/index.js:2159-2251).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12832,
+      "completion_tokens": 1163,
+      "total_tokens": 13995,
+      "cost": 0.001220925,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001220925,
+        "upstream_inference_prompt_cost": 0.000561504,
+        "upstream_inference_completions_cost": 0.000659421
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

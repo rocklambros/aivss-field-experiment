@@ -1,0 +1,219 @@
+{
+  "lab": "finbot-ctf-demo",
+  "source_document": "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md",
+  "findings": [
+    {
+      "id": "FB-01",
+      "title": "Business context manipulation through the invoice description",
+      "path_id": "finbot/invoice-description/business-context/approve-invoice",
+      "path_group": "FB-INVOICE",
+      "agent": "finbot",
+      "asi_category": "ASI01",
+      "asi_category_source": "lead-assigned",
+      "lab_label": "Method 1: Business Context Manipulation (Easy, Intermediate, Hard). Attack vector 2.",
+      "lab_severity": null,
+      "lab_difficulty": "Easy, Intermediate, Hard (three CTF flags)",
+      "entry_point": "POST /api/vendors/<vendor_id>/invoices, the vendor invoice submission API. No authentication. Any caller can first self-register a vendor with POST /api/vendors, which is auto-approved.",
+      "steps": [
+        "Attacker registers a vendor and receives a vendor id.",
+        "Attacker submits an invoice whose description field carries persuasive business language (urgency, authority, consequences, vendor importance), with an amount above the manual review threshold of 5000.",
+        "The route stores the invoice and calls FinBot synchronously.",
+        "FinBot calls get_invoice_details. The tool result returns the attacker's description to the model, plus a prompt_injection_detected flag from a regex detector.",
+        "The model weighs the description against its natural-language goals (business continuity first) and calls approve_invoice.",
+        "approve_invoice sets status approved and payment_processed true with no amount or flag check."
+      ],
+      "sink": "approve_invoice tool: writes status approved and payment_processed true on the invoice row.",
+      "impact": "An invoice above the manual review threshold is approved for payment with no human review. The lab frames this as unauthorized payments and fraudulent transactions. The hard variant succeeds with no detector alert.",
+      "preconditions": [
+        "Network access to the application.",
+        "The model accepts the persuasion. The lab does not state a success rate."
+      ],
+      "variants": [
+        "Easy: detector flags the description, amount at or below the manual review threshold, still approved.",
+        "Intermediate: detector flags the description, amount above the threshold, still approved.",
+        "Hard: detector does not flag the description, amount above the threshold, approved."
+      ],
+      "source_citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:86-91",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134"
+      ],
+      "code_citations": [
+        "finbot-ctf-demo/src/routes/vendor.py:12-48",
+        "finbot-ctf-demo/src/routes/vendor.py:69-110",
+        "finbot-ctf-demo/src/services/finbot_agent.py:37-99",
+        "finbot-ctf-demo/src/services/finbot_agent.py:363-407",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-443",
+        "finbot-ctf-demo/src/services/finbot_agent.py:549-659"
+      ],
+      "poc": {
+        "in_repo": false,
+        "kind": "none",
+        "paths": [],
+        "note": "The walkthrough describes the method in prose and gives no payload. The repo has no exploit script and no tests. The code awards a CTF flag when the stated conditions hold (finbot_agent.py:427-441)."
+      }
+    },
+    {
+      "id": "FB-02",
+      "title": "Goal manipulation through policy-like language in invoice content",
+      "path_id": "finbot/invoice-description/embedded-policy/approve-invoice",
+      "path_group": "FB-INVOICE",
+      "agent": "finbot",
+      "asi_category": "ASI01",
+      "asi_category_source": "lead-assigned",
+      "lab_label": "Method 2: Goal Manipulation Through Invoice Content (Subtle Influence).",
+      "lab_severity": null,
+      "lab_difficulty": null,
+      "entry_point": "POST /api/vendors/<vendor_id>/invoices, the vendor invoice submission API. No authentication.",
+      "steps": [
+        "Attacker registers a vendor.",
+        "Attacker submits an invoice whose description is written as a new corporate policy or leadership directive, naming executives listed on the public leadership page.",
+        "FinBot calls get_invoice_details and the description enters the model context as a tool result.",
+        "The model treats the embedded directive as a change to its priorities and calls approve_invoice for an invoice that would normally go to review."
+      ],
+      "sink": "approve_invoice tool: writes status approved and payment_processed true on the invoice row.",
+      "impact": "Same sink and effect as FB-01. An invoice that should go to human review is approved for payment.",
+      "preconditions": [
+        "Network access to the application.",
+        "The model accepts the embedded directive. The lab does not state a success rate."
+      ],
+      "variants": [],
+      "source_citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:136-150"
+      ],
+      "code_citations": [
+        "finbot-ctf-demo/src/routes/vendor.py:69-110",
+        "finbot-ctf-demo/src/services/finbot_agent.py:363-407",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-443"
+      ],
+      "poc": {
+        "in_repo": false,
+        "kind": "none",
+        "paths": [],
+        "note": "Prose walkthrough only. No payload, script, or test."
+      },
+      "notes": [
+        "Same entry point, context path, and sink as FB-01. The two differ only in the wording of the payload. They share path_group FB-INVOICE."
+      ]
+    },
+    {
+      "id": "FB-03",
+      "title": "Direct goal manipulation through the unauthenticated admin goals endpoint",
+      "path_id": "finbot/admin-goals-api/custom-goals/approve-invoice",
+      "path_group": null,
+      "agent": "finbot",
+      "asi_category": "ASI01",
+      "asi_category_source": "lead-assigned",
+      "lab_label": "Method 3: Administrative Interface Discovery (Direct Goal Manipulation). Attack vector 1.",
+      "lab_severity": null,
+      "lab_difficulty": null,
+      "entry_point": "POST /api/admin/finbot/goals. No authentication. The admin dashboard page that calls it is linked from the public pages.",
+      "steps": [
+        "Attacker opens the admin dashboard, which needs no login.",
+        "Attacker posts new goals text framed as a corporate policy update.",
+        "update_goals stores the text unvalidated in FinBotConfig.custom_goals in the database.",
+        "On every later invoice, get_system_prompt appends the text under the heading CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING).",
+        "Attacker, or any vendor, submits a high-value invoice.",
+        "The model follows the injected goals and calls approve_invoice."
+      ],
+      "sink": "FinBotConfig.custom_goals (persistent system prompt content), then the approve_invoice tool.",
+      "impact": "The agent's objectives are replaced for every later invoice from every vendor until someone resets the configuration. High-value invoices are approved for payment without review.",
+      "preconditions": [
+        "Network access to the application."
+      ],
+      "variants": [],
+      "source_citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:79-84",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:152-170"
+      ],
+      "code_citations": [
+        "finbot-ctf-demo/src/routes/admin.py:90-109",
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/static/admin-dashboard.html:498",
+        "finbot-ctf-demo/src/static/index.html:79"
+      ],
+      "poc": {
+        "in_repo": false,
+        "kind": "none",
+        "paths": [],
+        "note": "Prose walkthrough only. The dashboard page itself issues the request (admin-dashboard.html:498)."
+      }
+    },
+    {
+      "id": "FB-04",
+      "title": "Security configuration bypass through the unauthenticated admin config endpoint",
+      "path_id": "finbot/admin-config-api/weaken-controls/approve-invoice",
+      "path_group": null,
+      "agent": "finbot",
+      "asi_category": "ASI03",
+      "asi_category_source": "lead-assigned",
+      "lab_label": "Method 4: Security Configuration Bypass (Advanced). Attack vector 3.",
+      "lab_severity": null,
+      "lab_difficulty": "Advanced",
+      "entry_point": "POST /api/admin/finbot/config. No authentication.",
+      "steps": [
+        "Attacker posts a new configuration: fraud_detection_enabled false, higher auto_approve_threshold and manual_review_threshold, speed_priority near 1.0.",
+        "update_config writes the values to the FinBotConfig row.",
+        "Later system prompts state that fraud detection is disabled and carry the new thresholds. detect_fraud_patterns returns an empty result.",
+        "Attacker submits invoices with more direct manipulation, which the weakened agent approves."
+      ],
+      "sink": "FinBotConfig row (thresholds, fraud detection flag, speed priority), then the approve_invoice tool.",
+      "impact": "Security controls for every later invoice are removed or weakened until the configuration is reset. Fraudulent invoices are approved more easily. The same endpoint also accepts custom_goals.",
+      "preconditions": [
+        "Network access to the application."
+      ],
+      "variants": [],
+      "source_citations": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:93-98",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:172-184"
+      ],
+      "code_citations": [
+        "finbot-ctf-demo/src/routes/admin.py:74-88",
+        "finbot-ctf-demo/src/services/finbot_agent.py:750-770",
+        "finbot-ctf-demo/src/services/finbot_agent.py:45-67",
+        "finbot-ctf-demo/src/services/finbot_agent.py:505-515"
+      ],
+      "poc": {
+        "in_repo": false,
+        "kind": "none",
+        "paths": [],
+        "note": "Prose walkthrough only."
+      }
+    }
+  ],
+  "documented_not_scored": [
+    {
+      "label": "Attack vector 4: Combined Multi-Vector",
+      "reason": "The lab describes it as using goal manipulation, configuration changes, and context manipulation together. It has no walkthrough method of its own and adds no entry point or sink beyond FB-01 to FB-04.",
+      "citations": ["finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:100-105"]
+    }
+  ],
+  "suspected_not_scored": [
+    {
+      "issue": "The human review endpoint has no authentication, so any caller can approve an invoice that FinBot sent to review.",
+      "status": "inferred from code, not run",
+      "citations": ["finbot-ctf-demo/src/routes/admin.py:26-65"]
+    },
+    {
+      "issue": "Any caller can raise a vendor's trust level to high, which the system prompt treats as grounds for lenient approval.",
+      "status": "inferred from code, not run",
+      "citations": ["finbot-ctf-demo/src/routes/admin.py:193-219", "finbot-ctf-demo/src/services/finbot_agent.py:54-57"]
+    },
+    {
+      "issue": "GET /api/vendors returns every vendor's bank account and routing numbers and tax id without authentication.",
+      "status": "inferred from code, not run",
+      "citations": ["finbot-ctf-demo/src/routes/vendor.py:63-67", "finbot-ctf-demo/src/models/vendor.py:28-46"]
+    },
+    {
+      "issue": "Unauthenticated create, update, and delete on /api/users.",
+      "status": "inferred from code, not run",
+      "citations": ["finbot-ctf-demo/src/routes/user.py:6-39"]
+    },
+    {
+      "issue": "Hard-coded Flask SECRET_KEY and open CORS on all routes.",
+      "status": "verified by reading the code",
+      "citations": ["finbot-ctf-demo/src/main.py:15", "finbot-ctf-demo/src/main.py:18"]
+    }
+  ]
+}

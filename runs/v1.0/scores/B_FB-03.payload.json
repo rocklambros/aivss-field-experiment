@@ -1,0 +1,84 @@
+{
+  "finding_id": "FB-03",
+  "path_id": "finbot/admin-goals-api/custom-goals/approve-invoice",
+  "title": "Direct goal manipulation through the unauthenticated admin goals endpoint",
+  "summary": "The agent's objectives are replaced for every later invoice from every vendor until someone resets the configuration. High-value invoices are approved for payment without review.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-supplied natural language is posted directly to the unauthenticated admin goals endpoint and is appended unvalidated into the privileged system prompt that drives tool invocation.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:90-109",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:152-170"
+      ]
+    },
+    "CP": {
+      "rationale": "The injected goals are stored durably in the FinBotConfig row in the database and injected into the system prompt of every later invoice run, persisting beyond the originating session.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166"
+      ]
+    },
+    "AP": {
+      "rationale": "Compromised goals influence the single FinBot agent and its tools within the same application and policy domain; no other agent, tenant, or principal is involved.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458",
+        "finbot-ctf-demo/src/routes/admin.py:26-65"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent's tool loop can reach the proxy signal (approve_invoice, which awards CTF flags and completes the reward path), but no human-verified reward-hacking episode is documented in the packet.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458",
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 1,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "The agent has five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills on the assessed path.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice-processing agent whose goals are natural language injected into the system prompt and whose approval decisions are model-selected tool calls.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:90-109",
+      "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+      "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+      "finbot-ctf-demo/src/models/vendor.py:105",
+      "finbot-ctf-demo/src/static/admin-dashboard.html:498",
+      "finbot-ctf-demo/src/static/index.html:79"
+    ]
+  },
+  "evidence": {
+    "poc": false
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:35:29.143805+00:00",
+  "automatable": true,
+  "technical_impact": "total",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:35:29.143805+00:00"
+  }
+}

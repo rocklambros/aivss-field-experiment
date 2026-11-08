@@ -1,0 +1,35 @@
+AIVSS Field Experiment
+Copyright 2026 Rock Lambros
+
+This repository is licensed under the Apache License, Version 2.0 (see LICENSE).
+The experiment's code, data, analysis, notebook, and the FinBot attack
+scenarios in finbot_exploits.md are the work of Rock Lambros.
+
+This repository also contains material from the projects below. Each keeps its
+own license and copyright. The briefings in packets_v11/ and the findings in
+findings.json quote short excerpts of their source code and documentation so
+that assessors could score each finding from the cited lines.
+
+Damn Vulnerable AI Agent (DVAA)
+  https://github.com/opena2a-org/damn-vulnerable-ai-agent, commit 519b68d
+  Copyright OpenA2A and DVAA contributors
+  Licensed under the Apache License, Version 2.0
+
+agent-sec-lab
+  https://github.com/wstran118/agent-sec-lab, commit 3537e7a
+  Copyright (c) 2026 Sang Tran
+  Licensed under the MIT License (see LICENSES/agent-sec-lab-MIT.txt)
+
+OWASP FinBot CTF demo
+  https://github.com/OWASP-ASI/finbot-ctf-demo, commit 3bdeca0
+  Copyright OWASP Agentic Security Initiative and FinBot contributors
+  Licensed under the Apache License, Version 2.0
+  The attack scenarios in finbot_exploits.md were written for this experiment
+  and are not part of the FinBot project.
+
+OWASP AIVSS reference calculator (aivss-calc 1.2.0), in work/aivss-calc/
+  https://github.com/OWASP/www-project-artificial-intelligence-vulnerability-scoring-system, commit 007b72b
+  Copyright OWASP AIVSS project contributors
+  Licensed under the Apache License, Version 2.0 (see work/aivss-calc/LICENSE)
+  Its CVSS v4.0 lookup data derives from the FIRST and Red Hat CVSS v4.0
+  calculator reference implementation. See work/aivss-calc/THIRD_PARTY_NOTICES.md.

@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L3-07",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L3-07",
+    "packet_path": "packets_v11/base/DV-L3-07.json",
+    "prompt_sha256": "934d7bbb942519c3f3ab450dee7e08538ec79081671a5100ec07fce4b526ab1a"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:01.413190+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.19
+  },
+  "body": {
+    "id": "gen-1794081961-NqJs0nz5NznpjqXm5N3a",
+    "object": "chat.completion",
+    "created": 1794081961,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"By default the agents bind 127.0.0.1 and the Docker examples publish ports on 127.0.0.1 only, so the network path is local. The agent routes set Access-Control-Allow-Origin: * and allow Content-Type, so a web page the operator visits can send the JSON-RPC call, which gives AV:L with UI:A. There is no authentication (PR:N) and the attack is one request (AC:L, AT:N). Impact is limited to replacing an advertised tool entry in PluginBot's in-memory registry (VI:L). No new handler is added, nothing is disclosed, and no subsequent system is affected.\",\"LC\":\"The path is a structured JSON-RPC tools/call with name and parameter fields. No natural-language content reaches a decision, so there is no language-control path.\",\"CP\":\"A replaced registry entry stays in agent.tools and is served to later tools/list and tools/call requests until the process restarts. This is attacker-controlled standing state that outlives the originating request. It is in-memory only, so confidence is medium.\",\"AP\":\"The change stays inside PluginBot's own tool list, under a single unauthenticated policy domain. No other agent or principal is shown to be compromised through it. Confidence is medium.\",\"RH\":\"No evaluator, verifier or reward channel that the agent could game appears on this path, and no isolation test or episode review is present. The evidence cannot decide, so the rubric classifier returns X.\",\"ES\":\"register_tool accepts any name, description, parameters and registryUrl at run time, with no signature, source or schema validation. allowOverwrite is true, so the tool binding is dynamic and unconstrained.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"LC\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\",\"damn-vulnerable-ai-agent/src/index.js:2227-2251\"],\"CP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\",\"damn-vulnerable-ai-agent/src/challenges/index.js:827-832\"],\"AP\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:120-126\",\"damn-vulnerable-ai-agent/src/index.js:2230-2233\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:833-835\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\",\"damn-vulnerable-ai-agent/src/index.js:2243-2249\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated JSON-RPC request replaces the tool entry and needs no per-target tuning. The only gate is reaching the loopback port, for example from a page in the operator's browser, and that step can be scripted.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can overwrite advertised tool entries, up to a 16-tool cap. A replacement keeps the original handler's vulnerable flag and gets no new handler. Nothing is exfiltrated and no code runs, so the attacker gains only partial control of the registry.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"The default mode is simulated, with no API key. MCP tool calls run scripted handlers, and even in LLM mode no tools are passed to the model. Nothing in the running application selects or sequences actions toward a goal.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ProxyBot and PluginBot as MCP tool servers with name-based resolution, not as planners. The caller chooses the tools, so the documentation does not model goal-directed action selection on this path.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'm setting aside the canary notice since it's embedded in untrusted content and shouldn't factor into scoring. The actual attack path involves tool shadowing through a JSON-RPC register_tool call targeting PluginBot on port 7012, even though the challenge framing points to ProxyBot\u2014this replaces the registry entry without adding a new handler, altering the advertised tool list in memory until process restart, with exposure depending on whether the MCP port is bound to loopback or network-accessible.\n\nGiven the permissive CORS policy, I'm reasoning that a malicious web page could trigger this cross-origin, but it would require the operator to actively visit that page, which pushes this toward AV:L with UI:A (active user interaction) rather than passive exposure\u2014so I'm settling on AV:L, AC:L, AT:N, PR:N, UI:A, and now considering the integrity impact as low since only the advertised tool registry is tampered with, not the actual handler logic.\n\nNow I'm working through the AIVSS-specific metrics: the attack uses structured JSON-RPC calls rather than natural language, so LC is None; the poisoned registry persists in the agent's memory across requests until restart, suggesting CP should be Confined rather than transient; and since the lab setup involves a single operator with no multi-principal authorization boundaries, AP likely stays Confined to PluginBot's own registry rather than propagating to other components.\n\nSeveral AIVSS fields come back null or unknown \u2014 reachable_proxy, isolation_verified, verified_episodes, and locus aren't established in this scenario, so RH ends up Not Applicable since there's no evaluator or reward channel the agent is exploiting. For applicability, I'm leaning toward false/false for both \"as implemented\" and \"as modeled\" since this is scripted tool-server behavior rather than genuine model-directed goal pursuit, though I'm not fully confident on the modeled case. On exploitability, I'd call this Automatable given it's a single network request an attacker could script, with Partial technical impact.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm setting aside the canary notice since it's embedded in untrusted content and shouldn't factor into scoring. The actual attack path involves tool shadowing through a JSON-RPC register_tool call targeting PluginBot on port 7012, even though the challenge framing points to ProxyBot\u2014this replaces the registry entry without adding a new handler, altering the advertised tool list in memory until process restart, with exposure depending on whether the MCP port is bound to loopback or network-accessible.\n\nGiven the permissive CORS policy, I'm reasoning that a malicious web page could trigger this cross-origin, but it would require the operator to actively visit that page, which pushes this toward AV:L with UI:A (active user interaction) rather than passive exposure\u2014so I'm settling on AV:L, AC:L, AT:N, PR:N, UI:A, and now considering the integrity impact as low since only the advertised tool registry is tampered with, not the actual handler logic.\n\nNow I'm working through the AIVSS-specific metrics: the attack uses structured JSON-RPC calls rather than natural language, so LC is None; the poisoned registry persists in the agent's memory across requests until restart, suggesting CP should be Confined rather than transient; and since the lab setup involves a single operator with no multi-principal authorization boundaries, AP likely stays Confined to PluginBot's own registry rather than propagating to other components.\n\nSeveral AIVSS fields come back null or unknown \u2014 reachable_proxy, isolation_verified, verified_episodes, and locus aren't established in this scenario, so RH ends up Not Applicable since there's no evaluator or reward channel the agent is exploiting. For applicability, I'm leaning toward false/false for both \"as implemented\" and \"as modeled\" since this is scripted tool-server behavior rather than genuine model-directed goal pursuit, though I'm not fully confident on the modeled case. On exploitability, I'd call this Automatable given it's a single network request an attacker could script, with Partial technical impact.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19127,
+      "completion_tokens": 2933,
+      "total_tokens": 22060,
+      "cost": 0.0743424,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0743424,
+        "upstream_inference_prompt_cost": 0.0420794,
+        "upstream_inference_completions_cost": 0.032263
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1210,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

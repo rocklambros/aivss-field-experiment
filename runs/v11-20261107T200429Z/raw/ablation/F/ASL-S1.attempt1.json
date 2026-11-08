@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "ablation/F/ASL-S1",
+    "arm": "ablation",
+    "slot": "F",
+    "finding_id": "ASL-S1",
+    "packet_path": "packets_v11/ablation/ASL-S1.json",
+    "prompt_sha256": "4c6291bce8004168f5299535bfb38bfb645079ee6ac72a4cb097fee2527c71b6"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:47.216384+00:00",
+    "http_status": 200,
+    "elapsed_s": 9.72
+  },
+  "body": {
+    "id": "gen-1794082007-V12yEExlmEcn9Bv9gDtE",
+    "object": "chat.completion",
+    "created": 1794082007,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:P/PR:N/UI:P/VC:H/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"Attacker-edited page text returned by fetch_url enters the model context with no mediation and steers read_file and send_email, so language arrives through ingested content (indirect).\",\"CP\":\"The remember tool writes unsigned free text to a durable memory file even after untrusted content was read, and the next session's prompt presents it as trusted. This is reachable from the fetch path, though the documented S1 path does not itself use it.\",\"AP\":\"The documented path stays inside one agent and one principal. The email exfiltration is impact on a subsequent system, which belongs in SC/SI/SA and not here. No evidence of crossing into another agent or tenant.\",\"RH\":\"No evaluator, verifier or reward channel appears on the path, and the briefing gives no facts on one. The evidence cannot decide the facts classify_rh needs, so the result is X.\",\"ES\":\"All twelve built-in tools are offered by default with unvalidated arguments. Remote MCP manifests are fetched on every run, trusted, unpinned, and can replace built-in tools, so the extension surface is unconstrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/docker-compose.yml:1-3\",\"agent-sec-lab/agent/tools.py:312-325\",\"agent-sec-lab/agent/tools.py:327-347\",\"agent-sec-lab/docs/writeups/s1-indirect-prompt-injection.md:26-29\"],\"LC\":[\"agent-sec-lab/agent/tools.py:312-325\",\"agent-sec-lab/data/web/poisoned.txt:1-7\",\"agent-sec-lab/docs/writeups/s1-indirect-prompt-injection.md:5-12\"],\"CP\":[\"agent-sec-lab/agent/memory.py:1-7\",\"agent-sec-lab/agent/memory.py:60-66\",\"agent-sec-lab/agent/memory.py:72-79\",\"agent-sec-lab/agent/config.py:15\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:226-258\"],\"RH\":[\"agent-sec-lab/agent/loop.py:43-56\"],\"ES\":[\"agent-sec-lab/agent/loop.py:34\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/tools.py:134-154\",\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/tools.py:235-238\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The agent is a CLI with no network listener, and the attack needs the user to ask the agent to fetch the attacker-edited page. The lab also states that real-model susceptibility was not measured, so the attack cannot be shown to work as a repeatable, unattended exploit.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The path yields the contents of the workspace .env credential file through read_file and send_email. It does not give the attacker control over the whole system, since the agent's other tools are stubs.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The default CLI runs a real Anthropic model in a loop of up to 10 turns, and the model chooses which tools to call and in what order.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant whose model picks tools to complete tasks through a model-call, tool-dispatch loop, which matches the implementation.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16269,
+      "completion_tokens": 1466,
+      "total_tokens": 17735,
+      "cost": 0.0519178,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0519178,
+        "upstream_inference_prompt_cost": 0.0357918,
+        "upstream_inference_completions_cost": 0.016126
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

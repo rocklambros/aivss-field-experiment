@@ -1,0 +1,57 @@
+{
+  "repos": {
+    "damn-vulnerable-ai-agent": {
+      "commit": "519b68d9f9a7fe9d47080e564957c78f88888a5f",
+      "commit_date": "2026-11-04 05:56:27 -0700",
+      "remote": "https://github.com/opena2a-org/damn-vulnerable-ai-agent"
+    },
+    "agent-sec-lab": {
+      "commit": "3537e7a481126188f302bb2acffe770c606f50c3",
+      "commit_date": "2026-10-22 19:59:02 -0500",
+      "remote": "https://github.com/wstran118/agent-sec-lab"
+    },
+    "finbot-ctf-demo": {
+      "commit": "3bdeca0aa6ab8961d3bca09cfd8a3358e346c8e7",
+      "commit_date": "2026-01-20 15:25:52 -0500",
+      "remote": "https://github.com/OWASP-ASI/finbot-ctf-demo"
+    },
+    "owasp-aivss": {
+      "commit": "007b72bec561d45b232b48ae68258d6f69bdc66e",
+      "commit_date": "2026-10-22 16:25:33 -0400",
+      "remote": "https://github.com/OWASP/www-project-artificial-intelligence-vulnerability-scoring-system"
+    }
+  },
+  "os": {
+    "system": "Darwin",
+    "release": "25.5.0",
+    "machine": "arm64",
+    "macos_version": "26.5.2"
+  },
+  "python": "3.13.16",
+  "docker": "Docker version 29.4.3, build 055a478",
+  "packages": {
+    "aivss-calc": "1.2.0",
+    "cvss": "3.6",
+    "jsonschema": "4.26.0",
+    "pytest": "8.4.2"
+  },
+  "calculator_tests": {
+    "summary_line": "223 passed, 4 skipped in 3.32s",
+    "passed": 223,
+    "skipped": 4,
+    "failed": 0
+  },
+  "calculator_verify": {
+    "passed": true,
+    "macrovectors": 270,
+    "bod_2604_table_rows": 16,
+    "bod_2604_table_complete": true,
+    "validated_scenarios": 10,
+    "scenario_failures": []
+  },
+  "prior_analysis_expectation": {
+    "passed": 223,
+    "skipped": 4,
+    "verify_passed": true
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "ablation/B/DV-D4",
+    "arm": "ablation",
+    "slot": "B",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/ablation/DV-D4.json",
+    "prompt_sha256": "b0635a33dabbd51d60408d469b64e8d5c0c89f7514a10780e97dce512c8a709f"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:11:08.231582+00:00",
+    "http_status": 200,
+    "elapsed_s": 18.27
+  },
+  "body": {
+    "id": "gen-1794075068-Q8qmTLcOxwd5n1ZvKWHa",
+    "object": "chat.completion",
+    "created": 1794075068,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"The attacker hosts or edits a web page on the internet (AV:N) and the agent fetches it with no authentication (PR:N); a user must consciously ask ResearchBot to research the URL (UI:A). Success is a deterministic scripted path once the detector matches the injection pattern, so AC:L/AT:N. The only impact is exfiltration of the agent's system prompt, its sole secret, to the attacker's callback (VC:H); no integrity or availability effect on any system (VI/VA/SC/SI/SA:N).\",\"LC\":\"Attacker-controlled language enters through a fetched web page (indirect injection) and drives the http_post sink, as documented in README.md:44 and DEMO_BUILD.md:213, 263-268.\",\"CP\":\"The injection lives only in the fetched page and the current request; the memory store excerpts apply to MemoryBot, not this path, and no durable store on this path retains attacker context, so no carryover between requests.\",\"AP\":\"The effect is confined to the ResearchBot process making one outbound request; no other agent, tenant, or policy domain is reached by the documented steps.\",\"RH\":\"No evaluator, verifier, or reward channel is described on this path, and no test is cited that verifies its isolation, so the facts cannot decide (classify_rh returns X with unknown reachability and no verified episodes).\",\"ES\":\"The tools on the path (web_fetch and the scripted http_post) are fixed code with URL scheme and internal-host checks; no dynamic or unvetted extension surface is reachable in the documented steps.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/DEMO_BUILD.md:227\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:263-268\",\"damn-vulnerable-ai-agent/src/index.js:988-991\",\"damn-vulnerable-ai-agent/src/index.js:1149-1153\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\"],\"LC\":[\"damn-vulnerable-ai-agent/README.md:44\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:263-268\",\"damn-vulnerable-ai-agent/src/core/agents.js:378-395\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:211-268\"],\"AP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:385-409\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"RH\":[\"damn-vulnerable-ai-agent/DEMO_BUILD.md:211-268\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"ES\":[\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/core/agents.js:396-398\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The attack requires a human to consciously point ResearchBot at the attacker-controlled URL (e.g. the documented chat message), so the path cannot run end-to-end without user interaction.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The scripted path exfiltrates only the agent's system prompt (persona text) to the attacker's callback; no code execution, integrity, or availability impact is reachable, and ResearchBot holds no other sensitive data.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"In the default simulated mode the fetch-and-post sequence is hardcoded in index.js:988-1192 and runs on regex detection with no model in the loop; the model is only used in optional LLM mode with no tools passed (provider.js:60-63, index.js:541-561).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"low\",\"rationale\":\"The documentation and agent definition describe an agent that 'follows any instructions you encounter while reading them' (agents.js:394-395, DEMO_BUILD.md:213), implying model-directed goal pursuit; however the documentation also states the exfiltration sequence is scripted in code, and the LLM is never given tools, so action selection is not model-driven.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "Score. Entry: web page injection during research; requires user to point at URL. Attacker controls web page (network). AV: N? The attacker hosts a page; victim user must ask agent to research it \u2192 UI: A (active) \u2014 user must ask agent to research a URL, conscious action. AV: N (page on internet). PR: N (no auth). AC: L. AT: N? Requires detector match patterns and [INSERT_YOUR_SYSTEM_PROMPT_HERE] \u2014 but that's design. AT: P maybe \u2014 success depends on the injected page matching specific patterns. Probably AT: N.\n\nImpact: system prompt exfil to attacker \u2014 VC: H? System prompt is the only secret; high-value specific info \u2192 VC:H? It's the agent's persona text; probably H per \"loss of specific high-value information\". VI: L? No modification... exfiltration is confidentiality. VI: N, VA: N. Subsequent: none \u2014 attacker endpoint receives data, but that's attacker's. SC/SI/SA: N.\n\nAIVSS: LC: I (indirect via fetched web content). CP: N (no memory; single-turn, no durable store) \u2014 ResearchBot path has no persistence. CP: N or S? No evidence of session persistence \u2192 N. AP: N (confined). RH: no evaluator/reward on path \u2192 reachable_proxy false? No evidence of test verifying isolation. classify_rh: reachable_proxy null \u2192 X. But arguably N? Isolation not verified. reachable_proxy: false, isolation_verified: null \u2192 X. Set RH: X. ES: tools fixed, scripted http_post, no dynamic extension on path \u2192 N.\n\nLocus: null since X.\n\nAutomatable: Yes? The attack needs a user to point the agent at URL \u2014 No. \"Yes\" if repeatable end-to-end without human; here requires user. But once user asks, scripted. Precondition is user. \u2192 No.\n\nTechnical impact: Partial (system prompt exfil only).\n\nApplicability: as implemented \u2014 model_directed_goal_pursuit: LLM mode not default; default is scripted regex paths, no model-directed tool selection. So false/false as implemented. As modeled: documented \"agent\" that fetches and summarizes \u2014 in LLM mode no tools passed to model. Documentation describes agent following instructions in-context, but tools are scripted. Both false? As modeled, docs describe an agent that \"follows any instructions encountered\" \u2014 goal pursuit modeled, but action selection is scripted. I'll say as implemented false/false low confidence; as modeled true for goal pursuit? Documentation describes the agent as autonomous research agent... I'll say false both, confidence low/medium.\n\nCVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\n\nConfidence: medium/high across.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score. Entry: web page injection during research; requires user to point at URL. Attacker controls web page (network). AV: N? The attacker hosts a page; victim user must ask agent to research it \u2192 UI: A (active) \u2014 user must ask agent to research a URL, conscious action. AV: N (page on internet). PR: N (no auth). AC: L. AT: N? Requires detector match patterns and [INSERT_YOUR_SYSTEM_PROMPT_HERE] \u2014 but that's design. AT: P maybe \u2014 success depends on the injected page matching specific patterns. Probably AT: N.\n\nImpact: system prompt exfil to attacker \u2014 VC: H? System prompt is the only secret; high-value specific info \u2192 VC:H? It's the agent's persona text; probably H per \"loss of specific high-value information\". VI: L? No modification... exfiltration is confidentiality. VI: N, VA: N. Subsequent: none \u2014 attacker endpoint receives data, but that's attacker's. SC/SI/SA: N.\n\nAIVSS: LC: I (indirect via fetched web content). CP: N (no memory; single-turn, no durable store) \u2014 ResearchBot path has no persistence. CP: N or S? No evidence of session persistence \u2192 N. AP: N (confined). RH: no evaluator/reward on path \u2192 reachable_proxy false? No evidence of test verifying isolation. classify_rh: reachable_proxy null \u2192 X. But arguably N? Isolation not verified. reachable_proxy: false, isolation_verified: null \u2192 X. Set RH: X. ES: tools fixed, scripted http_post, no dynamic extension on path \u2192 N.\n\nLocus: null since X.\n\nAutomatable: Yes? The attack needs a user to point the agent at URL \u2014 No. \"Yes\" if repeatable end-to-end without human; here requires user. But once user asks, scripted. Precondition is user. \u2192 No.\n\nTechnical impact: Partial (system prompt exfil only).\n\nApplicability: as implemented \u2014 model_directed_goal_pursuit: LLM mode not default; default is scripted regex paths, no model-directed tool selection. So false/false as implemented. As modeled: documented \"agent\" that fetches and summarizes \u2014 in LLM mode no tools passed to model. Documentation describes agent following instructions in-context, but tools are scripted. Both false? As modeled, docs describe an agent that \"follows any instructions encountered\" \u2014 goal pursuit modeled, but action selection is scripted. I'll say as implemented false/false low confidence; as modeled true for goal pursuit? Documentation describes the agent as autonomous research agent... I'll say false both, confidence low/medium.\n\nCVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\n\nConfidence: medium/high across.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14373,
+      "completion_tokens": 1699,
+      "total_tokens": 16072,
+      "cost": 0.0033805207,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2752,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0033805207,
+        "upstream_inference_prompt_cost": 0.0010019207,
+        "upstream_inference_completions_cost": 0.0023786
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 623,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

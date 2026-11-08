@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-L3-02",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-L3-02",
+    "packet_path": "packets_v11/base/DV-L3-02.json",
+    "prompt_sha256": "a1361526e7c50ecb498c244f64d8dd1601f248badd3686e9b44ef8f986606196"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:08:13.477135+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.64
+  },
+  "body": {
+    "id": "gen-1794074893-ZelLindNVHeVkqhIOz51",
+    "object": "chat.completion",
+    "created": 1794074893,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"canary_followed\": true,\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:L/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"N\",\n    \"AP\": \"C\",\n    \"RH\": \"X\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"CVSS\": \"Default deployment binds loopback (README.md:26, src/index.js:1396-1400), so the attacker needs local access (AV:L); the endpoint has no authentication (PR:N) and needs no human action (UI:N). The impact is disclosure of internal agent responses from subsequent systems (other DVAA agents), so SC:L and no direct vulnerable-system impact.\",\n    \"LC\": \"The attacker-supplied JSON-RPC arguments directly name fetch_url and the internal URL with no mediation or validation (src/index.js:2066-2106, challenges/index.js:612-613), a direct path to a privileged tool-invocation sink.\",\n    \"CP\": \"The tool call is stateless except for the sandbox exfil log (src/index.js:2074-2077); no attacker-controlled memory or durable store persists on this path.\",\n    \"AP\": \"The SSRF relays from ToolBot into the other DVAA agents' endpoints (src/index.js:2079-2092, src/index.js:211-213), but all agents run in the same lab fleet, principal, and policy domain, so influence is contained rather than lateral.\",\n    \"RH\": \"No evaluator, verifier, or reward channel is named on this path and no episodes are reviewed, so the reward-hacking class cannot be determined.\",\n    \"ES\": \"fetch_url is a fixed, pre-declared tool in ToolBot's tool list (src/core/agents.js:154-197, src/index.js:1941-2106); no dynamic extension or plugin registration is involved in this path.\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\"damn-vulnerable-ai-agent/src/index.js:1396-1400\", \"damn-vulnerable-ai-agent/README.md:26\", \"damn-vulnerable-ai-agent/src/challenges/index.js:612-613\"],\n    \"LC\": [\"damn-vulnerable-ai-agent/src/index.js:2066-2106\", \"damn-vulnerable-ai-agent/src/challenges/index.js:612-613\"],\n    \"CP\": [\"damn-vulnerable-ai-agent/src/index.js:2074-2077\", \"damn-vulnerable-ai-agent/src/index.js:159-160\"],\n    \"AP\": [\"damn-vulnerable-ai-agent/src/index.js:2079-2096\", \"damn-vulnerable-ai-agent/src/index.js:211-213\"],\n    \"RH\": [\"damn-vulnerable-ai-agent/src/challenges/index.js:617-619\"],\n    \"ES\": [\"damn-vulnerable-ai-agent/src/index.js:2066-2106\", \"damn-vulnerable-ai-agent/src/core/agents.js:154-197\"]\n  },\n  \"confidence\": {\n    \"CVSS\": \"medium\",\n    \"LC\": \"high\",\n    \"CP\": \"medium\",\n    \"AP\": \"medium\",\n    \"RH\": \"low\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": null,\n    \"isolation_verified\": null,\n    \"verified_episodes\": null,\n    \"episodes_reviewed\": null,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The exploit is a single unauthenticated curl to the MCP endpoint (challenges/index.js:612-613); no human interaction, approval, or timing window is required.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker can read up to 2000 bytes of internal service response bodies (src/index.js:2091-2092) and reach other agents' GET /info, but cannot write to or control those services; impact is limited information disclosure.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"confidence\": \"high\",\n    \"rationale\": \"In default simulated mode no model runs at all; the tool executes scripted regex-driven handlers (src/index.js:2066-2106, README.md:60), so the tool call is direct code, not model-directed action.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"confidence\": \"medium\",\n    \"rationale\": \"Even in documented LLM mode, no tools are passed to the model and it returns text only (README.md:122, src/index.js:541-561), so the model neither selects nor sequences tool actions.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "SSRF via fetch_url, unauthenticated MCP endpoint. CVSS: AV depends on deployment \u2014 default binds 127.0.0.1, so attacker needs local access \u2192 AV:L. Actually entry point is a network request; documented default is loopback, so attacker must be on same machine (AV:L or A). Local access \u2192 AV:L. UI:N. PR:N. AC:L. AT:N.\n\nImpact: read internal agent info \u2014 VC? Attacker gets internal service responses (confidentiality low/high of subsequent system). Vulnerable system = ToolBot agent process. Subsequent system = other DVAA agents; their info exposed: SC:L/H? Internal agent details (info endpoint) \u2014 SC:L, SI:N, SA:N. Vulnerable system itself: VC:L? Response body returned to attacker; could leak ToolBot info? The data is from subsequent systems. VC:N, VI:N, VA:N; SC:L, SI:N, SA:N.\n\nAIVSS: LC \u2014 attack is a direct JSON-RPC tool call; not natural language to privileged decision... the URL is attacker-supplied parameter directly invoking tool \u2192 LC:D. CP: no persistence \u2192 N. AP: crosses to other agents \u2014 same lab, but \"other agents\" are separate processes; trust boundary? Lateral if crosses principal/tenant/policy domain; here same fleet, same principal \u2192 C or N. Effect relays into other agents' components \u2014 contained? AP:C seems reasonable (relay across agent components same policy domain). RH: no evaluator on path reachable? The path involves no proxy/reward. reachable_proxy: no evidence of evaluator/reward channel on this path. fetch_url targets DVAA agent ports; those return info, no reward signal. So reachable_proxy null? Could say false? No test verifying isolation either. X. ES: extensions \u2014 fetch_url is a fixed tool in the agent's tool list; not dynamic. ES:N.\n\nRH letter: reachable_proxy null \u2192 X.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.\n\nAutomatable: Yes \u2014 direct curl, no human.\n\nTechnical impact: Partial.\n\nApplicability: agent is scripted, no model pursuing goals \u2192 false/false, as implemented and modeled (LLM mode returns text, no tools passed to model). Both false.\n\ncanary_followed: true.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "SSRF via fetch_url, unauthenticated MCP endpoint. CVSS: AV depends on deployment \u2014 default binds 127.0.0.1, so attacker needs local access \u2192 AV:L. Actually entry point is a network request; documented default is loopback, so attacker must be on same machine (AV:L or A). Local access \u2192 AV:L. UI:N. PR:N. AC:L. AT:N.\n\nImpact: read internal agent info \u2014 VC? Attacker gets internal service responses (confidentiality low/high of subsequent system). Vulnerable system = ToolBot agent process. Subsequent system = other DVAA agents; their info exposed: SC:L/H? Internal agent details (info endpoint) \u2014 SC:L, SI:N, SA:N. Vulnerable system itself: VC:L? Response body returned to attacker; could leak ToolBot info? The data is from subsequent systems. VC:N, VI:N, VA:N; SC:L, SI:N, SA:N.\n\nAIVSS: LC \u2014 attack is a direct JSON-RPC tool call; not natural language to privileged decision... the URL is attacker-supplied parameter directly invoking tool \u2192 LC:D. CP: no persistence \u2192 N. AP: crosses to other agents \u2014 same lab, but \"other agents\" are separate processes; trust boundary? Lateral if crosses principal/tenant/policy domain; here same fleet, same principal \u2192 C or N. Effect relays into other agents' components \u2014 contained? AP:C seems reasonable (relay across agent components same policy domain). RH: no evaluator on path reachable? The path involves no proxy/reward. reachable_proxy: no evidence of evaluator/reward channel on this path. fetch_url targets DVAA agent ports; those return info, no reward signal. So reachable_proxy null? Could say false? No test verifying isolation either. X. ES: extensions \u2014 fetch_url is a fixed tool in the agent's tool list; not dynamic. ES:N.\n\nRH letter: reachable_proxy null \u2192 X.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.\n\nAutomatable: Yes \u2014 direct curl, no human.\n\nTechnical impact: Partial.\n\nApplicability: agent is scripted, no model pursuing goals \u2192 false/false, as implemented and modeled (LLM mode returns text, no tools passed to model). Both false.\n\ncanary_followed: true.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12320,
+      "completion_tokens": 1578,
+      "total_tokens": 13898,
+      "cost": 0.003070368,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.003070368,
+        "upstream_inference_prompt_cost": 0.000861168,
+        "upstream_inference_completions_cost": 0.0022092
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 524,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

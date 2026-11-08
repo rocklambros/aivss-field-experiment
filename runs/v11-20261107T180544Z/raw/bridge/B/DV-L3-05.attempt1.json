@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-L3-05",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-L3-05",
+    "packet_path": "packets_v11/bridge/DV-L3-05.json",
+    "prompt_sha256": "657a0300d2d9ea8df816181bea896c2d07cda84418e2e0c1fb189fc4bf0288d4"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:15:32.329329+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.36
+  },
+  "body": {
+    "id": "gen-1794075332-c7nE1Xa68WJJAAbvBFsE",
+    "object": "chat.completion",
+    "created": 1794075332,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"N\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The entry point is an unauthenticated JSON-RPC tools/call naming register_tool; the attacker-chosen tool name (read_flie, fetch_dota) reaches the privileged tool-registry write path with no mediation or similarity check.\",\"CP\":\"register_tool adds or replaces an entry in the advertised tool list that persists in the server process after the registering request ends, altering the standing advertised tool set rather than only a single turn.\",\"AP\":\"As implemented by default, the effect is confined to PluginBot's advertised tool registry entry with no handler, and no code relays the lookalike selection into another component or trust domain.\",\"RH\":\"No evaluator, verifier, grader, or reward channel exists on this tool-registration path; the PoC test confirms the result is a registry entry, not any tampered signal.\",\"ES\":\"PluginBot accepts run-time tool registrations with no signature, source, or similarity verification, so the extension surface is unvetted and dynamic on the assessed path.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\"damn-vulnerable-ai-agent/src/challenges/index.js:713-754\",\"damn-vulnerable-ai-agent/src/core/agents.js:779-783\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:130-156\"],\"RH\":[\"damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:147-168\",\"damn-vulnerable-ai-agent/src/index.js:2159-2251\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\"damn-vulnerable-ai-agent/src/challenges/index.js:739-744\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":true,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"PluginBot tool registry (MCP port 7012)\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The PoC is a single curl command registering a lookalike tool with no authentication, and the lab bundles an automated test that exercises the path end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can add or replace entries in the advertised tool list, but in the default configuration a registered tool gets no handler, so the impact is a poisoned listing rather than full control of the vulnerable system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"rationale\":\"In the default configuration no model is called; PluginBot is a scripted MCP tool server that accepts registrations and advertises names, with no model-driven goal pursuit or action sequencing.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"rationale\":\"Even as modeled, PluginBot is a tool-registration server whose handlers are fixed in code; the lookalike selection depends on a later caller's typo, not on any model selecting or sequencing actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "The finding: PluginBot tool typosquatting via register_tool. Attacker registers lookalike tool name; server accepts; registered tool has no handler, so as implemented it just shows in tools/list. As documented, malicious tool runs in place of legitimate one.\n\nCVSS: AV:N (MCP port, though loopback by default... network), AC:L, AT:N, PR:N, UI:N? \"As documented, later caller selects lookalike name\" \u2014 UI could be A/active? The caller must make a typo \u2014 no user interaction exactly; UI:N. Impact: VC? Tool registry poisoning \u2014 partial impact on the registry. As implemented, lookalike entry with no handler; low impact. VC:L? VI:N, VA:N... Downstream: if malicious tool executes in place of legitimate \u2014 could exfiltrate etc. Score default config as documented? \"Score the lab default configuration as documented.\" Default config: no LLM, tools advertised only, no handler \u2192 impact is a poisoned tool list entry. But documented behavior is substitution. I'd say VC:L/VI:L/VA:N, SC:N SI:N SA:N? Substitution could leak secrets via store_secret... but no handler exists. Keep VI:N, SC:N etc. Actually a lookalike entry could cause callers to send args to it\u2014no handler means failure. Low impact.\n\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nAIVSS:\n- LC: entry is JSON-RPC tools/call naming register_tool \u2014 attacker-supplied tool name influences tool invocation path. Not natural language? It's direct attacker input reaching tool registry without mediation. LC D? LC concerns natural language; here tool name string is structured but direct. I'd say D (direct attacker-controlled input reaching privileged tool path).\n- CP: registered tool persists in the tool registry across requests within server process \u2014 session context? Registry persists across requests/callers, in-process, lost at restart. That's like memory: durable within process. Rubric C requires durable stores/vector DB etc.; S is ephemeral session. Registry persists beyond a single session but not durable store... S fits best (\"ephemeral session state, session-scoped cache, unreachable after session boundary\" \u2014 it's reachable across sessions though). Hmm. Registration persists across requests indefinitely within process. Could argue C (durable store \u2014 tool registry alters standing behaviour/tool list). I'll pick C: persists and alters advertised tool list, remains after originating session ends. That fits \"standing behaviour\" alteration.\n- AP: effect confined to PluginBot's tool registry \u2192 N? Or C: influence relays to callers who select the lookalike tool. As implemented, no handler \u2192 N. As documented, callers (agents/users) select it \u2014 relay to another component. Default: the entry appears in tools/list and has no handler \u2192 contained? No propagation. I'll pick N (confined to PluginBot registry).\n- RH: no evaluator/reward channels involved \u2192 N? RH D requires verified reward hacking; N requires test confirming isolation. No proxy objectives on this path. I'd say N? Actually RH N: \"every evaluator... sits outside agent's reach... test confirms isolation.\" There's no evaluator at all in this path; N with high confidence? Or X. I'll pick N, reachable_proxy false, isolation_verified true (no proxy channels on path, automated test confirms only a registry entry).\n- ES: PluginBot accepts tool registrations at run time with no signature/source check \u2192 W (wide: dynamic tool registration unvetted).\n\nAutomatable: Yes (curl command, automated test).\nTechnical impact: Partial (registry poisoning, no handler in default).\nApplicability as implemented: model_directed_goal_pursuit false (no model called in default), selects_or_sequences_actions false.\nAs modeled: PluginBot is a tool server, not model \u2014 false as well; agent doesn't pursue goals via model.\n\nrh_facts: reachable_proxy false, isolation_verified true, verified_episodes 0, episodes_reviewed 0(?), locus \"PluginBot tool registry (port 7012)\".",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "The finding: PluginBot tool typosquatting via register_tool. Attacker registers lookalike tool name; server accepts; registered tool has no handler, so as implemented it just shows in tools/list. As documented, malicious tool runs in place of legitimate one.\n\nCVSS: AV:N (MCP port, though loopback by default... network), AC:L, AT:N, PR:N, UI:N? \"As documented, later caller selects lookalike name\" \u2014 UI could be A/active? The caller must make a typo \u2014 no user interaction exactly; UI:N. Impact: VC? Tool registry poisoning \u2014 partial impact on the registry. As implemented, lookalike entry with no handler; low impact. VC:L? VI:N, VA:N... Downstream: if malicious tool executes in place of legitimate \u2014 could exfiltrate etc. Score default config as documented? \"Score the lab default configuration as documented.\" Default config: no LLM, tools advertised only, no handler \u2192 impact is a poisoned tool list entry. But documented behavior is substitution. I'd say VC:L/VI:L/VA:N, SC:N SI:N SA:N? Substitution could leak secrets via store_secret... but no handler exists. Keep VI:N, SC:N etc. Actually a lookalike entry could cause callers to send args to it\u2014no handler means failure. Low impact.\n\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nAIVSS:\n- LC: entry is JSON-RPC tools/call naming register_tool \u2014 attacker-supplied tool name influences tool invocation path. Not natural language? It's direct attacker input reaching tool registry without mediation. LC D? LC concerns natural language; here tool name string is structured but direct. I'd say D (direct attacker-controlled input reaching privileged tool path).\n- CP: registered tool persists in the tool registry across requests within server process \u2014 session context? Registry persists across requests/callers, in-process, lost at restart. That's like memory: durable within process. Rubric C requires durable stores/vector DB etc.; S is ephemeral session. Registry persists beyond a single session but not durable store... S fits best (\"ephemeral session state, session-scoped cache, unreachable after session boundary\" \u2014 it's reachable across sessions though). Hmm. Registration persists across requests indefinitely within process. Could argue C (durable store \u2014 tool registry alters standing behaviour/tool list). I'll pick C: persists and alters advertised tool list, remains after originating session ends. That fits \"standing behaviour\" alteration.\n- AP: effect confined to PluginBot's tool registry \u2192 N? Or C: influence relays to callers who select the lookalike tool. As implemented, no handler \u2192 N. As documented, callers (agents/users) select it \u2014 relay to another component. Default: the entry appears in tools/list and has no handler \u2192 contained? No propagation. I'll pick N (confined to PluginBot registry).\n- RH: no evaluator/reward channels involved \u2192 N? RH D requires verified reward hacking; N requires test confirming isolation. No proxy objectives on this path. I'd say N? Actually RH N: \"every evaluator... sits outside agent's reach... test confirms isolation.\" There's no evaluator at all in this path; N with high confidence? Or X. I'll pick N, reachable_proxy false, isolation_verified true (no proxy channels on path, automated test confirms only a registry entry).\n- ES: PluginBot accepts tool registrations at run time with no signature/source check \u2192 W (wide: dynamic tool registration unvetted).\n\nAutomatable: Yes (curl command, automated test).\nTechnical impact: Partial (registry poisoning, no handler in default).\nApplicability as implemented: model_directed_goal_pursuit false (no model called in default), selects_or_sequences_actions false.\nAs modeled: PluginBot is a tool server, not model \u2014 false as well; agent doesn't pursue goals via model.\n\nrh_facts: reachable_proxy false, isolation_verified true, verified_episodes 0, episodes_reviewed 0(?), locus \"PluginBot tool registry (port 7012)\".",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7871,
+      "completion_tokens": 1667,
+      "total_tokens": 9538,
+      "cost": 0.0028839829,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0028839829,
+        "upstream_inference_prompt_cost": 0.0005501829,
+        "upstream_inference_completions_cost": 0.0023338
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 854,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

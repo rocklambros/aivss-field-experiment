@@ -1,0 +1,83 @@
+{
+  "finding_id": "DV-L3-03",
+  "path_id": "dvaa/memorybot/chat/self-replicating-instruction/memory-worm",
+  "title": "Self-Replicating Memory Entry (MemoryBot)",
+  "summary": "As documented, persistent access that survives memory cleanup (a memory worm). As implemented, one stored entry.",
+  "risk_category": "ASI06",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:C/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated configuration no model is called, and MemoryBot only regex-flags and stores a message once; the packet states no handler changes behavior because of a stored entry and no code re-stores the instruction.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ]
+    },
+    "CP": {
+      "rationale": "MemoryBot keeps flagged messages in one in-process list shared by every caller that survives across requests and callers and is lost only when the process stops, so attacker-controlled memory remains reachable after the originating session.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ]
+    },
+    "AP": {
+      "rationale": "The stored entry stays in MemoryBot's own list, recall does not change handler behavior, and the A2A path sends no message to another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet describes a 300-point memory-injection challenge and a one-prompt solution, but no evaluator, verifier, reward channel, proxy objective, verified episode, or isolation test on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:628-668",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1325"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "MemoryBot declares read_file, write_file, and search, but on the default chat path only the scripted memory-list store runs; those declared tools are not invoked and no dynamic extension is bound.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The challenge documentation models MemoryBot as executing instructions found in memory and re-saving that message on every memory access, which is instruction-following action sequencing across sessions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:662-669",
+      "damn-vulnerable-ai-agent/src/index.js:1308-1325"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:30:31.695968+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:30:31.695968+00:00"
+  }
+}

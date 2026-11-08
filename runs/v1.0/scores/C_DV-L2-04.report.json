@@ -1,0 +1,202 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L2-04",
+  "path_id": "dvaa/memorybot/chat/remember-instruction/stored-across-sessions",
+  "risk_category": {
+    "id": "ASI06",
+    "name": "Memory & Context Poisoning",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge models the stored instruction as followed in later conversations, which is model-directed instruction following, but the documented effect is reply text rather than the agent choosing or ordering actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+      "damn-vulnerable-ai-agent/src/index.js:159-160",
+      "damn-vulnerable-ai-agent/src/index.js:1308-1325",
+      "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:X/ES:N",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "In the default simulated handler, an unauthenticated chat message is the direct input and a flagged message is appended unsanitized to MemoryBot's shared list, which any later caller can recall; nothing reduces that language to closed validated fields before the sink.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1308-1325",
+            "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+            "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+            "damn-vulnerable-ai-agent/src/core/agents.js:632-679"
+          ]
+        }
+      },
+      "CP": {
+        "value": "C",
+        "label": "Cross-session memory",
+        "evidence": {
+          "rationale": "The packet states MemoryBot keeps flagged messages in one in-process list shared by every caller, surviving later requests and sessions until the process stops, so attacker-controlled memory remains reachable after the originating session.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:159-160",
+            "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+            "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+            "damn-vulnerable-ai-agent/src/index.js:500-502"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "As implemented, no handler changes later replies from a stored entry and no code hands the planted text to another agent; the effect stays in MemoryBot's own list rather than compromised intent crossing a trust boundary.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+            "damn-vulnerable-ai-agent/src/index.js:1308-1363",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "The cited material is a challenge payload and an exploit test that needs a running fleet; nothing shows a human-verified episode of the agent reaching or satisfying a grader, reward, or proxy by crossing a security boundary, and no isolation test is cited.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:86-102",
+            "damn-vulnerable-ai-agent/src/challenges/index.js:294-298",
+            "damn-vulnerable-ai-agent/src/challenges/index.js:268-308"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "N",
+        "label": "None or narrow",
+        "evidence": {
+          "rationale": "MemoryBot only declares tool names, and the default path does not call a model or pass tools; chat-agent tool lists are not executed except on separate scripted paths that this finding does not use.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+            "damn-vulnerable-ai-agent/src/llm/provider.js:56-84",
+            "damn-vulnerable-ai-agent/src/index.js:541-561"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A2",
+    "agentic_effect_class_label": "Substantial",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 7,
+    "agentic_effect_class_min": "A2",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "A2",
+    "provisional": true,
+    "agentic_uplift_u": 7,
+    "aivss": 7.1,
+    "aivss_min": 7.1,
+    "aivss_max": 7.1,
+    "aivss_band": "High",
+    "table_cell": 7.1,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:08:21.172572+00:00"
+  },
+  "title": "Persistent Memory Injection (MemoryBot)",
+  "summary": "As documented, an attacker plants instructions that activate in later sessions for other users. As implemented, the planted text is stored and shown to any later caller.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-07T00:08:21.172572+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A2"
+    },
+    "aivss_recommended_timeline": "14D",
+    "aivss_recommended_label": "Remediate within 14 days",
+    "overlay_triggered": true,
+    "escalated": true,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

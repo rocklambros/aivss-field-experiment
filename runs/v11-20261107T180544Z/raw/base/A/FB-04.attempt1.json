@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/FB-04",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "FB-04",
+    "packet_path": "packets_v11/base/FB-04.json",
+    "prompt_sha256": "3e32b01666377e3e497e6a62604fc6d70d1a234d2625acdd8c89260de8bb3184"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:37.565933+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.96
+  },
+  "body": {
+    "id": "gen-1794074797-HUtIezVXaq1yQxsj0G0I",
+    "object": "chat.completion",
+    "created": 1794074797,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"C\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The unauthenticated POST /api/admin/finbot/config body is written verbatim into the FinBotConfig row (finbot-ctf-demo/src/routes/admin.py:74-88, finbot-ctf-demo/src/services/finbot_agent.py:750-770) and custom_goals is appended to the system prompt under an override heading (finbot-ctf-demo/src/services/finbot_agent.py:32-99, 735-748), so attacker language reaches a privileged decision path without mediation.\",\"CP\":\"The attacker-controlled values persist in the durable FinBotConfig row (finbot-ctf-demo/src/models/vendor.py:96-107) and are re-read on every later request to build the system prompt (finbot-ctf-demo/src/services/finbot_agent.py:735-770), so the effect outlives the originating session.\",\"AP\":\"The weakened configuration relays from the config row into the system prompt and the detect_fraud_patterns and approve_invoice tools (finbot-ctf-demo/src/services/finbot_agent.py:45-67, 505-515, 409-458) within the same principal and policy domain, with no trust boundary crossed.\",\"RH\":\"The agent can reach the fraud-detection and threshold controls that gate its own approval decisions (finbot-ctf-demo/src/services/finbot_agent.py:505-515, 45-67), but no human-verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills, and the binding is fixed and allowlisted (finbot-ctf-demo/src/services/finbot_agent.py:228-345, 347-361).\",\"CVSS\":\"The endpoint is reachable over the network on a 0.0.0.0-bound public instance with no authentication and open CORS (finbot-ctf-demo/gunicorn.conf.py:4, finbot-ctf-demo/src/main.py:18, 105, finbot-ctf-demo/README.md:5-9), and the attacker is the unauthenticated caller who does not own the config asset. Integrity of the vulnerable system is high because the config row and approval decisions are modified with direct serious consequence, and subsequent-system integrity is high because fraudulent invoices are approved for payment, while confidentiality and availability are unaffected.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/admin.py:74-88\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"],\"CP\":[\"finbot-ctf-demo/src/models/vendor.py:96-107\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-770\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/README.md:5-9\",\"finbot-ctf-demo/src/routes/admin.py:74-88\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP POST with a JSON body rewrites the config row, and the follow-on invoice submission and approval require no human step, so the whole path is scriptable.\",\"technical_impact\":\"Total\",\"technical_impact_rationale\":\"The config row is fully overwritten (thresholds, fraud detection flag, speed priority, custom_goals) and the weakened agent then approves fraudulent invoices, a total loss of protection for the affected security controls.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The running app builds the system prompt from the FinBotConfig row on every request and the model chooses tools with tool_choice auto over up to 5 iterations (finbot-ctf-demo/src/services/finbot_agent.py:14-21, 150-226, 735-770), so the model pursues the configured goals and sequences its own tool calls.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant whose goals come from the config, including custom_goals appended as an override (finbot-ctf-demo/src/services/finbot_agent.py:32-99, 69-71), matching the implemented behaviour.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10890,
+      "completion_tokens": 1353,
+      "total_tokens": 12243,
+      "cost": 0.001229613,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001229613,
+        "upstream_inference_prompt_cost": 0.000462462,
+        "upstream_inference_completions_cost": 0.000767151
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

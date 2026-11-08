@@ -1,0 +1,198 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "FB-03",
+  "path_id": "finbot/admin-goals-api/custom-goals/approve-invoice",
+  "risk_category": {
+    "id": "ASI01",
+    "name": "Agent Goal Hijack",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice-processing assistant that pursues natural-language goals and selects tool calls, with the fallback described as a non-default path.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:90-109",
+      "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+      "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+      "finbot-ctf-demo/src/models/vendor.py:105",
+      "finbot-ctf-demo/src/static/admin-dashboard.html:498",
+      "finbot-ctf-demo/src/static/index.html:79"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:H/SA:N/E:U",
+    "macrovector": "000120",
+    "cvss_score": 8.8,
+    "cvss_bte": 8.8,
+    "exploit_maturity": {
+      "e": "U",
+      "rung": "none",
+      "rationale": "No affirmative exploitation evidence was supplied",
+      "state": "no_evidence_supplied",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:H/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:P/ES:N",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "Attacker-supplied natural-language goals text posted to the unauthenticated admin goals endpoint is stored unvalidated and appended verbatim to the system prompt under CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING), directly steering the model's tool choice with no mediation.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/routes/admin.py:90-109",
+            "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+            "finbot-ctf-demo/src/services/finbot_agent.py:69-71"
+          ]
+        }
+      },
+      "CP": {
+        "value": "C",
+        "label": "Cross-session memory",
+        "evidence": {
+          "rationale": "The custom_goals text is written to FinBotConfig.custom_goals in the database and injected into the system prompt of every later run, so it persists across sessions and alters standing agent behaviour rather than being re-retrieved source content.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/models/vendor.py:105",
+            "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+            "finbot-ctf-demo/src/services/finbot_agent.py:163-166"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The effect is confined to the single FinBot agent and its own configuration; there are no handoffs, no other agents, tenants or principals, so no trust boundary is crossed.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/routes/admin.py:26-65"
+          ]
+        }
+      },
+      "RH": {
+        "value": "P",
+        "label": "Possible",
+        "evidence": {
+          "rationale": "The agent can reach the approve_invoice write tool that sets status approved and payment_processed true with no amount check or confirmation, which is a reward/verifier channel on the path, but no human-verified reward-hacking episode is documented (prose walkthrough only, no PoC in repo).",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:409-458",
+            "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+            "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184"
+          ],
+          "reachable_proxy": true,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": "environment"
+        }
+      },
+      "ES": {
+        "value": "N",
+        "label": "None or narrow",
+        "evidence": {
+          "rationale": "The five tools are fixed in code with no dynamic tools, MCP servers, plugins or skills, and the binding is not model-selected, so the extension surface is narrow.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+            "finbot-ctf-demo/src/services/finbot_agent.py:347-361"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A2",
+    "agentic_effect_class_label": "Substantial",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 7,
+    "agentic_effect_class_min": "A2",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 8.8,
+    "cvss_bte": 8.8,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "High",
+    "agentic_effect_class": "A2",
+    "provisional": false,
+    "agentic_uplift_u": 7,
+    "aivss": 9.5,
+    "aivss_min": 9.5,
+    "aivss_max": 9.5,
+    "aivss_band": "Critical",
+    "table_cell": 9.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:40.417737+00:00"
+  },
+  "title": "Direct goal manipulation through the unauthenticated admin goals endpoint",
+  "summary": "The agent's objectives are replaced for every later invoice from every vendor until someone resets the configuration. High-value invoices are approved for payment without review.",
+  "decision": {
+    "exploitation": {
+      "rung": "none",
+      "rationale": "No affirmative exploitation evidence was supplied",
+      "state": "no_evidence_supplied",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:23:40.417737+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "total",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A2"
+    },
+    "aivss_recommended_timeline": "14D",
+    "aivss_recommended_label": "Remediate within 14 days",
+    "overlay_triggered": true,
+    "escalated": true,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

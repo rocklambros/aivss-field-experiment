@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L2-03",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L2-03",
+    "packet_path": "packets_v11/bridge/DV-L2-03.json",
+    "prompt_sha256": "029859cb90feb5f09e7b2331c370f1af2ba0f1e9c65d095f09f9a2a4da02be73"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:02.783090+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.82
+  },
+  "body": {
+    "id": "gen-1794074882-sqymArhU2fzydGKfiKwe",
+    "object": "chat.completion",
+    "created": 1794074882,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The read_file path is a JSON-RPC tools/call argument, not natural language; the caller names the tool and arguments directly and the handler resolves the path with no language mediation.\",\n    \"CP\": \"ToolBot is a stateless MCP tool server; the packet states cross-session persistence exists only in MemoryBot, and no attacker-controlled context carries over between ToolBot requests.\",\n    \"AP\": \"The effect is confined to the ToolBot read_file handler and the sandbox file it reads; no trust boundary into another agent, tenant, or principal is crossed.\",\n    \"RH\": \"The path reaches only a real file read inside a temporary sandbox directory; no evaluator, verifier, or reward channel is on the path, and the hard boundary refuses paths outside the sandbox.\",\n    \"ES\": \"ToolBot exposes a fixed set of four declared tools (read_file, write_file, execute, fetch_url) with no dynamic registration, and the file operations are confined by a hard sandbox boundary.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/challenges/index.js:223-262\",\n      \"damn-vulnerable-ai-agent/src/index.js:1941-1966\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:500-502\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:154-197\",\n      \"damn-vulnerable-ai-agent/src/index.js:1941-1990\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1941-1990\",\n      \"damn-vulnerable-ai-agent/src/sandbox/init.js:17-32\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:154-197\",\n      \"damn-vulnerable-ai-agent/src/index.js:1941-1990\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": true,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The documented PoC is a single curl command against an unauthenticated JSON-RPC endpoint, and the in-repo automated test exercises the same path, so the exploit is fully scriptable without human interaction.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The traversal discloses files outside the intended directory, but in the lab the reachable files are planted fakes inside a sandbox and a hard boundary refuses paths outside it, so confidentiality is impacted without integrity or availability loss.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated configuration no model is called; ToolBot is an MCP tool server that callers invoke directly, and the handler resolves the supplied path deterministically.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models ToolBot as an MCP tool server whose tools are exposed to any caller with no authentication; no model-directed goal pursuit or action selection is modeled on this path.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8184,
+      "completion_tokens": 937,
+      "total_tokens": 9121,
+      "cost": 0.000889527,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000889527,
+        "upstream_inference_prompt_cost": 0.000358248,
+        "upstream_inference_completions_cost": 0.000531279
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

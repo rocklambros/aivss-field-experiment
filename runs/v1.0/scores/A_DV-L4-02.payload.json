@@ -1,0 +1,78 @@
+{
+  "finding_id": "DV-L4-02",
+  "path_id": "dvaa/orchestrator/a2a/spoofed-sender/delegation",
+  "title": "Agent-to-Agent Attack Chain (Orchestrator identity spoofing)",
+  "summary": "As documented, a spoofed agent identity makes two agents perform actions that neither should allow alone. As implemented, the effect is an acceptance reply.",
+  "risk_category": "ASI07",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated configuration the A2A handler returns a fixed scripted reply and no model is called, so attacker-supplied natural language does not reach any privileged decision or tool-invocation path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ]
+    },
+    "CP": {
+      "rationale": "The A2A handler answers only the latest message and the lab profile states there is no cross-session persistence outside MemoryBot, which is not on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739"
+      ]
+    },
+    "AP": {
+      "rationale": "The handler sends no message to the Worker and the Worker runs nothing, so the effect is confined to the initially affected Orchestrator endpoint.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier or reward channel is reachable on this path; the handler only returns a scripted acceptance reply and no proxy objective exists.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "No dynamic or unvetted extension is invoked on the assessed path; the A2A handler is a fixed scripted reply with no tool binding.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab documents the Orchestrator as trusting the self-declared identity, delegating a dangerous task, and the Worker executing it, which models goal pursuit and action sequencing across agents.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:251-295",
+      "damn-vulnerable-ai-agent/src/index.js:1694-1701",
+      "damn-vulnerable-ai-agent/src/index.js:1711-1739"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:30.874970+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:30.874970+00:00"
+  }
+}

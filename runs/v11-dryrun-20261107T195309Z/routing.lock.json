@@ -1,0 +1,401 @@
+{
+  "locked_at": "2026-11-07T19:53:10.654171+00:00",
+  "endpoints": {
+    "A": {
+      "openai": {
+        "tag": "openai",
+        "provider_name": "OpenAI",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1050000,
+        "max_completion_tokens": 128000,
+        "max_prompt_tokens": 922000,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "seed",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "verbosity",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000002",
+          "completion": "0.00001",
+          "web_search": "0.01",
+          "input_cache_read": "0.0000001",
+          "input_cache_write": "0.0000025",
+          "discount": 0,
+          "overrides": [
+            {
+              "min_prompt_tokens": 272000,
+              "prompt": "0.000004",
+              "completion": "0.000015",
+              "input_cache_read": "0.0000002",
+              "input_cache_write": "0.000005"
+            }
+          ]
+        }
+      },
+      "azure/us": {
+        "tag": "azure/us",
+        "provider_name": "Azure",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1050000,
+        "max_completion_tokens": 128000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_completion_tokens",
+          "tools",
+          "tool_choice",
+          "verbosity",
+          "response_format",
+          "seed",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000022",
+          "completion": "0.000011",
+          "web_search": "0.01",
+          "input_cache_read": "0.00000011",
+          "input_cache_write": "0.00000275",
+          "discount": 0,
+          "overrides": [
+            {
+              "min_prompt_tokens": 272000,
+              "prompt": "0.0000044",
+              "completion": "0.0000165",
+              "input_cache_read": "0.00000022",
+              "input_cache_write": "0.0000055"
+            }
+          ]
+        }
+      }
+    },
+    "B": {
+      "google-vertex/global": {
+        "tag": "google-vertex/global",
+        "provider_name": "Google",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1048576,
+        "max_completion_tokens": 943718,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "seed",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "stop",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000002",
+          "completion": "0.00001",
+          "image": "0.000002",
+          "audio": "0.000002",
+          "input_audio_cache": "0.0000001",
+          "web_search": "0.014",
+          "internal_reasoning": "0.00001",
+          "input_cache_read": "0.0000001",
+          "input_cache_write": "0.0000001875",
+          "discount": 0.5
+        }
+      },
+      "google-vertex/us": {
+        "tag": "google-vertex/us",
+        "provider_name": "Google",
+        "status": -2,
+        "quantization": "unknown",
+        "context_length": 1048576,
+        "max_completion_tokens": 65536,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "seed",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "stop",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000022",
+          "completion": "0.000011",
+          "image": "0.0000022",
+          "audio": "0.0000022",
+          "input_audio_cache": "0.00000011",
+          "web_search": "0.014",
+          "internal_reasoning": "0.000011",
+          "input_cache_read": "0.00000011",
+          "input_cache_write": "0.0000001875",
+          "discount": 0.5
+        }
+      }
+    },
+    "C": {
+      "amazon-bedrock/global": {
+        "tag": "amazon-bedrock/global",
+        "provider_name": "Amazon Bedrock",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 500000,
+        "max_completion_tokens": 450000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "structured_outputs",
+          "response_format",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "top_k",
+          "stop",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000002",
+          "completion": "0.000006",
+          "web_search": "0.01",
+          "input_cache_read": "0.0000005",
+          "input_cache_write": "0",
+          "discount": 0,
+          "overrides": [
+            {
+              "min_prompt_tokens": 200000,
+              "prompt": "0.000004",
+              "completion": "0.000012",
+              "input_cache_read": "0.000001",
+              "input_cache_write": "0"
+            }
+          ]
+        }
+      },
+      "xai/zdr/us": {
+        "tag": "xai/zdr/us",
+        "provider_name": "xAI",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 500000,
+        "max_completion_tokens": 450000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "structured_outputs",
+          "response_format",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "seed",
+          "logprobs",
+          "top_logprobs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000022",
+          "completion": "0.0000066",
+          "web_search": "0.005",
+          "input_cache_read": "0.00000055",
+          "discount": 0,
+          "overrides": [
+            {
+              "min_prompt_tokens": 200000,
+              "prompt": "0.0000044",
+              "completion": "0.0000132",
+              "input_cache_read": "0.0000011"
+            }
+          ]
+        }
+      }
+    },
+    "D": {
+      "alibaba/us-east-1": {
+        "tag": "alibaba/us-east-1",
+        "provider_name": "Alibaba",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1000000,
+        "max_completion_tokens": 131072,
+        "max_prompt_tokens": 983616,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "seed",
+          "presence_penalty",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "logprobs",
+          "top_logprobs",
+          "top_k",
+          "frequency_penalty",
+          "stop",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000002",
+          "completion": "0.000006",
+          "input_cache_read": "0.00000025",
+          "discount": 0
+        }
+      }
+    },
+    "E": {
+      "wafer/us": {
+        "tag": "wafer/us",
+        "provider_name": "Wafer",
+        "status": 0,
+        "quantization": "fp4",
+        "context_length": 1048576,
+        "max_completion_tokens": 943718,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000000699",
+          "completion": "0.0000014",
+          "input_cache_read": "0.0000000689",
+          "discount": 0
+        }
+      }
+    },
+    "F": {
+      "anthropic": {
+        "tag": "anthropic",
+        "provider_name": "Anthropic",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1000000,
+        "max_completion_tokens": 128000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "stop",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "response_format",
+          "verbosity",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000002",
+          "completion": "0.00001",
+          "web_search": "0.01",
+          "input_cache_read": "0.0000001",
+          "input_cache_write": "0.0000025",
+          "input_cache_write_1h": "0.000004",
+          "discount": 0
+        }
+      },
+      "amazon-bedrock/us-east-1": {
+        "tag": "amazon-bedrock/us-east-1",
+        "provider_name": "Amazon Bedrock",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1000000,
+        "max_completion_tokens": 128000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "stop",
+          "tool_choice",
+          "tools",
+          "response_format",
+          "verbosity",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000022",
+          "completion": "0.000011",
+          "web_search": "0.01",
+          "input_cache_read": "0.00000011",
+          "input_cache_write": "0.00000275",
+          "input_cache_write_1h": "0.0000044",
+          "discount": 0
+        }
+      }
+    },
+    "G": {
+      "azure/us": {
+        "tag": "azure/us",
+        "provider_name": "Azure",
+        "status": 0,
+        "quantization": "unknown",
+        "context_length": 1048576,
+        "max_completion_tokens": 384000,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "max_completion_tokens",
+          "tools",
+          "tool_choice",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000191",
+          "completion": "0.00000383",
+          "input_cache_read": "0.00000016",
+          "discount": 0
+        }
+      }
+    }
+  }
+}

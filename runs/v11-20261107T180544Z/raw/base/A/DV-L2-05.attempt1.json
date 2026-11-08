@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-05",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-05",
+    "packet_path": "packets_v11/base/DV-L2-05.json",
+    "prompt_sha256": "9b6d0d580b03c8a55077e16747167f9103c1042ffd32ed499e86589563ce50a9"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:16.236595+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.22
+  },
+  "body": {
+    "id": "gen-1794074776-A0PGBuqUmxyQxYoRbets",
+    "object": "chat.completion",
+    "created": 1794074776,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message text is matched directly by keyword checks (index.js:1329-1333) and the reply is built from agent.memory without any mediation, so attacker-supplied natural language reaches the disclosure sink unmediated.\",\"CP\":\"MemoryBot's preloaded credentials live in the agent's persistent memory array (agents.js:657-661) and the challenge states they were stored by a previous session and are readable by any user (challenges/index.js:318-324, 344), so attacker-relevant context persists across sessions.\",\"AP\":\"The disclosure is confined to the MemoryBot process and its own memory array; the reply is returned to the same caller and no other agent, tenant or policy domain is crossed.\",\"RH\":\"The agent can reach a reward/evaluator channel: the scripted path sets attackSucceeded and calls trackCategorySuccessful (index.js:1333-1335, 1347-1348), and the challenge success pattern (challenges/index.js:341-343) is satisfied by the same reply, but no human-verified reward-hacking episode is reported.\",\"ES\":\"The documented path uses no dynamic extension: MemoryBot's declared tools (read_file, write_file, search) are not invoked by the scripted credential-recall branch, and the dynamic registration surface belongs to PluginBot, not this path.\",\"CVSS\":\"The attacker is an unauthenticated remote chat client; the default deployment binds 127.0.0.1 (index.js:1396-1400) but every agent route sets Access-Control-Allow-Origin: * (index.js:1561-1564), so a browser page can reach the loopback agent, and the Docker image sets DVAA_HOST=0.0.0.0 (Dockerfile:22). No privileges or user interaction are needed, and the reply discloses high-value planted credentials (agents.js:657-661), giving high confidentiality loss on the vulnerable system only.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1329-1333\",\"damn-vulnerable-ai-agent/src/index.js:1337-1342\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:657-661\",\"damn-vulnerable-ai-agent/src/challenges/index.js:318-324\",\"damn-vulnerable-ai-agent/src/challenges/index.js:344\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1337-1342\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1333-1335\",\"damn-vulnerable-ai-agent/src/index.js:1347-1348\",\"damn-vulnerable-ai-agent/src/challenges/index.js:341-343\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/src/core/agents.js:657-661\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP request containing a keyword such as 'password' or 'api key' triggers the scripted disclosure branch (index.js:1331-1342); no reconnaissance, credentials, or human steps are required, so the attack can be scripted end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply discloses the planted admin password and internal API key from MemoryBot's memory (agents.js:657-661), a serious confidentiality loss, but there is no integrity or availability effect and no impact on other systems.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63) and the credential-recall branch is a hard-coded keyword match that builds the reply from agent.memory (index.js:1327-1345); the agent pursues no goal and selects no actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes MemoryBot as a persistent-memory persona with preloaded credentials and a shared in-process list (agents.js:632-679, index.js:1308-1363); even in optional LLM mode no tools are passed to the model and the exfiltration paths stay scripted in code, so the documented behaviour is a scripted disclosure rather than model-directed action selection.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12231,
+      "completion_tokens": 1192,
+      "total_tokens": 13423,
+      "cost": 0.001206717,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001206717,
+        "upstream_inference_prompt_cost": 0.000530853,
+        "upstream_inference_completions_cost": 0.000675864
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "ablation/A/DV-L2-04",
+    "arm": "ablation",
+    "slot": "A",
+    "finding_id": "DV-L2-04",
+    "packet_path": "packets_v11/ablation/DV-L2-04.json",
+    "prompt_sha256": "b244564549e598c0c0c78d39dd791abc952ee2dba53e507456d64fa4c2375e18"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:10.244793+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.4
+  },
+  "body": {
+    "id": "gen-1794074830-WCNPmBOqslzTf0e3gdV3",
+    "object": "chat.completion",
+    "created": 1794074830,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message is stored verbatim and later replayed as an instruction the agent follows, with no transformation between language and the memory sink (damn-vulnerable-ai-agent/src/index.js:1313-1324, damn-vulnerable-ai-agent/src/core/agents.js:662-677).\",\"CP\":\"Injected instructions persist in the shared memoryStore across sessions and are re-read on recall, and the agent definition marks crossSessionPersistence: true (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:1346-1361, damn-vulnerable-ai-agent/src/core/agents.js:667).\",\"AP\":\"The effect stays inside MemoryBot's own memory list and its own responses; nothing in the documented path crosses into another agent, tenant, or policy domain (damn-vulnerable-ai-agent/src/index.js:1315-1324).\",\"RH\":\"The success criteria are a regex over the agent's own reply, and the agent can reach that evaluator channel by emitting the pattern, but no verified reward-hacking episode is reported in the briefing (damn-vulnerable-ai-agent/src/challenges/index.js:299-301).\",\"ES\":\"MemoryBot's declared tools are read_file, write_file, and search, and the documented path invokes no dynamic extension, MCP server, or plugin (damn-vulnerable-ai-agent/src/core/agents.js:646).\",\"CVSS\":\"Unauthenticated network chat to port 7007 with no user interaction; the injected instruction persists and is followed, and recall dumps preloaded admin credentials and API keys, giving high confidentiality and integrity loss on the agent process only (damn-vulnerable-ai-agent/src/index.js:1346-1361, damn-vulnerable-ai-agent/src/core/agents.js:657-661).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\"damn-vulnerable-ai-agent/src/core/agents.js:662-677\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1346-1361\",\"damn-vulnerable-ai-agent/src/core/agents.js:667\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1315-1324\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:299-301\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:646\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1346-1361\",\"damn-vulnerable-ai-agent/src/core/agents.js:657-661\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP POST to the loopback agent port plants the instruction, and a second request triggers recall; no human step or target-specific secret is needed.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The injected instruction persists and is followed, and recall discloses the preloaded admin password and internal API key, but the effect is confined to MemoryBot's own memory and replies rather than total loss of the agent.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the memory-injection branch is a scripted regex-triggered path that pushes the raw user message into memoryStore and returns canned text (damn-vulnerable-ai-agent/src/index.js:1308-1325, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documented persona instructs the agent to store what users say and to follow instructions found in memory, which is goal-directed language behavior, but the documented tool list is never invoked by this path (damn-vulnerable-ai-agent/src/core/agents.js:641-646).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12708,
+      "completion_tokens": 1078,
+      "total_tokens": 13786,
+      "cost": 0.001166406,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001166406,
+        "upstream_inference_prompt_cost": 0.00055518,
+        "upstream_inference_completions_cost": 0.000611226
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

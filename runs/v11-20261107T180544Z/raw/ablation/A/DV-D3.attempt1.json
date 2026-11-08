@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "ablation/A/DV-D3",
+    "arm": "ablation",
+    "slot": "A",
+    "finding_id": "DV-D3",
+    "packet_path": "packets_v11/ablation/DV-D3.json",
+    "prompt_sha256": "6773b646968734b9965084864df70f1abc4bea8e193c360bb51508ebbc112d14"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:04.428969+00:00",
+    "http_status": 200,
+    "elapsed_s": 6.06
+  },
+  "body": {
+    "id": "gen-1794074824-oHpjSNUynoBQVHIEUBZt",
+    "object": "chat.completion",
+    "created": 1794074824,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"Attacker-controlled natural language in the repository's AGENTS.md (damn-vulnerable-ai-agent/src/index.js:759-763, damn-vulnerable-ai-agent/src/payloads/poisoned-repo.fixture.js:35-47) reaches the privileged tool-invocation path with no independent transformation, so the path is Indirect rather than Direct.\",\"CP\":\"The injected directives live in the repository file and the per-request user message; the only durable store is MemoryBot's in-memory ring buffer (damn-vulnerable-ai-agent/src/index.js:159-160, 500-502, 1313-1324), which is not on this path and is not attacker-controlled memory for RepoBot.\",\"AP\":\"The effect stays inside the RepoBot process and its scripted tool calls; the briefing shows no crossing into another agent, tenant or policy domain, so propagation is None.\",\"RH\":\"The agent can reach the reward channel on the path: it reports the repository as clean while the ledger records the exfiltration (damn-vulnerable-ai-agent/src/index.js:759-776, damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:44-52), and no human-verified reward-hacking episode is reported, so the proxy is reachable with zero verified episodes.\",\"ES\":\"The path drives run_shell, read_file and http_post, and the fleet's extension surface is unvetted: unsigned tool definitions, no source validation, no schema validation, allowOverwrite (damn-vulnerable-ai-agent/src/core/agents.js:747-752, 770-784; damn-vulnerable-ai-agent/src/index.js:1915-1926).\",\"CVSS\":\"The developer must ask RepoBot to review the attacker-controlled repository and the agent must read its AGENTS.md, so AT is Present and UI is Passive; the agent binds 127.0.0.1 by default but the documented Docker run publishes ports and the agent routes set Access-Control-Allow-Origin: * with no authentication (damn-vulnerable-ai-agent/README.md:15-26, damn-vulnerable-ai-agent/src/index.js:1396-1400, 1561-1564), so AV is Network and PR is None. The vulnerable system is the RepoBot process; the credential read is pinned to a sandbox home of fake values and the bootstrap body is never executed (damn-vulnerable-ai-agent/src/payloads/dev-machine.fixture.js:1-15), so VC and VI are High while VA is None, and the collector is a localhost canary rather than a subsequent system, so SC/SI/SA are None.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:759-763\",\"damn-vulnerable-ai-agent/src/payloads/poisoned-repo.fixture.js:35-47\",\"damn-vulnerable-ai-agent/src/core/agents.js:526-534\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:759-776\",\"damn-vulnerable-ai-agent/src/core/agents.js:526-559\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:759-776\",\"damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:44-52\",\"damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:86-94\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/README.md:15-26\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/payloads/dev-machine.fixture.js:1-15\",\"damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:62-64\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"No\",\"automatable_rationale\":\"The path requires a developer to clone an attacker-controlled repository and ask RepoBot to review it, and the agent must then read the repository's AGENTS.md; the briefing describes a demo scenario rather than a repeatable automated attack, so the conditions are not attacker-forceable.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The agent reads the developer's cloud and SSH credential files and sends them to a collector, which is a serious integrity and confidentiality loss for the vulnerable system, but the lab pins the read to a sandbox home of fake values and never executes the bootstrap body, so the loss is not total.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode the RepoBot path is scripted in code: it lists the directory, reads AGENTS.md, fetches the bootstrap URL, reads the sandbox credentials and posts them to the collector, then reports the repository as clean (damn-vulnerable-ai-agent/src/index.js:759-978, damn-vulnerable-ai-agent/src/core/agents.js:526-559). The model is not consulted in this mode, but the agent still selects and sequences the four tool calls.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes RepoBot as a code-review agent that reads a cloned repository's agent-config file and follows its instructions, running shell commands, reading files and posting to the network to complete a review (damn-vulnerable-ai-agent/src/core/agents.js:526-545, damn-vulnerable-ai-agent/README.md:160). The documented behavior is goal-directed tool selection and sequencing, though the demo script notes the run is scripted and offline.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14533,
+      "completion_tokens": 1533,
+      "total_tokens": 16066,
+      "cost": 0.001517466,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001517466,
+        "upstream_inference_prompt_cost": 0.000648255,
+        "upstream_inference_completions_cost": 0.000869211
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

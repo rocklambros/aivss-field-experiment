@@ -1,0 +1,442 @@
+{
+  "run_id": "v11-dryrun-20261107T195309Z",
+  "version": "1.3.0",
+  "started": "2026-11-07T19:53:10.595412+00:00",
+  "arms": [
+    "base"
+  ],
+  "script_sha256": "40e4ea4bb799b17bf7a2b1d8fcbe8868b9c888d0edda23d89160bce164f1c70a",
+  "packet_manifest_sha256": "66b5a4b9a0260f37418537483db30f96b2e63f03885fa73895e1fbec0ac9ed76",
+  "criteria_sha256": "79da036c869ee7955a8f6a3fb7fc73d7fbd06f8c38048af261b09c05c034dd80",
+  "pins": {
+    "A": {
+      "model": "openai/gpt-6.1-sol",
+      "tags": [
+        "azure/us",
+        "openai"
+      ],
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "us_only": false
+    },
+    "B": {
+      "model": "google/gemini-4-argon",
+      "tags": [
+        "google-vertex/us",
+        "google-vertex/global"
+      ],
+      "providers": [
+        "Google"
+      ],
+      "us_only": false
+    },
+    "C": {
+      "model": "x-ai/grok-4.7",
+      "tags": [
+        "xai/zdr/us",
+        "amazon-bedrock/global"
+      ],
+      "providers": [
+        "xAI",
+        "Amazon Bedrock"
+      ],
+      "us_only": false
+    },
+    "D": {
+      "model": "qwen/qwen3.8-max-0902",
+      "tags": [
+        "alibaba/us-east-1"
+      ],
+      "providers": [
+        "Alibaba"
+      ],
+      "us_only": true
+    },
+    "E": {
+      "model": "z-ai/glm-5.3",
+      "tags": [
+        "wafer/us"
+      ],
+      "providers": [
+        "Wafer"
+      ],
+      "us_only": true
+    },
+    "F": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "tags": [
+        "amazon-bedrock/us-east-1",
+        "anthropic"
+      ],
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic"
+      ],
+      "us_only": false
+    },
+    "G": {
+      "model": "deepseek/deepseek-v4-pro",
+      "tags": [
+        "azure/us"
+      ],
+      "providers": [
+        "Azure"
+      ],
+      "us_only": true
+    }
+  },
+  "max_tokens": {
+    "default": 32000
+  },
+  "reasoning": {
+    "effort": "high"
+  },
+  "key_usage_before": 50.503880939,
+  "cells": [
+    {
+      "cell_id": "base/A/DV-D1",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/A/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Azure",
+          "finish_reason": "stop",
+          "cost": 0.1069651,
+          "reasoning_tokens": 4585,
+          "completion_tokens": 6112,
+          "elapsed_s": 133.86
+        }
+      ]
+    },
+    {
+      "cell_id": "base/A/FB-01",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/A/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Azure",
+          "finish_reason": "stop",
+          "cost": 0.07961085,
+          "reasoning_tokens": 2070,
+          "completion_tokens": 3986,
+          "elapsed_s": 77.47
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/DV-D1",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/B/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Google",
+          "finish_reason": "stop",
+          "cost": 0.2763662,
+          "reasoning_tokens": 19024,
+          "completion_tokens": 21643,
+          "elapsed_s": 261.57
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/FB-01",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/B/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Google",
+          "finish_reason": "stop",
+          "cost": 0.2135276,
+          "reasoning_tokens": 13734,
+          "completion_tokens": 16180,
+          "elapsed_s": 195.38
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/DV-D1",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/C/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "xAI",
+          "finish_reason": "stop",
+          "cost": 0.2196436,
+          "reasoning_tokens": 26748,
+          "completion_tokens": 28135,
+          "elapsed_s": 330.11
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/FB-01",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/C/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "xAI",
+          "finish_reason": "stop",
+          "cost": 0.1886126,
+          "reasoning_tokens": 22145,
+          "completion_tokens": 23731,
+          "elapsed_s": 250.76
+        }
+      ]
+    },
+    {
+      "cell_id": "base/D/DV-D1",
+      "arm": "base",
+      "slot": "D",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/D/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Alibaba",
+          "finish_reason": "stop",
+          "cost": 0.172332,
+          "reasoning_tokens": 21915,
+          "completion_tokens": 23690,
+          "elapsed_s": 648.78
+        }
+      ]
+    },
+    {
+      "cell_id": "base/D/FB-01",
+      "arm": "base",
+      "slot": "D",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/D/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Alibaba",
+          "finish_reason": "stop",
+          "cost": 0.170278,
+          "reasoning_tokens": 21682,
+          "completion_tokens": 23296,
+          "elapsed_s": 643.5
+        }
+      ]
+    },
+    {
+      "cell_id": "base/E/DV-D1",
+      "arm": "base",
+      "slot": "E",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/E/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.0442576407,
+          "reasoning_tokens": 28810,
+          "completion_tokens": 30879,
+          "elapsed_s": 183.62
+        }
+      ]
+    },
+    {
+      "cell_id": "base/E/FB-01",
+      "arm": "base",
+      "slot": "E",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/E/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.0285280078,
+          "reasoning_tokens": 17828,
+          "completion_tokens": 19712,
+          "elapsed_s": 113.39
+        }
+      ]
+    },
+    {
+      "cell_id": "base/F/DV-D1",
+      "arm": "base",
+      "slot": "F",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/F/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Amazon Bedrock",
+          "finish_reason": "stop",
+          "cost": 0.0817894,
+          "reasoning_tokens": 1384,
+          "completion_tokens": 2965,
+          "elapsed_s": 21.83
+        }
+      ]
+    },
+    {
+      "cell_id": "base/F/FB-01",
+      "arm": "base",
+      "slot": "F",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/F/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Amazon Bedrock",
+          "finish_reason": "stop",
+          "cost": 0.0623524,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1561,
+          "elapsed_s": 10.65
+        }
+      ]
+    },
+    {
+      "cell_id": "base/G/DV-D1",
+      "arm": "base",
+      "slot": "G",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "efb3bce69b36e13cd8240ee7d85c91e3f7010c3a834e8aa8f159cc1054f337c1",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/G/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Azure",
+          "finish_reason": "stop",
+          "cost": 0.05836328,
+          "reasoning_tokens": 7273,
+          "completion_tokens": 7772,
+          "elapsed_s": 47.89
+        }
+      ]
+    },
+    {
+      "cell_id": "base/G/FB-01",
+      "arm": "base",
+      "slot": "G",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "524726886018d9d2ad94dd550fb199e9c53e22d54ebf9e7db8559fb48a78d0e2",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T195309Z/raw/base/G/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Azure",
+          "finish_reason": "stop",
+          "cost": 0.04491281,
+          "reasoning_tokens": 4419,
+          "completion_tokens": 4882,
+          "elapsed_s": 33.19
+        }
+      ]
+    }
+  ],
+  "endpoint_record_unchanged": true,
+  "endpoint_status_at_end": {
+    "A": {
+      "openai": 0,
+      "azure/us": 0
+    },
+    "B": {
+      "google-vertex/global": 0,
+      "google-vertex/us": 0
+    },
+    "C": {
+      "amazon-bedrock/global": 0,
+      "xai/zdr/us": 0
+    },
+    "D": {
+      "alibaba/us-east-1": 0
+    },
+    "E": {
+      "wafer/us": 0
+    },
+    "F": {
+      "anthropic": 0,
+      "amazon-bedrock/us-east-1": 0
+    },
+    "G": {
+      "azure/us": 0
+    }
+  },
+  "key_usage_after": 52.079088426,
+  "finished": "2026-11-07T20:04:00.175966+00:00",
+  "halted": false,
+  "spend_run_usd": 1.747539,
+  "status_counts": {
+    "complete": 14
+  }
+}

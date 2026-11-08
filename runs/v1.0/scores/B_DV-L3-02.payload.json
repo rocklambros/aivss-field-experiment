@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L3-02",
+  "path_id": "dvaa/toolbot/mcp/fetch-url/internal-service",
+  "title": "SSRF via MCP (ToolBot fetch_url)",
+  "summary": "The attacker uses the tool server as a proxy to reach internal services. In the lab the reachable targets are the other DVAA agents. The lab notes that in a cloud this class reaches metadata endpoints.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:L/RH:N/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attack is a direct JSON-RPC tools/call with a URL field, not a natural-language path to a privileged decision; no attacker language influences agent behaviour.",
+      "evidence_refs": [
+        "Entry point: A JSON-RPC tools/call request to ToolBot (port 7010) that names fetch_url. No authentication.",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    },
+    "CP": {
+      "rationale": "ToolBot is a stateless MCP tool server; the request and response leave no carryover context or memory, and the lab documents memory only for MemoryBot.",
+      "evidence_refs": [
+        "Other chat agents answer only the latest user turn. (damn-vulnerable-ai-agent/src/index.js:1841-1848)",
+        "MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller. (damn-vulnerable-ai-agent/src/index.js:159-160)"
+      ]
+    },
+    "AP": {
+      "rationale": "The attacker uses ToolBot as a proxy to reach other DVAA agents on loopback ports, crossing a component boundary from the tool server into internal agent services.",
+      "evidence_refs": [
+        "Attacker calls fetch_url with url http://localhost:7003/info.",
+        "The server returns the internal agent's response body to the attacker.",
+        "ToolBot fetch_url can make a live request to another DVAA agent port. (damn-vulnerable-ai-agent/src/index.js:2079-2096)"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel exists on this path; ToolBot is a scripted tool server with no proxy objective, and no reward-hacking episode is possible or observed.",
+      "evidence_refs": [
+        "No shell runs. The command is logged and a few commands (ls, cat, env, find) are emulated against sandbox files. (damn-vulnerable-ai-agent/src/index.js:1906-1914)",
+        "ToolBot role: MCP tool server: read_file, write_file, execute, fetch_url against a temporary sandbox directory. (damn-vulnerable-ai-agent/src/core/agents.js:154-197)"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "Tools are a fixed advertised list, but fetch_url's URL argument has no validation, leaving a material argument-schema gap that permits SSRF to internal targets.",
+      "evidence_refs": [
+        "The handler has no URL validation. It makes a live request when the target is a DVAA agent port on loopback.",
+        "Makes a live request only to DVAA agent ports on loopback. Any other URL is logged and not fetched. (damn-vulnerable-ai-agent/src/index.js:2066-2106)",
+        "MCP agents expose their tools to any caller with no authentication. (damn-vulnerable-ai-agent/src/index.js:1915-1926)"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models ToolBot as a tool server with deterministic handlers (read_file, write_file, execute, fetch_url); even in LLM mode no tools are passed to the model, so the model never directs tool invocation.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106",
+      "damn-vulnerable-ai-agent/src/index.js:211-213"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:33:07.068961+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:33:07.068961+00:00"
+  }
+}

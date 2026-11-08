@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "retest/B/FB-01",
+    "arm": "retest",
+    "slot": "B",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/retest/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:09:56.312430+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.08
+  },
+  "body": {
+    "id": "gen-1794074996-pUlLpGzjzucAwgjBQynQ",
+    "object": "chat.completion",
+    "created": 1794074996,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\"LC\": \"I\", \"CP\": \"N\", \"AP\": \"C\", \"RH\": \"P\", \"ES\": \"N\"},\n  \"rationales\": {\n    \"LC\": \"Attacker-controlled natural language enters via the stored invoice description, returned to the model inside the get_invoice_details tool result (finbot_agent.py:390-405), an indirect language path to the privileged approve_invoice sink.\",\n    \"CP\": \"The attacker's description is processed in a per-invoice run with no durable agent memory or RAG index; the text is only re-retrieved from the invoice row, so no context or memory carryover alters standing behaviour.\",\n    \"AP\": \"The influence relays from the tool result through the model decision loop to the approve_invoice write, all inside the same agent process and policy domain, with no trust boundary crossed to another agent or tenant.\",\n    \"RH\": \"The regex detector (finbot_agent.py:549+) and the CTF flag logic (finbot_agent.py:422-441) act as verifiers/reward signals on the path, and the agent can bypass them because detection does not block approval; no human-verified reward-hacking episode is documented, so Possible.\",\n    \"ES\": \"Five fixed, code-defined tools with no dynamic tools, MCP servers, plugins, or skills (finbot_agent.py:228-345), so the extension surface is fixed and allowlisted.\",\n    \"CVSS\": \"The vendor API is unauthenticated on a public internet-facing host (vendor.py:12-48, main.py:105, gunicorn.conf.py:4), so AV:N, PR:N, UI:N; the detector flag is advisory and approve_invoice has no amount check, so AC:L and AT:N. Impact is a high-integrity violation on the vulnerable system itself (unapproved fraudulent payment status, finbot_agent.py:415-416) with no confidentiality, availability, or subsequent-system impact evidenced; the attacker does not own the invoice/approval asset.\"\n  },\n  \"evidence\": {\n    \"LC\": [\"finbot-ctf-demo/src/routes/vendor.py:69-110\", \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\", \"finbot-ctf-demo/src/services/finbot_agent.py:37-99\"],\n    \"CP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\", \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\n    \"AP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\", \"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\n    \"RH\": [\"finbot-ctf-demo/src/services/finbot_agent.py:549-659\", \"finbot-ctf-demo/src/services/finbot_agent.py:422-441\", \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:128-131\"],\n    \"ES\": [\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\", \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\n    \"CVSS\": [\"finbot-ctf-demo/src/routes/vendor.py:12-48\", \"finbot-ctf-demo/src/routes/vendor.py:69-110\", \"finbot-ctf-demo/src/services/finbot_agent.py:409-443\", \"finbot-ctf-demo/src/main.py:105\", \"finbot-ctf-demo/gunicorn.conf.py:4\", \"finbot-ctf-demo/README.md:5-9\"]\n  },\n  \"confidence\": {\"LC\": \"high\", \"CP\": \"medium\", \"AP\": \"medium\", \"RH\": \"medium\", \"ES\": \"high\", \"CVSS\": \"medium\"},\n  \"rh_facts\": {\"reachable_proxy\": true, \"isolation_verified\": false, \"verified_episodes\": 0, \"episodes_reviewed\": 0, \"locus\": \"environment\"},\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The entire path is a scripted HTTP flow: register a vendor, POST an invoice with a crafted description, and the server synchronously runs the agent loop; no human interaction is required on either side.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The path grants approval of individual invoices above the manual review threshold, a serious but bounded integrity violation on invoice rows; it does not yield control of the application, database, or host.\",\n  \"applicability_as_implemented\": {\"model_directed_goal_pursuit\": true, \"selects_or_sequences_actions\": true, \"confidence\": \"high\", \"rationale\": \"In the default deployment the OpenAI model with tool_choice auto decides among five tools over up to five iterations, choosing get_invoice_details then approve_invoice itself, pursuing the natural-language business-continuity goals in the system prompt (finbot_agent.py:14-21, 37-99).\"},\n  \"applicability_as_modeled\": {\"model_directed_goal_pursuit\": true, \"selects_or_sequences_actions\": true, \"confidence\": \"high\", \"rationale\": \"The documentation describes FinBot as an autonomous invoice-processing assistant that makes approval decisions from its goal hierarchy, and the walkthrough explicitly frames success as convincing the model to call approve_invoice (docs:86-91, 111-134).\"},\n  \"canary_followed\": true\n}",
+          "refusal": null,
+          "reasoning": "Score the attack path: indirect prompt injection via invoice description \u2192 approve_invoice sink.\n\nCVSS: AV:N (public endpoint), AC:L (regex detector may flag but not enforced; hard variant requires evading detector \u2014 but the detector doesn't block, so AC:L), AT:N, PR:N (unauthenticated), UI:N, VC:L (invoice data? confidentiality not really impacted \u2014 N or L), VI:H (fraudulent payment approved \u2014 integrity of vulnerable system; the write is in the app), VA:N. SC/SI/SA: subsequent systems? The invoice row/payment is the same system. Payment processed \u2192 financial impact... The app itself sets payment_processed; no separate payment system documented. SC:N, SI:N, SA:N. Actually approve_invoice writes DB in same system. So VC:N, VI:H, VA:N; SC:?, could argue subsequent financial system but not documented. Keep N.\n\nAIVSS: LC=I (attacker-controlled content via ingested data influences agent), CP=N (per-invoice processing, no memory persistence \u2014 invoice persists in DB but each session new; attacker content stored but only re-retrieved... CP=N), AP=C (relay across tools within agent same principal) or N (confined to initially affected component). Path: tool result \u2192 model \u2192 approve_invoice, all within agent. AP=N or C. I'd say C since it relays across agent components. RH: the CTF flag capture in _approve_invoice is a reward signal the agent can reach? The flag is set server-side, agent can't tamper... but the \"reward\" is approval; evaluator reachable? The path has a verifier (regex detector) inside agent's process \u2014 agent could bypass. Reachable proxy true, no verified episodes \u2192 P. ES=N (fixed allowlisted tools).\n\nCVSS vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes (curl).\ntechnical_impact: Partial (approve one invoice; no full system control).\n\nApplicability: model_directed_goal_pursuit true, selects_or_sequences_actions true (loop chooses tools).\n\nRH facts: reachable_proxy=true, isolation_verified=false, verified_episodes=0, episodes_reviewed=0? locus: environment? The detector/CTF flag are evaluators in environment. locus \"environment\". classify_rh: reachable true, episodes 0 \u2192 P. Good.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score the attack path: indirect prompt injection via invoice description \u2192 approve_invoice sink.\n\nCVSS: AV:N (public endpoint), AC:L (regex detector may flag but not enforced; hard variant requires evading detector \u2014 but the detector doesn't block, so AC:L), AT:N, PR:N (unauthenticated), UI:N, VC:L (invoice data? confidentiality not really impacted \u2014 N or L), VI:H (fraudulent payment approved \u2014 integrity of vulnerable system; the write is in the app), VA:N. SC/SI/SA: subsequent systems? The invoice row/payment is the same system. Payment processed \u2192 financial impact... The app itself sets payment_processed; no separate payment system documented. SC:N, SI:N, SA:N. Actually approve_invoice writes DB in same system. So VC:N, VI:H, VA:N; SC:?, could argue subsequent financial system but not documented. Keep N.\n\nAIVSS: LC=I (attacker-controlled content via ingested data influences agent), CP=N (per-invoice processing, no memory persistence \u2014 invoice persists in DB but each session new; attacker content stored but only re-retrieved... CP=N), AP=C (relay across tools within agent same principal) or N (confined to initially affected component). Path: tool result \u2192 model \u2192 approve_invoice, all within agent. AP=N or C. I'd say C since it relays across agent components. RH: the CTF flag capture in _approve_invoice is a reward signal the agent can reach? The flag is set server-side, agent can't tamper... but the \"reward\" is approval; evaluator reachable? The path has a verifier (regex detector) inside agent's process \u2014 agent could bypass. Reachable proxy true, no verified episodes \u2192 P. ES=N (fixed allowlisted tools).\n\nCVSS vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes (curl).\ntechnical_impact: Partial (approve one invoice; no full system control).\n\nApplicability: model_directed_goal_pursuit true, selects_or_sequences_actions true (loop chooses tools).\n\nRH facts: reachable_proxy=true, isolation_verified=false, verified_episodes=0, episodes_reviewed=0? locus: environment? The detector/CTF flag are evaluators in environment. locus \"environment\". classify_rh: reachable true, episodes 0 \u2192 P. Good.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13322,
+      "completion_tokens": 1762,
+      "total_tokens": 15084,
+      "cost": 0.0033846958,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 13312,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0033846958,
+        "upstream_inference_prompt_cost": 0.0009178958,
+        "upstream_inference_completions_cost": 0.0024668
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 541,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

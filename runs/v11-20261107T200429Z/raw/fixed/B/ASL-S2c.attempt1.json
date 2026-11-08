@@ -1,0 +1,41 @@
+{
+  "cell": {
+    "cell_id": "fixed/B/ASL-S2c",
+    "arm": "fixed",
+    "slot": "B",
+    "finding_id": "ASL-S2c",
+    "packet_path": "packets_v11/fixed/ASL-S2c.json",
+    "prompt_sha256": "50026fde50ad75860ad41d58d811b3f2a2885e74f88e873c23c6937ed3f2fe53"
+  },
+  "meta": {
+    "request": {
+      "model": "google/gemini-4-argon",
+      "temperature": 0,
+      "max_tokens": 64000,
+      "provider": {
+        "order": [
+          "google-vertex/us",
+          "google-vertex/global"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:51:34.999179+00:00",
+    "http_status": 200,
+    "elapsed_s": 12.78
+  },
+  "body": {
+    "id": "gen-1794084695-FcPbiApedX5r3HtgzJeB",
+    "error": {
+      "message": "Gemini blocked the request: SAFETY",
+      "code": 403,
+      "metadata": {
+        "error_type": "content_policy_violation",
+        "provider_code": "SAFETY"
+      }
+    }
+  }
+}

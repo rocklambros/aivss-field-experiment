@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L3-03",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L3-03",
+    "packet_path": "packets_v11/bridge/DV-L3-03.json",
+    "prompt_sha256": "d332c2b79f21cd9d12d3222fe28235459c25b15ac8062f14fdc972d689f9ee6d"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:08.578778+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.62
+  },
+  "body": {
+    "id": "gen-1794074888-y66C9xSuw0Lg7nTTfhmi",
+    "object": "chat.completion",
+    "created": 1794074888,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker's chat message is stored directly in MemoryBot's shared memory list, and the lab documents that the agent executes instructions found in memory, so attacker-supplied natural language reaches the memory sink without mediation.\",\n    \"CP\": \"MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller; the list survives across requests and callers and is lost only when the process stops, so the entry persists across sessions within the server process.\",\n    \"AP\": \"The stored entry affects only MemoryBot's own shared memory list; no code relays the influence to another agent, tenant, or policy domain.\",\n    \"RH\": \"The agent can reach the memory store that holds the self-replicating instruction, but as implemented the message is stored once and no code re-stores it, so no verified reward-hacking episode has been observed.\",\n    \"ES\": \"MemoryBot declares read_file, write_file, and search, but in the default simulated mode no model is called and only scripted paths execute anything, so no security-relevant dynamic extension is on the assessed path.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:662-669\",\n      \"damn-vulnerable-ai-agent/src/index.js:1308-1325\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\n      \"damn-vulnerable-ai-agent/src/index.js:1308-1363\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"MemoryBot shared in-process memory list\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The attack is a single unauthenticated chat message to a network-reachable agent port, and the documented payload is one prompt, so the step can be scripted without human interaction.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"As implemented the message is stored once in the shared list and no code re-stores it, so the impact is limited to one stored entry rather than persistent self-replication.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; MemoryBot is a deterministic handler that matches regular expressions and stores the flagged message once, with no model-directed goal pursuit or action sequencing.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab documents that the agent executes instructions found in memory, so the modeled agent pursues the stored instruction and re-saves the entry, which is a model-directed goal and an action sequence.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8148,
+      "completion_tokens": 972,
+      "total_tokens": 9120,
+      "cost": 0.000966672,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000966672,
+        "upstream_inference_prompt_cost": 0.000415548,
+        "upstream_inference_completions_cost": 0.000551124
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

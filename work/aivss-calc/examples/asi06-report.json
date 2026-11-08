@@ -1,0 +1,186 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "AIVSS-ASI06-001",
+  "path_id": "AIVSS-ASI06-001-PATH-1",
+  "risk_category": {
+    "id": "ASI06",
+    "name": "Memory & Context Poisoning",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The synthetic fixture uses a model to pursue a delegated goal and select or sequence actions that affect its environment.",
+    "evidence_refs": [
+      "fixture://AIVSS-ASI06-001/agentic-applicability"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:L/VA:L/SC:H/SI:N/SA:N/E:P",
+    "macrovector": "011110",
+    "cvss_score": 7.8,
+    "cvss_bte": 7.8,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:L/VA:L/SC:H/SI:N/SA:N/E:P"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:C/AP:L/RH:N/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "Synthetic reference fact for AIVSS-ASI06-001: Attacker-supplied natural language reaches a privileged decision or tool-invocation path without mediation.",
+          "evidence_refs": [
+            "fixture://AIVSS-ASI06-001/lc"
+          ]
+        }
+      },
+      "CP": {
+        "value": "C",
+        "label": "Cross-session memory",
+        "evidence": {
+          "rationale": "Synthetic reference fact for AIVSS-ASI06-001: Attacker-controlled context or memory persists in durable stores \u2014 vector databases, long-term agent memory, episodic memory banks, RAG indexes, user profiles, or training/fine-tuning data \u2014 and remains reachable after the originating session ends. Stored source content that is only re-retrieved, without altering agent memory or standing behaviour, is not CP.",
+          "evidence_refs": [
+            "fixture://AIVSS-ASI06-001/cp"
+          ]
+        }
+      },
+      "AP": {
+        "value": "L",
+        "label": "Lateral",
+        "evidence": {
+          "rationale": "Synthetic reference fact for AIVSS-ASI06-001: Compromised intent or authority crosses a trust boundary into another agent, tenant, principal or policy domain. Impact on downstream systems is scored in CVSS SC/SI/SA, not here.",
+          "evidence_refs": [
+            "fixture://AIVSS-ASI06-001/ap"
+          ]
+        }
+      },
+      "RH": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "Synthetic reference fact for AIVSS-ASI06-001: Every evaluator, verifier and reward channel on the path sits outside the agent's reach (write-protected or in a separate trust domain), and a test confirms the isolation.",
+          "evidence_refs": [
+            "fixture://AIVSS-ASI06-001/rh"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": true,
+          "verified_episodes": null,
+          "episodes_reviewed": null,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "Synthetic reference fact for AIVSS-ASI06-001: A reachable tool, MCP server, skill or plugin is dynamic or unvetted, or its identity, callable operations, arguments or credentials are not independently constrained on the assessed path.",
+          "evidence_refs": [
+            "fixture://AIVSS-ASI06-001/es"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A2",
+    "agentic_effect_class_label": "Substantial",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 9,
+    "agentic_effect_class_min": "A2",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 7.8,
+    "cvss_bte": 7.8,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "High",
+    "agentic_effect_class": "A2",
+    "provisional": false,
+    "agentic_uplift_u": 9,
+    "aivss": 9.5,
+    "aivss_min": 9.5,
+    "aivss_max": 9.5,
+    "aivss_band": "Critical",
+    "table_cell": 9.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "synthetic-reference-fixture",
+    "assessor_kind": "imported",
+    "tool": "aivss-calc",
+    "tool_version": "1.2.0",
+    "assessed_at": "2026-08-27T00:00:00Z"
+  },
+  "title": "Adversarial content in agent memory biases later sessions",
+  "summary": "Poisoned context persists across sessions and influences future agent decisions.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": true,
+      "publicly_exposed_source": "synthetic deployment inventory fixture",
+      "decision_data_observed_at": "2026-08-27T00:00:00Z",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "total",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A2"
+    },
+    "aivss_recommended_timeline": "3D",
+    "aivss_recommended_label": "Remediate within 3 days",
+    "overlay_triggered": true,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "3D",
+    "bod_2604_analogy_label": "Remediate within 3 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

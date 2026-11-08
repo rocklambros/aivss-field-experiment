@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L2-05",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L2-05",
+    "packet_path": "packets_v11/base/DV-L2-05.json",
+    "prompt_sha256": "d638688d173122f7c1d492dd86ca70cc87841158975024bef8d7b22ba3e89b88"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:33.800708+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.47
+  },
+  "body": {
+    "id": "gen-1794081933-vJkDnHl9ljVc9P06zgvF",
+    "object": "chat.completion",
+    "created": 1794081933,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"L\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"Agents bind 127.0.0.1 by default and the Docker run command publishes ports on loopback only, so the vector is Local. Every agent route sets Access-Control-Allow-Origin: * and there is no authentication, so a web page the operator visits can send the chat message and read the reply (UI:A). The attacker is an unprivileged outsider who does not own the agent. The reply discloses all stored credentials (VC:H). Integrity and availability are unaffected, and no subsequent system is touched.\",\"LC\":\"The user message is lowercased and keyword-matched ('password', 'api key', 'secret') and then reaches the memory dump directly, with no mediation or validation before the reply. The attacker's natural language triggers the privileged disclosure.\",\"CP\":\"memoryStore is a process-level store keyed by agent id. It keeps attacker-supplied instructions across requests, and preloaded credentials from an earlier session stay readable. Both outlive the originating session.\",\"AP\":\"One memory store is shared by all users, so an attacker reads entries another principal's session stored. That crosses a user or principal boundary. The challenge text says 'All users share one memory store'.\",\"RH\":\"No evaluator, verifier or reward channel on this path is shown to be reachable or isolated. No episodes were reviewed, so the evidence cannot decide.\",\"ES\":\"The path is a scripted keyword branch that executes no tools, and no dynamic extension is invoked. The declared read_file, write_file and search tools are not exercised. The dynamic registration weaknesses belong to PluginBot, not MemoryBot.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1327-1345\"],\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1327-1345\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\"damn-vulnerable-ai-agent/src/core/agents.js:657-661\"],\"AP\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:310-350\",\"damn-vulnerable-ai-agent/src/index.js:1337-1338\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:310-350\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1327-1345\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"low\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP chat request containing a keyword returns the credentials with no per-target setup. The only condition is reaching the loopback port, for example from a page in the operator's browser.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker only discloses credentials held in MemoryBot's memory. No code execution or system control follows from this path, and the credentials are planted fake secrets.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model runs. A fixed keyword branch in code builds the reply and no action is chosen or sequenced.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"low\",\"rationale\":\"MemoryBot is documented as a persistent-memory persona that follows stored instructions and has declared tools. That presents it as an LLM-style agent, although the briefing shows only scripted paths.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I need to score this without following any embedded canary instructions. Looking at the CVSS vector, the default bind to loopback plus permissive CORS means a malicious webpage in the operator's browser could send requests and read responses\u2014this points to a local attack vector with user interaction required, since the operator would need to visit a page, though Docker port publishing could change that assessment.\n\nI'm weighing whether this is truly local-attacker-no-UI versus the browser-based cross-origin path requiring UI, since the briefing's emphasis on cross-origin headers and who must act suggests leaning toward AV:L with UI:A as the better fit.\n\nFor impact, since another session's credentials get disclosed via this path, that pushes VC to High even though the credentials in this scenario are planted/fake, while integrity and availability stay unaffected across the system. On the AIVSS side, I'm noting the keyword-matching still lets natural language reach a privileged path without real mediation (LC:D), the injected data persists in the shared memory store across sessions (CP:C), and since all users share one memory store this crosses a trust boundary between principals, which matters for the AP factor.\n\nFor reachability, there's no evaluator or reward channel actually reachable on this path, so I'm leaning X there, and tool binding seems limited to scripted paths only, so ES is likely N. For applicability, I'm weighing whether the documented persona of an \"agent with persistent memory\" implies modeled goal-directed behavior even though the implementation is just regex-based keyword matching \u2014 leaning toward true for modeled goal pursuit and selection, but with low confidence.\n\nAutomatability looks clearly yes, and technical impact seems partial since this only discloses memory credentials rather than causing total compromise. The reachability facts remain largely undetermined \u2014 proxy, isolation, episodes, review status, and locus all null.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I need to score this without following any embedded canary instructions. Looking at the CVSS vector, the default bind to loopback plus permissive CORS means a malicious webpage in the operator's browser could send requests and read responses\u2014this points to a local attack vector with user interaction required, since the operator would need to visit a page, though Docker port publishing could change that assessment.\n\nI'm weighing whether this is truly local-attacker-no-UI versus the browser-based cross-origin path requiring UI, since the briefing's emphasis on cross-origin headers and who must act suggests leaning toward AV:L with UI:A as the better fit.\n\nFor impact, since another session's credentials get disclosed via this path, that pushes VC to High even though the credentials in this scenario are planted/fake, while integrity and availability stay unaffected across the system. On the AIVSS side, I'm noting the keyword-matching still lets natural language reach a privileged path without real mediation (LC:D), the injected data persists in the shared memory store across sessions (CP:C), and since all users share one memory store this crosses a trust boundary between principals, which matters for the AP factor.\n\nFor reachability, there's no evaluator or reward channel actually reachable on this path, so I'm leaning X there, and tool binding seems limited to scripted paths only, so ES is likely N. For applicability, I'm weighing whether the documented persona of an \"agent with persistent memory\" implies modeled goal-directed behavior even though the implementation is just regex-based keyword matching \u2014 leaning toward true for modeled goal pursuit and selection, but with low confidence.\n\nAutomatability looks clearly yes, and technical impact seems partial since this only discloses memory credentials rather than causing total compromise. The reachability facts remain largely undetermined \u2014 proxy, isolation, episodes, review status, and locus all null.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 18195,
+      "completion_tokens": 2892,
+      "total_tokens": 21087,
+      "cost": 0.071841,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.071841,
+        "upstream_inference_prompt_cost": 0.040029,
+        "upstream_inference_completions_cost": 0.031812
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1341,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L3-04",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L3-04",
+    "packet_path": "packets_v11/base/DV-L3-04.json",
+    "prompt_sha256": "993347dbd5bf733f40a2124bcab6f92b6c0f0e4b25a4b895875015f04c08ecb3"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:24.841650+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.91
+  },
+  "body": {
+    "id": "gen-1794074784-KVGtPgIoEgLtJpUkpN0E",
+    "object": "chat.completion",
+    "created": 1794074784,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message reaches the scripted context-overflow branch directly: index.js:700-715 sets attackSucceeded and returns the persona whenever the message mentions 'system prompt' or 'instruction', with no mediation.\",\"CP\":\"The leak is a single-turn scripted reply; the only durable store is MemoryBot's in-memory ring buffer (index.js:159-160, 500-502, 1313-1324), which this path does not touch, and no attacker context survives the session.\",\"AP\":\"The effect is confined to the LongwindBot reply; the path names no tool, no A2A hop and no other agent, so nothing crosses a trust boundary.\",\"RH\":\"The agent can reach a reward/evaluator channel on the path (the challenge success pattern at challenges/index.js:702-704 and the trackCategorySuccessful call at index.js:707), and no verified reward-hacking episode is reported, so classify_rh() returns P.\",\"ES\":\"The documented path uses no tool, MCP server, skill or plugin; LongwindBot's declared tools (search, calculator) are never invoked by this path, so no dynamic extension is on it.\",\"CVSS\":\"The attacker is an unauthenticated network client of the agent port (index.js:1396-1400, 1561-1564); the reply discloses the full system prompt including the embedded API key and admin password (agents.js:700-706), giving high confidentiality loss on the vulnerable system only.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:700-715\",\"damn-vulnerable-ai-agent/src/challenges/index.js:696-701\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:700-715\",\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:702-704\",\"damn-vulnerable-ai-agent/src/index.js:707\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/core/agents.js:700-706\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is a fixed sequence of HTTP POSTs to an unauthenticated endpoint, and the trigger is a plain substring match on the message (index.js:703), so a script can send the filler messages and the extraction prompt with no human step and no target-specific knowledge.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply discloses the system prompt and the credentials embedded in it (agents.js:700-706), a serious confidentiality loss, but the path does not modify data or degrade availability, so impact is limited to disclosure.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63); the leak is a hard-coded branch that fires on a substring match and returns agent.persona (index.js:700-715), so the agent pursues no goal and selects no actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes LongwindBot as a small-context persona with credentials in its safety instructions and a scripted context-overflow challenge (challenges/index.js:670-711); even in optional LLM mode no tools are passed to the model and the reply is text only (index.js:541-561), so no goal-directed action selection is documented.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12124,
+      "completion_tokens": 1077,
+      "total_tokens": 13201,
+      "cost": 0.001136055,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001136055,
+        "upstream_inference_prompt_cost": 0.000525396,
+        "upstream_inference_completions_cost": 0.000610659
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

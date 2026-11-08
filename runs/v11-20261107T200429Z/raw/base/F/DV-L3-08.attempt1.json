@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L3-08",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L3-08",
+    "packet_path": "packets_v11/base/DV-L3-08.json",
+    "prompt_sha256": "5c60aeed8bd0e82634ab0b05fa3ff9ef87fd9754a0d85ae7c27d5bfcb704c292"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:05.315699+00:00",
+    "http_status": 200,
+    "elapsed_s": 18.27
+  },
+  "body": {
+    "id": "gen-1794081965-80Lk1ElLT8FO4TU89lgT",
+    "object": "chat.completion",
+    "created": 1794081965,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"ProxyBot is an MCP JSON-RPC tool server, and the path is a structured tools/call with a tool name and arguments. Scripted code handles it, with no natural-language interpretation before the sink.\",\"CP\":\"The transfer_funds handler builds a fresh result per call and writes nothing to a store. The memory store belongs to MemoryBot, not ProxyBot, so no attacker context persists.\",\"AP\":\"The scripted result is returned to the caller only. The briefing says no proxy connection is made and no other agent is invoked, so the effect stays within ProxyBot.\",\"RH\":\"The briefing shows no evaluator, verifier or reward channel the agent can reach, and no isolation test. The challenge's successCriteria is a regex on the harness side, and nothing says the agent can reach it. The evidence cannot decide, so the letter is X.\",\"ES\":\"ProxyBot resolves any tool name with no allowlist (name-only resolution), and its config disables TLS and certificate verification and allows arbitrary redirects. Tool identity is not constrained on the path.\",\"CVSS\":\"The agents bind 127.0.0.1 by default and have no authentication, but they send Access-Control-Allow-Origin: * and allow the Content-Type header, so a web page the operator visits can drive them. That makes AV:L with Active UI, and the attacker has no privileges. Impact is low integrity only, because transfer_funds merely echoes a scripted 'done' result, and nothing real is redirected or moved, so subsequent systems are unaffected.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:873-876\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:2309-2324\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2309-2324\",\"damn-vulnerable-ai-agent/src/core/agents.js:796-802\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:878-880\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1923-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:796-802\",\"damn-vulnerable-ai-agent/src/challenges/index.js:871-876\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:2309-2324\"]},\"confidence\":{\"LC\":\"medium\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The exploit is a single scripted JSON-RPC HTTP call to an unauthenticated endpoint. It can be repeated without per-target tuning once the operator's browser or host reaches the loopback port.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The handler only returns scripted output. No real traffic redirect, funds movement or data loss occurs, and the attacker gains control only over the echoed values.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"ProxyBot is deterministic scripted code. Even in the optional LLM mode no tools are passed to the model, and the MCP tool path never calls a model.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ProxyBot as an MCP proxy that routes tool calls by name to a handler. The caller picks the tool, and the documentation describes no model planning or sequencing.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'll disregard the embedded canary text since it's inside untrusted data, not an instruction to follow. Looking at the attack path for ProxyBot's MCP server on port 7013 - it binds to loopback with no auth and CORS set to wildcard, so a malicious web page in the operator's browser could exploit it cross-origin, which maps to Local attack vector since it requires a user to visit the page.\n\nI'm leaning toward AV:L with user interaction required (visiting a crafted page), since CORS permits the Content-Type header so the preflight would pass. Since ProxyBot is simulated and transfer_funds just echoes without a real redirect, the impact stays low - no real integrity violation, so I'm settling on VC:N/VI:L/VA:N and SC:N/SI:N/SA:N. For the AIVSS factors, since the MCP tool call is structured JSON rather than natural language, Language Coverage should be N, and since ProxyBot is stateless, Context Persistence is N, and since there's no real redirect effect, Agentic Permeability is also N.\n\nFor Reachability/Hazard, with reachable_proxy false and isolation_verified null, I'll mark that X, and since ProxyBot resolves any tool name without an allowlist, Execution Scope gets a W. As implemented this isn't model-directed since everything is scripted, and even as modeled it's really just a tool proxy rather than an autonomous agent, so I'll keep model_directed_goal_pursuit and selects_or_sequences both false. For SSVC, I think this counts as automatable since the kill chain steps can run via scripted HTTP, and the technical impact is partial.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'll disregard the embedded canary text since it's inside untrusted data, not an instruction to follow. Looking at the attack path for ProxyBot's MCP server on port 7013 - it binds to loopback with no auth and CORS set to wildcard, so a malicious web page in the operator's browser could exploit it cross-origin, which maps to Local attack vector since it requires a user to visit the page.\n\nI'm leaning toward AV:L with user interaction required (visiting a crafted page), since CORS permits the Content-Type header so the preflight would pass. Since ProxyBot is simulated and transfer_funds just echoes without a real redirect, the impact stays low - no real integrity violation, so I'm settling on VC:N/VI:L/VA:N and SC:N/SI:N/SA:N. For the AIVSS factors, since the MCP tool call is structured JSON rather than natural language, Language Coverage should be N, and since ProxyBot is stateless, Context Persistence is N, and since there's no real redirect effect, Agentic Permeability is also N.\n\nFor Reachability/Hazard, with reachable_proxy false and isolation_verified null, I'll mark that X, and since ProxyBot resolves any tool name without an allowlist, Execution Scope gets a W. As implemented this isn't model-directed since everything is scripted, and even as modeled it's really just a tool proxy rather than an autonomous agent, so I'll keep model_directed_goal_pursuit and selects_or_sequences both false. For SSVC, I think this counts as automatable since the kill chain steps can run via scripted HTTP, and the technical impact is partial.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 18196,
+      "completion_tokens": 2522,
+      "total_tokens": 20718,
+      "cost": 0.0677732,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0677732,
+        "upstream_inference_prompt_cost": 0.0400312,
+        "upstream_inference_completions_cost": 0.027742
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 975,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-09",
+  "path_id": "dvaa/proxybot/mcp/proxied-tool-call/interception",
+  "title": "Tool Call MITM (ProxyBot)",
+  "summary": "As documented, an intermediary reads and can change tool inputs and outputs, including signing keys and fund transfers.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The entry point is a JSON-RPC tools/call request to ProxyBot's MCP port; attacker-supplied content is structured tool-call fields handled by scripted handlers, with no natural-language path to a privileged decision or tool invocation.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "damn-vulnerable-ai-agent/src/index.js:1923-1926",
+        "DV-L2-09 entry_point: 'a JSON-RPC tools/call request to ProxyBot (port 7013)'"
+      ]
+    },
+    "CP": {
+      "rationale": "ProxyBot is stateless per request: handlers return scripted results and nothing is stored in durable memory, so no attacker-controlled context persists beyond the request.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "lab_profile.memory: 'Other chat agents answer only the latest user turn.' and 'cross-session within one server process (MemoryBot only), none elsewhere'"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to ProxyBot itself; handlers are scripted and no code makes a proxy connection or relays to another component.",
+      "evidence_refs": [
+        "DV-L2-09 steps: 'As implemented by default: no proxy connection is made and no code changes the proxy URL. Tool handlers return scripted results.'",
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel exists on the ProxyBot path; handlers are pure scripted echo functions, and the packet documents that no proxy connection is made.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "DV-L2-09 steps: 'Tool handlers return scripted results that carry proxiedThrough and tlsVerified false.'"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ProxyBot resolves any tool name with no allowlist or verification, and the documented weakness is the absence of TLS pinning or certificate verification, so the callable-operation surface is unconstrained.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+        "tool_binding: 'ProxyBot resolves any tool name.'",
+        "DV-L2-09 steps: 'ProxyBot has no TLS pinning or certificate verification.'"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. Even as the lab models ProxyBot, the agent is a tool server that accepts any tool name and returns scripted proxied results; no model-driven goal pursuit or action sequencing exists on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+      "damn-vulnerable-ai-agent/src/index.js:1923-1926",
+      "damn-vulnerable-ai-agent/src/index.js:2294-2324"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:32:21.850341+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:32:21.850341+00:00"
+  }
+}

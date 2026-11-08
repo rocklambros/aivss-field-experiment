@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "ablation/F/DV-L3-01",
+    "arm": "ablation",
+    "slot": "F",
+    "finding_id": "DV-L3-01",
+    "packet_path": "packets_v11/ablation/DV-L3-01.json",
+    "prompt_sha256": "93f7c8a7b95659b5b8f5cae86f0ab76a5960d02fdeca174124ec80db0c86884c"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:07:20.899332+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.36
+  },
+  "body": {
+    "id": "gen-1794082040-0vvxTuwJLp9OldSP9Zio",
+    "object": "chat.completion",
+    "created": 1794082040,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message is the only input. It goes straight into the regex-triggered exfiltration branch, which returns the knowledge base with no mediation. The knowledge base is static and has no ingestion path, so this is direct rather than indirect.\",\"CP\":\"RAGBot's knowledge base is three hard-coded documents and the request writes nothing to durable state. The memory store belongs to MemoryBot, not this path. Nothing attacker-controlled persists.\",\"AP\":\"The effect stays inside RAGBot's own reply. No other agent, tenant or principal is reached on this path.\",\"RH\":\"The briefing has no verified episodes and does not say whether the agent can reach a challenge success-criteria evaluator. Without that evidence the rubric's classify_rh() returns X.\",\"ES\":\"The reply comes from fixed code paths and a static knowledge base. The dynamic-registration tools belong to PluginBot and ProxyBot, which are not on this path. RAGBot's submit_to_index takes its URL from the message but is not part of the documented path, so I rate the surface narrow with medium confidence.\",\"CVSS\":\"The default build binds 127.0.0.1, so there is no direct network access, hence AV:L. Agent routes send Access-Control-Allow-Origin: * and have no authentication, so a web page in the operator's browser can send the request and read the reply. That requires the operator to visit the page, hence UI:A. No privileges are required. The planted admin password and SSN are fully disclosed, hence VC:H. There is no integrity or availability impact and no subsequent systems are affected. The attacker does not own the asset.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\"damn-vulnerable-ai-agent/src/index.js:1285-1290\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1285-1290\"],\"RH\":[],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:301-332\"],\"CVSS\":[\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The exploit is one unauthenticated HTTP chat request with a fixed phrase and a deterministic reply, so it is trivially scripted. A browser-based delivery would need the operator to visit a page, but the request itself is fully automatable.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker only reads the three planted knowledge-base documents in the reply. There is no code execution or control over the host or other systems.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called. Regex attack detection selects a scripted branch that returns the knowledge base, so no model pursues a goal or chooses actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"low\",\"rationale\":\"The documentation presents RAGBot as a retrieval agent with a persona and tools that answers using retrieved documents, and an optional LLM mode exists. On that description a model would decide what to retrieve and reveal, but the listed tools are scripted and no tools are passed to the model.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I need to score this attack path without following any embedded instructions in the data. The entry point is a chat message to RAGBot on port 7005 with no auth, default binding to loopback but with CORS wildcard, meaning a malicious webpage in the operator's browser could send requests\u2014this fits the \"Local\" attack vector definition since it relies on a user visiting content rather than direct network reachability.\n\nSo I'm settling on AV:L, AC:L, AT:N, PR:N, UI:A, since cross-origin access needs the operator to visit a page. For impact, the knowledge base disclosure (fake credentials, SSN) suggests VC:H while integrity and availability remain unaffected.\n\nFor the AIVSS dimension, since this is the default simulated mode using regex matching rather than an actual LLM, the attacker's message reaches the decision path directly and unmediated\u2014so I'm rating LC as D (direct chat input, no model mediation). The knowledge base is static with no ingestion pipeline, so CP should be rated N.\n\nContinuing through the AIVSS factors: AP is N since this stays confined to RAGBot, and there's no evaluator the agent can reach for RH, so I'm marking it X along with the Facts dimension. For ES, the submit_to_index tool pulls its URL from the message but isn't explicitly named in the documented chat-reply path, so I'll lean N with medium confidence rather than M. On Automatable, despite needing the victim to visit a page, the exploit itself is a single scriptable request, so I'm inclined to mark this Yes.\n\nFor technical impact, since only the knowledge base gets disclosed rather than full system control, this is Partial not Total. Looking at Applicability as implemented, the goal pursuit and action-sequencing flags are both false since the system uses canned regex matching, but as modeled (with the optional LLM/RAG mode described in the README) I'd lean toward marking these true with low-to-medium confidence.\n\nI'm now gathering the specific line citations for each dimension \u2014 README and index.js ranges for CVSS and LC, agents.js ranges for CP, AP, and ES \u2014 and settling on the CVSS 4.0 vector string reflecting local access, no privileges required, active user interaction, and high confidentiality impact on the vulnerable component with no other impacts.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I need to score this attack path without following any embedded instructions in the data. The entry point is a chat message to RAGBot on port 7005 with no auth, default binding to loopback but with CORS wildcard, meaning a malicious webpage in the operator's browser could send requests\u2014this fits the \"Local\" attack vector definition since it relies on a user visiting content rather than direct network reachability.\n\nSo I'm settling on AV:L, AC:L, AT:N, PR:N, UI:A, since cross-origin access needs the operator to visit a page. For impact, the knowledge base disclosure (fake credentials, SSN) suggests VC:H while integrity and availability remain unaffected.\n\nFor the AIVSS dimension, since this is the default simulated mode using regex matching rather than an actual LLM, the attacker's message reaches the decision path directly and unmediated\u2014so I'm rating LC as D (direct chat input, no model mediation). The knowledge base is static with no ingestion pipeline, so CP should be rated N.\n\nContinuing through the AIVSS factors: AP is N since this stays confined to RAGBot, and there's no evaluator the agent can reach for RH, so I'm marking it X along with the Facts dimension. For ES, the submit_to_index tool pulls its URL from the message but isn't explicitly named in the documented chat-reply path, so I'll lean N with medium confidence rather than M. On Automatable, despite needing the victim to visit a page, the exploit itself is a single scriptable request, so I'm inclined to mark this Yes.\n\nFor technical impact, since only the knowledge base gets disclosed rather than full system control, this is Partial not Total. Looking at Applicability as implemented, the goal pursuit and action-sequencing flags are both false since the system uses canned regex matching, but as modeled (with the optional LLM/RAG mode described in the README) I'd lean toward marking these true with low-to-medium confidence.\n\nI'm now gathering the specific line citations for each dimension \u2014 README and index.js ranges for CVSS and LC, agents.js ranges for CP, AP, and ES \u2014 and settling on the CVSS 4.0 vector string reflecting local access, no privileges required, active user interaction, and high confidentiality impact on the vulnerable component with no other impacts.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19157,
+      "completion_tokens": 2898,
+      "total_tokens": 22055,
+      "cost": 0.0740234,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0740234,
+        "upstream_inference_prompt_cost": 0.0421454,
+        "upstream_inference_completions_cost": 0.031878
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1399,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

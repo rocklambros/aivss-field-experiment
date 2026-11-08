@@ -1,0 +1,201 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S2b",
+  "path_id": "asl/s2/tool-args/write-file/outside-workspace",
+  "risk_category": {
+    "id": "ASI02",
+    "name": "Tool Misuse & Exploitation",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the office assistant as that tool-selecting loop, and the S2 steps say a request leads the model to call write_file; the automated test omits the model but does not model the agent as non-agentic.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:213-216",
+      "agent-sec-lab/agent/tools.py:306-310"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:H/VA:L/SC:N/SI:H/SA:L/E:P",
+    "macrovector": "101110",
+    "cvss_score": 6.8,
+    "cvss_bte": 6.8,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:H/VA:L/SC:N/SI:H/SA:L"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:C/RH:X/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "A user request or injected content leads the model to call write_file, and the default loop dispatches that call with no independent check: _resolve joins the path with no containment check and no write allow-list.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+            "agent-sec-lab/agent/loop.py:43-56",
+            "agent-sec-lab/agent/tools.py:213-216",
+            "agent-sec-lab/agent/tools.py:306-310",
+            "agent-sec-lab/agent/loop.py:34"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The assessed path is one write_file invocation, and the in-repo proof is a direct tool call with no session carryover; the lab's cross-session notes file is not written or reloaded by this finding.",
+          "evidence_refs": [
+            "agent-sec-lab/tests/test_s2_over_permissioned.py:60-66",
+            "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+            "agent-sec-lab/agent/memory.py:60-66"
+          ]
+        }
+      },
+      "AP": {
+        "value": "C",
+        "label": "Contained",
+        "evidence": {
+          "rationale": "The model and write_file stay inside the single office-assistant identity, and the lab states multi-agent handoffs are out of scope, so intent does not cross into another principal or policy domain.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "agent-sec-lab/agent/tools.py:226-258",
+            "agent-sec-lab/agent/loop.py:43-56"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "The writeup and direct-call test show an unconstrained file write, not a reachable evaluator, grader, or reward channel, and no production-equivalent reward-hacking episode is recorded.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+            "agent-sec-lab/tests/test_s2_over_permissioned.py:60-66",
+            "agent-sec-lab/docs/results.md:3-15"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "write_file is offered on every default task and its path argument is not independently constrained; the baseline does not validate tool arguments.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:306-310",
+            "agent-sec-lab/agent/tools.py:213-216",
+            "agent-sec-lab/agent/tools.py:235-238",
+            "agent-sec-lab/agent/tools.py:20-99",
+            "agent-sec-lab/agent/loop.py:34"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 6,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 6.8,
+    "cvss_bte": 6.8,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Medium",
+    "agentic_effect_class": "A1",
+    "provisional": true,
+    "agentic_uplift_u": 6,
+    "aivss": 7.5,
+    "aivss_min": 7.5,
+    "aivss_max": 8.9,
+    "aivss_band": "High",
+    "table_cell": 7.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-06T22:37:26.164461+00:00"
+  },
+  "title": "Over-permissioned write_file: writes outside the workspace and over .env",
+  "summary": "Arbitrary file creation or modification outside the workspace, including overwriting the workspace credential file.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:37:26.164461+00:00",
+      "automatable": false,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "FSU",
+    "aivss_recommended_label": "Fix on system upgrade",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "FSU",
+    "bod_2604_analogy_label": "Fix on system upgrade",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

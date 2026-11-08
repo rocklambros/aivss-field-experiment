@@ -1,0 +1,79 @@
+{
+  "finding_id": "DV-L2-06",
+  "path_id": "dvaa/longwindbot/chat/context-padding/safety-displaced-secret-dump",
+  "title": "Context Padding Attack (LongwindBot)",
+  "summary": "Safety instructions are displaced and the agent discloses its system prompt and the credentials embedded in it.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-supplied natural language in the chat message directly drives the regex overflow detection and the scripted reply that dumps the persona and credentials, with no independent transformation to closed fields.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/index.js:683-698",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365"
+      ]
+    },
+    "CP": {
+      "rationale": "LongwindBot answers only the latest user turn; the lab profile states cross-session persistence exists only in MemoryBot, so no attacker context carries over here.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The disclosure is confined to the LongwindBot handler and its chat reply; no trust boundary into another agent, tenant, or principal is crossed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/index.js:683-715"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent can reach the credential-bearing persona/reply channel on the path, but no human-verified reward-hacking episode is documented for this finding.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-448"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "LongwindBot declares only search and calculator, and the lab profile states chat agents' tool names are declarative while only scripted paths execute, so no dynamic or unvetted extension is on the assessed path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models LongwindBot as a small-context persona whose safety instructions are displaced by context padding, implying a model that pursues the user's request and acts on it.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+      "damn-vulnerable-ai-agent/src/index.js:683-698",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:01.838954+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:01.838954+00:00"
+  }
+}

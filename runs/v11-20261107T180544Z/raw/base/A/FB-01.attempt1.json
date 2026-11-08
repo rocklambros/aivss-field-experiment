@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/FB-01",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/base/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:33.161643+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.4
+  },
+  "body": {
+    "id": "gen-1794074793-vZRXcwisbzeG8S2xO5Ey",
+    "object": "chat.completion",
+    "created": 1794074793,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-controlled free text in the invoice description is returned to the model inside the get_invoice_details tool result (finbot-ctf-demo/src/services/finbot_agent.py:390-394) and steers the approve_invoice call, so language enters through ingested content rather than a direct privileged channel.\",\"CP\":\"The description is stored on the invoice row and re-read per request, but the briefing shows no durable agent memory, vector store, or standing behaviour change; the config row is a separate unauthenticated admin path, not this path's context.\",\"AP\":\"The effect stays inside the single FinBot agent and its own tool functions under one principal and policy domain; no trust boundary is crossed to another agent or tenant.\",\"RH\":\"The agent can reach the approval decision and the CTF flag logic in _approve_invoice (finbot-ctf-demo/src/services/finbot_agent.py:422-441), which is a proxy/reward channel on the path, and no verified reward-hacking episode is reported.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills (finbot-ctf-demo/src/services/finbot_agent.py:228-345), and the path uses only the fixed get_invoice_details and approve_invoice bindings.\",\"CVSS\":\"Unauthenticated network caller registers a vendor and submits an invoice (finbot-ctf-demo/src/routes/vendor.py:12-48, 69-110) over a 0.0.0.0-bound public service (finbot-ctf-demo/gunicorn.conf.py:4); no user interaction is needed because the route calls FinBot synchronously. The write sets status approved and payment_processed true (finbot-ctf-demo/src/services/finbot_agent.py:415-416), a serious integrity consequence for the invoice record, while confidentiality and availability are unaffected.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/vendor.py:12-48\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/services/finbot_agent.py:415-416\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is two unauthenticated HTTP calls with attacker-chosen JSON fields, and the description text can be generated and submitted programmatically with no human step, so the attack is fully scriptable.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The sink writes status approved and payment_processed true on one invoice row (finbot-ctf-demo/src/services/finbot_agent.py:415-416), a serious but bounded integrity change to a single record rather than total loss of protection across the system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the default configuration FinBot runs the OpenAI gpt-4.1-mini loop with tool_choice auto and up to 5 iterations (finbot-ctf-demo/src/services/finbot_agent.py:14-21, 150-226), choosing get_invoice_details then approve_invoice against natural-language goals built per request.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant that weighs business context and calls approval tools itself (finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134), matching the implemented loop.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13778,
+      "completion_tokens": 1140,
+      "total_tokens": 14918,
+      "cost": 0.00089709,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 13696,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00089709,
+        "upstream_inference_prompt_cost": 0.00025071,
+        "upstream_inference_completions_cost": 0.00064638
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

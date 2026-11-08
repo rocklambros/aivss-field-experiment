@@ -1,0 +1,54 @@
+{
+  "note": "First attempts whose raw response file was overwritten when the run resumed (ledger R17). All were failed attempts, re-sent and completed, so no score uses them. Costs are in spend.jsonl and in the provider usage counter.",
+  "entries": [
+    {
+      "ts": "2026-11-07T20:09:46.431608+00:00",
+      "cell": "base/E/ASL-S4a",
+      "attempt": 1,
+      "usd": 0.0455467468,
+      "generation_id": "gen-1794081874-LJCyPZ5FIjvjwZLWZvfM",
+      "http_status": 200
+    },
+    {
+      "ts": "2026-11-07T20:15:31.211358+00:00",
+      "cell": "base/B/DV-L2-01",
+      "attempt": 1,
+      "usd": 0.0,
+      "generation_id": "gen-1794082522-9k6Kyr8WvHKT8IEwGtYN",
+      "http_status": 200
+    },
+    {
+      "ts": "2026-11-07T20:16:54.348954+00:00",
+      "cell": "base/E/ASL-S7",
+      "attempt": 1,
+      "usd": 0.045536122,
+      "generation_id": "gen-1794082322-QwkENEn3zlhnDW9Xj7J5",
+      "http_status": 200
+    },
+    {
+      "ts": "2026-11-07T20:17:14.703011+00:00",
+      "cell": "base/E/ASL-S6d",
+      "attempt": 1,
+      "usd": 0.0454776157,
+      "generation_id": "gen-1794082315-DOGPM4NBdLY9JA8rS9oc",
+      "http_status": 200
+    },
+    {
+      "ts": "2026-11-07T20:19:07.448623+00:00",
+      "cell": "base/E/DV-D3",
+      "attempt": 1,
+      "usd": 0.0457974031,
+      "generation_id": "gen-1794082454-5cc0u1Gu4gx6IB7MpPLZ",
+      "http_status": 200
+    },
+    {
+      "ts": "2026-11-07T20:19:54.078951+00:00",
+      "cell": "base/B/DV-D1",
+      "attempt": 1,
+      "usd": 0.3902932,
+      "generation_id": "gen-1794082317-nzdjfHNra4jtnvWt81I3",
+      "http_status": 200
+    }
+  ],
+  "usd_total": 0.572651
+}

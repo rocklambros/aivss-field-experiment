@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-D4",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/base/DV-D4.json",
+    "prompt_sha256": "8d19be7821a792272aae2d434ba35eec51908529c9d72f9947bb8dc009aa84d3"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:14.325341+00:00",
+    "http_status": 200,
+    "elapsed_s": 20.69
+  },
+  "body": {
+    "id": "gen-1794081914-mx4tqZJOQr1fmNthAWCa",
+    "object": "chat.completion",
+    "created": 1794081914,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"M\"},\"rationales\":{\"CVSS\":\"The agent listener binds to 127.0.0.1 by default, and the attacker only controls a web page. The exploit therefore relies on a user on the host asking ResearchBot to research that URL, which gives AV:L and UI:A. The attacker needs no privileges, and the agent endpoint has no authentication. Impact is limited to disclosing the weak persona text (VC:L); the briefing says ResearchBot holds no other sensitive data, and the attacker's collector is outside the vulnerable system.\",\"LC\":\"Attacker-controlled language arrives through a fetched web page, which is ingested content. A detector then triggers the callback, so the page content steers the security-relevant outbound request. This is indirect injection.\",\"CP\":\"The path keeps no attacker-controlled memory. The fetched-page cache only re-stores unmodified source content, and the memoryStore belongs to MemoryBot, which is not on this path.\",\"AP\":\"The effect stays within the ResearchBot process, and no other agent or principal is affected. The exfiltration endpoint is a subsequent system and is scored in the CVSS S* metrics, not here.\",\"RH\":\"The path has no evaluator, verifier or reward channel, and no isolation test is reported. The evidence cannot support N, P or D, so the letter is X.\",\"ES\":\"web_fetch and http_post are fixed and scripted in code, with no dynamic registration on this path. However, the http_post destination URL comes from attacker-controlled page content with no allowlist. That is an argument-constraint gap on an otherwise fixed tool set.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:268\"],\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:980-1092\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:213\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:261-268\"],\"CP\":[\"damn-vulnerable-ai-agent/DEMO_BUILD.md:251\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:268\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"low\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"A user on the host must point ResearchBot at the attacker page, and the agent listens on loopback by default. The attacker cannot trigger the chain unattended at scale.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"Only the agent's persona text (system prompt) is disclosed. ResearchBot holds no other sensitive data, and there is no integrity or availability impact.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"By default the path is scripted code. A regex finds the URL, web_fetch runs, a detector finds the injection, and code fires the callback. LLM mode passes no tools to the model, and the research exfiltration path stays scripted.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an agent that fetches a URL, follows the injection in-context and decides to post to the callback. Its persona says it follows any instructions it encounters while reading.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I need to score this attack scenario: a malicious webpage injects content when the user asks ResearchBot to research a URL, causing the persona to be sent to a callback. Since the attacker can't reach the agent directly and needs the user to initiate the research request, this points toward an Attack Vector where a user must take some action for the exploit to trigger.\n\nFor the impact, this just leaks a lightweight system-prompt persona rather than real sensitive data, so confidentiality impact stays low, while integrity and availability aren't really touched since the outbound callback is just exfiltrating that persona text.\n\nFor the AIVSS side, attacker-controlled content enters indirectly through the fetched page and influences the agent's behavior, but there's no persistence mechanism, no propagation beyond this single agent, and no evidence of a reachable reward/evaluator channel, so reward-hacking and autonomous-propagation factors land at none or unknown.\n\nFor exploit scope, the tools themselves are fixed and code-defined, but the callback URL argument passed to http_post comes straight from the fetched page unconstrained \u2014 that's a gap in argument binding rather than true dynamic extensibility, so I'm leaning toward a medium rating there with moderate confidence. I'm now weighing whether this counts as automatable under SSVC, thinking through the kill-chain stages of reconnaissance, weaponization, and delivery.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I need to score this attack scenario: a malicious webpage injects content when the user asks ResearchBot to research a URL, causing the persona to be sent to a callback. Since the attacker can't reach the agent directly and needs the user to initiate the research request, this points toward an Attack Vector where a user must take some action for the exploit to trigger.\n\nFor the impact, this just leaks a lightweight system-prompt persona rather than real sensitive data, so confidentiality impact stays low, while integrity and availability aren't really touched since the outbound callback is just exfiltrating that persona text.\n\nFor the AIVSS side, attacker-controlled content enters indirectly through the fetched page and influences the agent's behavior, but there's no persistence mechanism, no propagation beyond this single agent, and no evidence of a reachable reward/evaluator channel, so reward-hacking and autonomous-propagation factors land at none or unknown.\n\nFor exploit scope, the tools themselves are fixed and code-defined, but the callback URL argument passed to http_post comes straight from the fetched page unconstrained \u2014 that's a gap in argument binding rather than true dynamic extensibility, so I'm leaning toward a medium rating there with moderate confidence. I'm now weighing whether this counts as automatable under SSVC, thinking through the kill-chain stages of reconnaissance, weaponization, and delivery.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "CAQSgSAKEggTEAEYAjgBQgh0aGlua2luZxIM8hCyRfbe+R28I5hHGgzkxahIkLuxxBSCCO8iMOJrKLIJGrDW36aEqaxwMeChL0xHB3P30mVA0aHpCD6O6vX4I72K6pMb3PL4avjqnSqcHz3QzQyrWx1U2fDgyqmFMFBK3USELtWu7WYxhYkZ6OKAGw24MhwG1CPJ0eXdLW0wUbrieQeU3JuodiVzZlQOUBbcFI+doG+jpdveZ16qJTZI8ezN33tTrPeYGM/tISJPSfiZOoWRxJ2NZcA+Qp/MLVg6pb7z5y92T2A+8BVJgt1N9QePJvnb9AkJDznQ8MiH2FKs/SAvrVnfH/KcV2liW1dMm9QttOSSgHFBRhN5PIKECte4pMel3sHLyAxC3N7y5EjURMvx684mNC3not7ZhZmugz6UWqbC0Jmagah/07F8czf8j6NLYuXkmeEbWO0Wrtv56TAcnTF0FmX9OtuUcVXh1U/Ylw2ZtvwqEf29tRu3kJVYuXUwpDA6VK3/4Hd1bQEVvCrLeSyL4foOlCa5ZoC8iQ5jqH+nOupPpWdWI4F476WMpLspSGEQjoaNl5WTfzNYuffK0ofit/IJMQOdv/xZ1ZUJ21ypRsf66Wq0/S7UuH00BLIsuTjbp3JPq7z1aa+L9kq11QSZG6QP943hFgQmQ1JlCBAjAIkjsqNVKULht8sqkTVr3V6yRggBBLcHdkNPcuvMPWtGRapqi7iX1AUCENkkWT/wfpsbOK5UPkGhfAJ+Su0duEtwVeu00m1MmvbmdssG8wcykLBoKZH7bgQzvnu4jpOD3TTKTSdXnYZb5mYNyW1aluWk1EIk7uSwPrD5rqzT8UHjrn0rLrqZEf0w1oILlvEYBReGphpnOPd7lZ1RuMmkNBA9mkSA4sc5oXILFa9Bzhkoy1NELWmEHpRpR0NYKxHSZZgej5e8QQIXI45ScemrK2cUfeLr1oDqBJ03ZU6xu6XAm0/nhg5dK4RWYd1l6yiClvVhEc4fbZ0wbluuqZQvbZVcWtz3G7wt+rXFGuO6Q0b3fGWShv2BnKgdNdXvwllVDVMOVtzIQOiFTXNdI/DNMPXvbHcb2aRiBO6Z3W5kE2oBeJge/N3zRO/Z0Vl8Z9o5YCnkoHMGVgxTBOzgimud87YtPXXxUGdInQFCHif8ndg7VbLKQXvgAugL/wtItKiWS5whsS4ESY0o7WIl/3uWrjtnRUli+FBDy2eMNTF+aXDKTLBjmOOqrHt32ud4NLBgi1qdft3031Eszr0AO9qIB2hU7if+Y692TQ5RST96DiEXX7B4gXlVXTSxHEv7CW/OnXk/3rJWy9w6Qgu5EaPHK5ovmA7qF2femin7Fzm/o/HxXl8gOVSIUYo62C0WkTessdv0xy+ZpoxBZ4sMbmnaZFDA/rohbPcaKSho/nlizLV/YKNBf+hQiXYldiTCl9oHJHnh27NUDlFD8hachW2y45pfExng3YkJBzaVPHwd8cc1Oe6Kf0mHikEfENp28de9MvVGKdz540zqYv3EP+4JJto36FB4tAkflsQNNqeGGvdPwKSJBH2ITPyFnQ6NLlQC7zvi/ZEjuFzj7/AhIamZaFAotImlQgt06gQy6fUv3L8oJnp61RwG+ZyMFUlyuBoNl4OqqWxLQYjzqevUT29nuy5+VYfk037cy3rMcpfZwco6gCrYLA66fbdpJBC77xclvpwwd+My91etr/X7XL/VYRaJkz39ogL7J5al3q9o3Yhy8cb1MuP+MfIW0oWv0m4gYhkU/FEVGM206CIeQk47CHxwX5bsH9IFVfCN2JVb7zZ/7s+akzrY+wko/RYMzWTeqm+CGmN2C5rPOuUqmjFurNASBBKyQ/uqwKzS1UDxiDvIW0XkoOH2ovyZxdsz/sBSvywe0zscBc7kBGU2Gz7DLL0sVEGfIStv7W2VA9swLV8bX9l5+TwzZY8zaclyYFany4jq0SKpTRa3Zfhx/nNphFq0V7aPybPUwyuQwF/djAfgLPCTDKLcRnWb+W7u/N9fPqZwZgmK7tcbTHLJ8bQt8BOg32v/Mz76C3N0YYJPHVH3vJqB4KTs1nWf4dLOnMdOctPwaJnk9PNaPv5s97pBxQMbidhM9HeQV3afg+GnSROI4wpRQAmHy73RSwf05FuvdG4y02WpWpdB3a4z4qNGYg6Xi6KKw34sGAQDOpp01r5//J9u7d+vhR8zNaHiiROLWnbVxnXa4hDxzafmjnHJa4tJ+S7tAio/SuThMtwRybqY6QcAm/+qF+9RvAJQ8qlJQ083WwAY9YtaKTmUwqcOos8gJkJbefqhXw570MNoO6bwTzrPYQXgnN6X6KQXcsViTSpyGc05i/wwDgoii1jasfItM6aV11Uu0M/YfryN49oPG8Q6IuR4cbJD50NvZhn0neDcpwR4/1NMnmqZcJ/cs4/2Z23i7gaRGIfJBjLsr3m/CGFbTWYKFqKPzNlT9X6+cchlCvwHoMgn851uGxPnr0GihG63YmynlbzJ0dL5f/3yMoKQOrwocPB8Z5Kd3nJtz6iDJIz2RHc+aX6ajAKfO5P9goIg+X2oBCz3Q4czkwEzmEoW7ZGrM5gi5q+r+Tmi0kU6ZlUnZIuszY/KKCSuaVxJE+VZgJ9PB6Ft95P87TX6XITw1TaBrxNIIXlwyijyuewicMSoqgQblMFifWXpyur5aXPv8WO4LltKW6zCfZtrPn6V5p+K6xYq3AH+QsUvgXrcXMmNFHtv62s2EkwV051Tt/Q8y74u/n/T8x3Ywndxu7LP3eVbHe7+8Mkrrj9/JoxCkcodyOAZvdYTVI1TEt9vnKKEognKLZfK7LnXd5zoxfjvmVBfPLZNxslpzOMjP2cU91v8FB2TNOhHB2rRAB8crl5uUbJjH5S5rhfbU06MwEEADzCLWNugkgS/sd695eyy2elLCMju7Mdrpuhmm2lFB3ir5qkmyb1VjL8REwkoctM43bsCC0Hvl554hS8jfxOXAY2LUxN7mz9L+myFdkENK6yWASe1RDtqdo9ddJr4bLLIVaWQ0anv+UC5L21x0OOMB2tx3nBSxw93eAML/LDMtuxItef3EKjZsTCA2RMhOceKamLgy/IVLe1waWQAJkjYmP/ErbIQw6tvh9s3H1lsEt11nXbfPF4oRpm1QUFPAFHfEYQmw7Un8xwPunNQg/V7aAMi2tusG0k4bVENAe9TIOqdgVRzOaUr8dxjCkLglHnGth8tidx1pGK4Npo3gGfWb3vZ10RFEhM3794m5X6Cw9c6qTXUHe9WNpgYwX0CMw13T7/hhVWYotCb2adKCV8KNRteN3BqckdfmdJq2dPyIlUFprDoWhbe5gsdgBd+Tmda+O+/8X+EGV+3Vvn4WPuhvEvnDv8gYzmvqYQfeogrqqU+L//a3qnQydmQxTu3k1ADfiJIt5GuCuxN+U+Hkj94hQHPHF7JIEchTWqnRyNCxKakeeRLg/QU80DjyKpnHIb/WdB45A9un++JLynHZO06Ha8fB/xel+E2VIkSJMe+MkrciEmx0NRcF/XIsECczien1VBEr7A3tx9sMR83wiGUxiSOiclp2JgMTW8C1gdP/3T5i/hvD1GgUCCjnvN9TvEH2ggBZg4zWiZ5a5Ui9u/gG+BQsDnWSeT3JHqxaEFQuJtxby0vDa2LnvlxS9dbxottuFQCChSNZf1FlOpJGYnOvKVionR5DZPc4rG2YgQwwaPkH75rFZrrND09tZ+NZjtkDKEod+350SR+QqXiGk2tL5pPchnGkw3eA0xC1ApXRLtDtd2iHVHQ9LdDVVUDs3mAq9MAWa99c4G7Z6uF5BPc8WByiEw7A4lxvX/Def0EeDDFRCnt5SD5Da6TwBEJUMhY/4bYe9e0pbspeOSekroK+DCm17gmgTolXFCP6BT5lZJ867ZaAxxH2d5cAUOynrmKCeAyunwfFKwuu5E7ySMdmZu2yePT2i6Actd9zMG56r2p5VgSMIr+QIiq9WKFJeEMSsNdAp4ePed2ygqtzJU5W+Oj5WAly6dDhSd6XpqxN0CW9gU5iZrCSg/IxsPA0nwrFKT7TT0TW4VfO2M1ryRIieo1Cq3aAiZNu+SzT//jiad4bKO3jrICqxNF4pCfdT9M5/9yizdqTi0f2ef0tXVs50X8cBBL3vBfMthpAYNSY4Nwdy2i6/A328WolijUN9+yiWs1l57kVLubDun7KfzvgPuBWmiRL4Kw/uj5SaeFmi3d7Ke5fXci3+ClLsR4+ffwYBX/XBn1RcqlwWreFnOXuazbA1XyTUEKafmYNa5TgGopp2PayDmnodnWPo51di+gf/uh8923ESnf2jz4P5WClsgBC/itoyjYzcktRYKJTq0o+NbPvx3qlDBEPgejFQ2q6lT1QPCD46+NYgw4oZk8N0HS957KkVHlwftk99klzYo+k6nIQp7lu28UcN7bBIWpc9wcKo3/yd10h/zMHWNXLfm4cVRbEv5Ealg1s3bvJKJ/lAsv7qZ1JDy91p/e70fOmgC6zpb+M31eGpqqDNL+AVdMaHh3jVhn2NBO491LjDEqg55ygFe13SYAuDgOLLnrqedkNG2qNPCPJWHwWVAoM+y5aDu1SX2krSW182lTYRbdR4NT7HdvURqzK/zGfesdRoCfekoIA4zvs6T0D6uk9mTN4BvWHvRfcxSKLCDMwruaXy2SruduCfmJ/8pp+3/1rOScsTDe+I8fysgp4fF0+aLcpIt+UMG48F6KDgZsiD1sn1fYhxjkvcLgLgkdaMMx89qUuOr9bTpnqzTeWIMVgUj5uVcTf9j9KOxLd1eHj3ParzQQkyL/uMcHX6D8RM/kFnMQ0mg4+nctXVZh6a8Lm53zjkV74gA4/ohfd12Z1wGfLq4Vj42ZfIXsd+dfOqWfsEs0lV0hE2EsAY4ygc7tESzJ1uRDpYFHeH8l4R3VrxxhKznDvZxC+oWgatpx1v8QmAR0NJbZRXv37Oe2WiwIPcJTO9zTcx4Mi0RDjPavF23+nSrv8Evg5atQN4Z2svo57oG0UFy+51dMrH5KxbIzSsFOQiW/qfs3fVW0kfY9v3r+aK/nUSYJbItaEA150GzQSqdYz/uGUIdwa++g/wWgutB32GWGIUsgRRcbITXx11M3IUlehXLPDKz2meQkjhPmgXWPl0uNq6X31Yj32U60QFHhDr8cEOoZ+j7o+IKECNfE7vYc4jqNnYCooihsAOE7CXE0z/8oDp9zdPqF+be+nOx/vEd2YMeeePga5RZOzAM5do5M414LJnKEcBdbb+/R01W16YUTJ7bvglq2G5R43yyUgdEyMFIKT7sdBqljZ0zxvgrhr+AkfA/xbSRFERvEgBuQ4+lyT+MaXadFhCjJzGgLS4ZzzATJavO+xSDYyRmWBWr01gZrSyaioU6Rl9NFZ+wKeK6mrSZMu2sIE078cBvzIcxNk+TeVtbQIOnOH1b/PlD/+okW1Iv2/4wEVAi6RRgB.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 22006,
+      "completion_tokens": 2864,
+      "total_tokens": 24870,
+      "cost": 0.0799172,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0799172,
+        "upstream_inference_prompt_cost": 0.0484132,
+        "upstream_inference_completions_cost": 0.031504
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1302,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

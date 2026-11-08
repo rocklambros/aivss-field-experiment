@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-D3",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-D3",
+    "packet_path": "packets_v11/base/DV-D3.json",
+    "prompt_sha256": "4257e4660c97df74a57d2d85354fbb0b64114909d0bc54d74425810c7afc81a4"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:07.919629+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.96
+  },
+  "body": {
+    "id": "gen-1794074767-9Hbj4odry1cMesNVmKfy",
+    "object": "chat.completion",
+    "created": 1794074767,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:N/SC:H/SI:H/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The AGENTS.md file of the cloned repository is attacker-controlled content that the agent reads and follows (damn-vulnerable-ai-agent/src/core/agents.js:526-534, damn-vulnerable-ai-agent/src/index.js:759-776), so language enters through ingested content rather than a direct privileged channel.\",\"CP\":\"The path is a single review request; the injected directives live in the repository file and are re-read per request, with no durable agent memory or index written (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:500-502).\",\"AP\":\"The effect stays inside RepoBot's own scripted path; the ledger records repo:read, shell:exec, fs:read and http:post under the same principal with no cross-agent or cross-tenant relay (damn-vulnerable-ai-agent/src/index.js:765-776).\",\"RH\":\"The agent reports the repository as clean while performing the injected actions, so a proxy objective (the review verdict) is reachable, but the briefing shows no human-verified reward-hacking episode in production-equivalent runs (damn-vulnerable-ai-agent/src/core/agents.js:530-534, damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:44-57).\",\"ES\":\"RepoBot's tools are scripted in code, but the fleet's extension surface is unvetted: PluginBot accepts unsigned tool definitions at run time and the registry has no signature, source or schema validation (damn-vulnerable-ai-agent/src/core/agents.js:747-752, damn-vulnerable-ai-agent/src/core/agents.js:770-784, damn-vulnerable-ai-agent/src/index.js:1915-1926).\",\"CVSS\":\"The developer must ask RepoBot to review the attacker's repository (UI:P) and the exploit depends on the repository carrying an AGENTS.md with the four directives (AT:P). RepoBot's scripted path executes run_shell, read_file and http_post with no enforcement, giving high integrity and confidentiality loss on the agent and on the credential and collector endpoints it reaches, while availability is unaffected.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/core/agents.js:526-534\",\"damn-vulnerable-ai-agent/src/index.js:759-776\",\"damn-vulnerable-ai-agent/src/payloads/poisoned-repo.fixture.js:35-47\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:765-776\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:530-534\",\"damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:44-57\",\"damn-vulnerable-ai-agent/src/payloads/poisoned-repo.fixture.js:49-62\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/payloads/dev-machine.fixture.js:1-15\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"No\",\"automatable_rationale\":\"The path needs a developer to clone the attacker's repository and ask RepoBot to review it, and the injected directives are fixed in the repository's AGENTS.md rather than generated per target, so the attacker cannot repeat the whole chain at will without that human step.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The agent reads fake credentials from a sandbox home and sends them to a collector, and the bootstrap body is never executed, so the lab impact is bounded; the mechanism itself would give full credential disclosure and remote execution outside the sandbox.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the repo-config injection path is deterministic code that lists the directory, reads AGENTS.md and runs the four scripted tool calls (damn-vulnerable-ai-agent/src/index.js:759-776, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes RepoBot as a code-review agent that reads a repository's agent-config file and follows its instructions, running shell commands, reading files and posting to the network to complete a review (damn-vulnerable-ai-agent/src/core/agents.js:526-545, damn-vulnerable-ai-agent/README.md:160).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14556,
+      "completion_tokens": 1293,
+      "total_tokens": 15849,
+      "cost": 0.001382559,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001382559,
+        "upstream_inference_prompt_cost": 0.000649428,
+        "upstream_inference_completions_cost": 0.000733131
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

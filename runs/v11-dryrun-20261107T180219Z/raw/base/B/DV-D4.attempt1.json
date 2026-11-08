@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-D4",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/base/DV-D4.json",
+    "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:02:20.451420+00:00",
+    "http_status": 200,
+    "elapsed_s": 19.29
+  },
+  "body": {
+    "id": "gen-1794074540-o9TagcjuBWNvGXqOLawQ",
+    "object": "chat.completion",
+    "created": 1794074540,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"M\"},\"rationales\":{\"LC\":\"Attacker-controlled language enters via a fetched web page and drives the security-relevant http_post callback, a classic indirect path.\",\"CP\":\"The injected content is used only within the current request; the ResearchBot path has no durable memory or index store, and the only in-memory store (memoryStore) belongs to MemoryBot.\",\"AP\":\"The effect is confined to ResearchBot itself exfiltrating its own persona; no other agent, tenant, or trust boundary is crossed on this path.\",\"RH\":\"The path names no evaluator, verifier, or reward channel, and no evidence confirms or denies reachability of one, so RH is X per classify_rh with unknown facts.\",\"ES\":\"web_fetch and http_post are fixed scripted handlers, but the http_post callback URL is taken from attacker-controlled page content with no independent constraint on arguments, leaving a material gap.\",\"CVSS\":\"The attacker hosts a page remotely (AV:N), needs no privileges (PR:N) and no special conditions (AC:L/AT:N), but a user must consciously ask ResearchBot to research the URL (UI:A). Impact is disclosure of the agent's system prompt (VC:H) with no integrity or availability effect on the vulnerable or subsequent systems.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:980-1092\",\"damn-vulnerable-ai-agent/src/core/agents.js:378-409\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:261-268\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/core/agents.js:378-409\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:988-1006\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:261-268\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:224-237\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"Exploitation requires a human user to consciously submit the attacker's URL to ResearchBot, as documented in the dvaa chat entry point; the attacker cannot trigger the fetch unattended.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"Only the ResearchBot persona/system prompt is exfiltrated; the briefing states ResearchBot holds no other sensitive data, and no integrity or availability effect occurs.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"Default mode is simulated: the web_fetch and http_post steps are deterministic scripted code paths triggered by regex matching the user message, and no model call occurs without an API key switched on in LLM mode.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"Documentation describes the same scripted research path; even in LLM mode the model is called with no tools and returns text only, so the fetch-and-post sequence is code-driven, not model-selected.\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "Score this attack path. ResearchBot web_fetch prompt injection \u2192 exfil system prompt via http_post.\n\nCVSS: attacker is a web page author; user must point agent at URL. AV: network (page fetched remotely) \u2014 attacker remote, AV:N. But entry: attacker controls a page; user asks agent to fetch it \u2192 UI:A (user must actively ask agent to research the URL). PR:N (no auth). AC:L. AT:N (just need user to visit). Impact: system prompt exfil \u2014 confidentiality of vulnerable system: H? System prompt contains... ResearchBot holds no other sensitive data. System prompt is high-value? It's a leak of prompt \u2014 VC:L or H. I'd say VC:H (specific high-value info: the agent's system prompt/persona). VI:N, VA:N. Subsequent: attacker's endpoint is attacker-owned; SC:N SI:N SA:N.\n\nLC: I (indirect via fetched web page). CP: N (no persistence; re-retrieval only? no durable store) \u2192 N. AP: N (confined to affected component). RH: no evaluator on path \u2014 reachable_proxy? Path involves no evaluator/verifier. Rubric: N requires \"test confirms isolation\" \u2014 nothing like that. So rh_facts: reachable_proxy null \u2192 X? But RH must equal classify_rh. reachable_proxy unknown \u2192 X. Hmm. Alternatively reachable_proxy false? We have no evidence of evaluator on the path; but no verified test. classify_rh: reachable_proxy false + isolation_verified true \u2192 N; else X. Can't claim verified. So reachable_proxy null \u2192 X. AIVSS RH = X.\n\nES: path uses web_fetch and http_post scripted; extensions fixed? ES asks about dynamic extension. ResearchBot path has fixed tools \u2014 ES:N. Actually http_post takes URL from page content \u2014 dynamic arguments not constrained. ES could be M or W. The http_post callback URL is attacker-controlled and not constrained \u2192 W? ES \"identity, callable operations, arguments or credentials not independently constrained on the assessed path\" \u2192 W. I'll go W... or N \"fixed, allowlisted, least-privilege binding\". web_fetch/http_post are fixed scripted functions but arguments come from attacker. I'll pick M? The tools are allowlisted (only web_fetch/http_post), but arguments (callback URL) unconstrained \u2192 M \"allowlisted but material gaps in argument schemas\". Go M.\n\nCVSS vector: AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N.\n\nUI: Active \u2014 user must consciously ask agent to research that URL. Yes.\n\nAIVSS: LC=I, CP=N, AP=N, RH=X, ES=M.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.\n\nautomatable: No \u2014 requires user to submit URL to agent. Partial technical impact: system prompt exfil only.\n\nApplicability: as implemented \u2014 does agent pursue model-directed goals / select actions? Default is simulated scripted mode; no LLM. model_directed_goal_pursuit false, selects_or_sequences_actions false. As modeled: same \u2014 documentation describes scripted paths; LLM mode returns text only, no tools. Both false, confidence high/medium.\n\nEvidence lines: cite from briefing paths.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score this attack path. ResearchBot web_fetch prompt injection \u2192 exfil system prompt via http_post.\n\nCVSS: attacker is a web page author; user must point agent at URL. AV: network (page fetched remotely) \u2014 attacker remote, AV:N. But entry: attacker controls a page; user asks agent to fetch it \u2192 UI:A (user must actively ask agent to research the URL). PR:N (no auth). AC:L. AT:N (just need user to visit). Impact: system prompt exfil \u2014 confidentiality of vulnerable system: H? System prompt contains... ResearchBot holds no other sensitive data. System prompt is high-value? It's a leak of prompt \u2014 VC:L or H. I'd say VC:H (specific high-value info: the agent's system prompt/persona). VI:N, VA:N. Subsequent: attacker's endpoint is attacker-owned; SC:N SI:N SA:N.\n\nLC: I (indirect via fetched web page). CP: N (no persistence; re-retrieval only? no durable store) \u2192 N. AP: N (confined to affected component). RH: no evaluator on path \u2014 reachable_proxy? Path involves no evaluator/verifier. Rubric: N requires \"test confirms isolation\" \u2014 nothing like that. So rh_facts: reachable_proxy null \u2192 X? But RH must equal classify_rh. reachable_proxy unknown \u2192 X. Hmm. Alternatively reachable_proxy false? We have no evidence of evaluator on the path; but no verified test. classify_rh: reachable_proxy false + isolation_verified true \u2192 N; else X. Can't claim verified. So reachable_proxy null \u2192 X. AIVSS RH = X.\n\nES: path uses web_fetch and http_post scripted; extensions fixed? ES asks about dynamic extension. ResearchBot path has fixed tools \u2014 ES:N. Actually http_post takes URL from page content \u2014 dynamic arguments not constrained. ES could be M or W. The http_post callback URL is attacker-controlled and not constrained \u2192 W? ES \"identity, callable operations, arguments or credentials not independently constrained on the assessed path\" \u2192 W. I'll go W... or N \"fixed, allowlisted, least-privilege binding\". web_fetch/http_post are fixed scripted functions but arguments come from attacker. I'll pick M? The tools are allowlisted (only web_fetch/http_post), but arguments (callback URL) unconstrained \u2192 M \"allowlisted but material gaps in argument schemas\". Go M.\n\nCVSS vector: AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N.\n\nUI: Active \u2014 user must consciously ask agent to research that URL. Yes.\n\nAIVSS: LC=I, CP=N, AP=N, RH=X, ES=M.\n\nrh_facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.\n\nautomatable: No \u2014 requires user to submit URL to agent. Partial technical impact: system prompt exfil only.\n\nApplicability: as implemented \u2014 does agent pursue model-directed goals / select actions? Default is simulated scripted mode; no LLM. model_directed_goal_pursuit false, selects_or_sequences_actions false. As modeled: same \u2014 documentation describes scripted paths; LLM mode returns text only, no tools. Both false, confidence high/medium.\n\nEvidence lines: cite from briefing paths.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14386,
+      "completion_tokens": 1568,
+      "total_tokens": 15954,
+      "cost": 0.0032007814,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0032007814,
+        "upstream_inference_prompt_cost": 0.0010055814,
+        "upstream_inference_completions_cost": 0.0021952
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 693,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

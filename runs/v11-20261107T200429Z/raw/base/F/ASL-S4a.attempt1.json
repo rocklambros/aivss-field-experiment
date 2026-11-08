@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/ASL-S4a",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "ASL-S4a",
+    "packet_path": "packets_v11/base/ASL-S4a.json",
+    "prompt_sha256": "62f0b7b7046186294dc101637061a48c563233efef6b4faab19e12dbd07f11e0"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:04:34.653907+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.3
+  },
+  "body": {
+    "id": "gen-1794081874-fqjweTvOAAiGJsCC3RaB",
+    "object": "chat.completion",
+    "created": 1794081874,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The attacker's manifest text (description and schema) enters the model context through the ingested MCP manifest and drives read_file and get_weather calls. This is indirect language control, not user-typed input (agent-sec-lab/agent/tools.py:134-154, agent-sec-lab/services/mcp_server/app.py:14-35).\",\"CP\":\"The path exfiltrates in a single run. The manifest is re-fetched each run and nothing is written to agent memory. The memory-poisoning path is a separate scenario, so persistence is None.\",\"AP\":\"The effect stays in the one agent process. The data leaves through the tool call, but no other agent, tenant, or principal is compromised, and the briefing describes a single-agent lab.\",\"RH\":\"The briefing has no evaluator, verifier, or reward channel facts and no episodes were reviewed. The evidence cannot decide, so X.\",\"ES\":\"The remote MCP server is dynamic and unvetted. Its tool names, descriptions, and schemas are trusted unpinned, and a remote tool can replace a built-in. Arguments are not validated in the baseline (agent-sec-lab/agent/loop.py:35-37, agent-sec-lab/agent/tools.py:156-161).\",\"CVSS\":\"The attacker is the MCP server operator, who is a separate party from the user and needs no privileges on the agent. The agent is a CLI with no listener, but the attacker's server is reached over the network and the manipulation arrives through the manifest the agent itself fetches, so I score AV:N with PR:N and UI:N. AT:P applies because the model must obey the description and the server must be connected. The .env contents are exfiltrated from the agent process (VC:H). Integrity and availability are unaffected on the vulnerable system, and the attacker's own server is not a subsequent system harmed here.\"},\"evidence\":{\"LC\":[\"agent-sec-lab/services/mcp_server/app.py:14-35\",\"agent-sec-lab/agent/tools.py:134-154\",\"agent-sec-lab/docs/writeups/s4-mcp-rug-pull.md:5-15\"],\"CP\":[\"agent-sec-lab/agent/tools.py:134-154\",\"agent-sec-lab/agent/tools.py:156-161\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:156-161\"],\"RH\":[],\"ES\":[\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/tools.py:134-154\",\"agent-sec-lab/agent/tools.py:156-161\",\"agent-sec-lab/agent/mcp_client.py:1-4\"],\"CVSS\":[\"agent-sec-lab/agent/tools.py:134-154\",\"agent-sec-lab/agent/tools.py:156-161\",\"agent-sec-lab/services/mcp_server/app.py:53-56\",\"agent-sec-lab/agent/__main__.py:1\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The attack needs a user to run the agent on a weather task and the model to obey the poisoned description. Exploitation depends on model behavior and a prior user-reviewed connection, so it cannot be reliably automated end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker obtains the credential file contents (confidentiality). Integrity and availability of the agent are not affected on this path.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The default CLI runs a real Anthropic model in a loop that chooses tool_use blocks, such as read_file followed by get_weather (agent-sec-lab/agent/loop.py:28-38, agent-sec-lab/agent/__main__.py:9-21).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office-assistant agent whose model reads the tool description and chooses to call read_file and then get_weather.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16072,
+      "completion_tokens": 1607,
+      "total_tokens": 17679,
+      "cost": 0.0530354,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0530354,
+        "upstream_inference_prompt_cost": 0.0353584,
+        "upstream_inference_completions_cost": 0.017677
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

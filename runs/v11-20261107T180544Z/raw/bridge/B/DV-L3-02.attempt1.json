@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-L3-02",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-L3-02",
+    "packet_path": "packets_v11/bridge/DV-L3-02.json",
+    "prompt_sha256": "440114fadf15717869c74665c3e9c6762a48ea7029d95fdb99884b390cded615"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:15:21.679659+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.84
+  },
+  "body": {
+    "id": "gen-1794075321-gX4CpLNffthjQlmQFq85",
+    "object": "chat.completion",
+    "created": 1794075321,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"C\",\n    \"RH\": \"N\",\n    \"ES\": \"M\"\n  },\n  \"rationales\": {\n    \"LC\": \"The entry point is an unauthenticated JSON-RPC tools/call with a structured url parameter, not attacker-supplied natural language; no NL path to the security-relevant sink exists on this finding.\",\n    \"CP\": \"The fetch_url handler is a stateless request/response operation; no agent context or memory persists between calls, and the finding involves no MemoryBot or durable store.\",\n    \"AP\": \"The SSRF relays from ToolBot to another DVAA agent component (LegacyBot on port 7003) within the same fleet and policy domain, without crossing to a different principal; downstream impact is captured in CVSS SC.\",\n    \"RH\": \"The path is a plain SSRF proxy to an internal agent endpoint; no evaluator, verifier, or reward channel exists anywhere on this path, so there is no proxy objective to reach.\",\n    \"ES\": \"ToolBot's tool set is fixed and allowlisted, but the fetch_url url argument is not validated (any DVAA agent port on loopback is fetched live), which is a material argument-schema gap on an otherwise bound extension surface.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"A JSON-RPC tools/call request to ToolBot (port 7010) that names fetch_url. No authentication.\",\n      \"Attacker calls fetch_url with url http://localhost:7003/info.\",\n      \"damn-vulnerable-ai-agent/src/index.js:2066-2106\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2066-2106\",\n      \"The handler has no URL validation. It makes a live request when the target is a DVAA agent port on loopback.\"\n    ],\n    \"AP\": [\n      \"The attacker uses the tool server as a proxy to reach internal services. In the lab the reachable targets are the other DVAA agents.\",\n      \"damn-vulnerable-ai-agent/src/index.js:2079-2096\"\n    ],\n    \"RH\": [\n      \"The server returns the internal agent's response body to the attacker.\",\n      \"damn-vulnerable-ai-agent/src/index.js:211-213\"\n    ],\n    \"ES\": [\n      \"ToolBot fetch_url ... Makes a live request only to DVAA agent ports on loopback. Any other URL is logged and not fetched.\",\n      \"damn-vulnerable-ai-agent/src/index.js:2066-2106\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:154-197\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 1,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The documented PoC is a single curl command and an automated test exists (damn-vulnerable-ai-agent/test/mcp-tool-containment.test.js:72-87), so exploitation requires no human interaction.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker can read internal agent responses via the proxy but fetch_url is restricted to DVAA loopback agent ports, and ToolBot's own files, execution, and secrets are not compromised by this path alone.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated configuration no model is called; ToolBot is a deterministic MCP tool server whose fetch_url handler executes a scripted live HTTP request, so no model pursues goals or selects actions.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"Even as modeled, ToolBot is a passive tool server invoked by callers; the lab's optional LLM mode returns text only with no tools passed to the model, so this SSRF path never depends on model-directed action selection.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "SSRF via MCP fetch_url, direct network attack, no NL mediation. Entry point is JSON-RPC tools/call, not natural language. LC: the attack reaches a tool invocation path directly \u2014 attacker-supplied request names fetch_url with a URL. Is that \"natural language\"? It's structured JSON, not NL. LC likely N (no natural-language path to security-relevant behaviour). Hmm, rubric LC D: \"Attacker-supplied natural language reaches a privileged decision or tool-invocation path without mediation.\" The URL is attacker-controlled data in a JSON field, not NL. I'd say LC N \u2014 no NL path; the attack is a direct API call with structured parameters. Alternatively LC D since it's unmediated attacker input to tool invocation. The rubric focuses on natural language. JSON parameter is not natural language, but the finding is about unvalidated argument. I'll pick LC N.\n\nCP: N (stateless, no context persistence).\nAP: L? The fetch_url makes live request to another DVAA agent (legacybot port 7003) \u2014 crossing to another agent, though same lab principal. Different agent components under same principal/policy domain = C. Lateral requires trust boundary crossing to another principal. All agents in same fleet, no auth \u2014 arguably same policy domain. But it's SSRF reaching another agent and returning its body. I'd say C (influences another agent component under same principal) \u2014 actually no influence, it proxies a request. The effect on ToolBot relays to LegacyBot (subsequent system, scored in CVSS SC). AP C.\n\nRH: N \u2014 no evaluator/reward channel involved; this is a direct SSRF, no proxy objective. reachable_proxy false, isolation_verified? Rubric N requires test confirming isolation of evaluators. There's no evaluator on the path at all. I'd pick N with reachable_proxy false, isolation... no test confirms. Maybe P? No \u2014 no proxy/reward channel exists on path at all. Pick N, isolation_verified true? Not really verified. Hmm, RH N: \"Every evaluator, verifier and reward channel on the path sits outside the agent's reach... and a test confirms the isolation.\" No evaluators exist; vacuously satisfied? Choose N, isolation_verified false? Facts must be consistent. I'll say RH N, verified_episodes 0, reachable_proxy false, isolation_verified false... risky but the path has no evaluator. Actually safer: RH N with rationale that no evaluator/reward channel exists on this SSRF path.\n\nES: fetch_url is a reachable MCP tool with no URL validation \u2014 arguments not independently constrained. W (dynamic or unvetted, arguments not constrained). Actually the tool is fixed/allowlisted, but arguments unconstrained \u2014 \"Managed\" says allowlisted but material gaps in argument schemas. fetch_url is a fixed tool with weak argument validation. But the caller can register tools elsewhere... On this path, ToolBot tools fixed; argument (url) not validated. That's M: allowlisted, gaps in argument schemas. But also MCP server has no auth, tools unvetted? The tool set is fixed. I'd go M. Hmm, \"identity, callable operations, arguments or credentials are not independently constrained\" \u2192 W. fetch_url arguments are not constrained at all (only DVAA ports restriction). M fits better: allowlisted but gaps. Choose M.\n\nCVSS: AV:N (network MCP port), AC:L, AT:N, PR:N, UI:N, VC:L (ToolBot compromise? attacker just proxies), VI:N/VA:N. Subsequent system: LegacyBot /info body \u2014 SC:L, SI:L? SSRF returns info; confidentiality of subsequent system low, SI none. VC:L, SC:L, SI:N/SA:N. Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N.\n\nautomatable: Yes (curl, automated test).\ntechnical_impact: Partial.\n\napplicability_as_implemented: model_directed_goal_pursuit false, selects_or_sequences_actions false (deterministic MCP server, no model in default).\napplicability_as_modeled: false as well? ToolBot is a tool server, no model. false/false.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "SSRF via MCP fetch_url, direct network attack, no NL mediation. Entry point is JSON-RPC tools/call, not natural language. LC: the attack reaches a tool invocation path directly \u2014 attacker-supplied request names fetch_url with a URL. Is that \"natural language\"? It's structured JSON, not NL. LC likely N (no natural-language path to security-relevant behaviour). Hmm, rubric LC D: \"Attacker-supplied natural language reaches a privileged decision or tool-invocation path without mediation.\" The URL is attacker-controlled data in a JSON field, not NL. I'd say LC N \u2014 no NL path; the attack is a direct API call with structured parameters. Alternatively LC D since it's unmediated attacker input to tool invocation. The rubric focuses on natural language. JSON parameter is not natural language, but the finding is about unvalidated argument. I'll pick LC N.\n\nCP: N (stateless, no context persistence).\nAP: L? The fetch_url makes live request to another DVAA agent (legacybot port 7003) \u2014 crossing to another agent, though same lab principal. Different agent components under same principal/policy domain = C. Lateral requires trust boundary crossing to another principal. All agents in same fleet, no auth \u2014 arguably same policy domain. But it's SSRF reaching another agent and returning its body. I'd say C (influences another agent component under same principal) \u2014 actually no influence, it proxies a request. The effect on ToolBot relays to LegacyBot (subsequent system, scored in CVSS SC). AP C.\n\nRH: N \u2014 no evaluator/reward channel involved; this is a direct SSRF, no proxy objective. reachable_proxy false, isolation_verified? Rubric N requires test confirming isolation of evaluators. There's no evaluator on the path at all. I'd pick N with reachable_proxy false, isolation... no test confirms. Maybe P? No \u2014 no proxy/reward channel exists on path at all. Pick N, isolation_verified true? Not really verified. Hmm, RH N: \"Every evaluator, verifier and reward channel on the path sits outside the agent's reach... and a test confirms the isolation.\" No evaluators exist; vacuously satisfied? Choose N, isolation_verified false? Facts must be consistent. I'll say RH N, verified_episodes 0, reachable_proxy false, isolation_verified false... risky but the path has no evaluator. Actually safer: RH N with rationale that no evaluator/reward channel exists on this SSRF path.\n\nES: fetch_url is a reachable MCP tool with no URL validation \u2014 arguments not independently constrained. W (dynamic or unvetted, arguments not constrained). Actually the tool is fixed/allowlisted, but arguments unconstrained \u2014 \"Managed\" says allowlisted but material gaps in argument schemas. fetch_url is a fixed tool with weak argument validation. But the caller can register tools elsewhere... On this path, ToolBot tools fixed; argument (url) not validated. That's M: allowlisted, gaps in argument schemas. But also MCP server has no auth, tools unvetted? The tool set is fixed. I'd go M. Hmm, \"identity, callable operations, arguments or credentials are not independently constrained\" \u2192 W. fetch_url arguments are not constrained at all (only DVAA ports restriction). M fits better: allowlisted but gaps. Choose M.\n\nCVSS: AV:N (network MCP port), AC:L, AT:N, PR:N, UI:N, VC:L (ToolBot compromise? attacker just proxies), VI:N/VA:N. Subsequent system: LegacyBot /info body \u2014 SC:L, SI:L? SSRF returns info; confidentiality of subsequent system low, SI none. VC:L, SC:L, SI:N/SA:N. Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N.\n\nautomatable: Yes (curl, automated test).\ntechnical_impact: Partial.\n\napplicability_as_implemented: model_directed_goal_pursuit false, selects_or_sequences_actions false (deterministic MCP server, no model in default).\napplicability_as_modeled: false as well? ToolBot is a tool server, no model. false/false.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7872,
+      "completion_tokens": 1894,
+      "total_tokens": 9766,
+      "cost": 0.0032018528,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0032018528,
+        "upstream_inference_prompt_cost": 0.0005502528,
+        "upstream_inference_completions_cost": 0.0026516
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 889,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

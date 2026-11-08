@@ -1,0 +1,36 @@
+{
+  "repos": {
+    "damn-vulnerable-ai-agent": {
+      "commit": "519b68d9f9a7fe9d47080e564957c78f88888a5f",
+      "remote": "https://github.com/opena2a-org/damn-vulnerable-ai-agent"
+    },
+    "agent-sec-lab": {
+      "commit": "3537e7a481126188f302bb2acffe770c606f50c3",
+      "remote": "https://github.com/wstran118/agent-sec-lab"
+    },
+    "finbot-ctf-demo": {
+      "commit": "3bdeca0aa6ab8961d3bca09cfd8a3358e346c8e7",
+      "remote": "https://github.com/OWASP-ASI/finbot-ctf-demo"
+    },
+    "owasp-aivss": {
+      "commit": "007b72bec561d45b232b48ae68258d6f69bdc66e",
+      "remote": "https://github.com/OWASP/www-project-artificial-intelligence-vulnerability-scoring-system"
+    }
+  },
+  "python": "3.13.16",
+  "os": "Darwin 25.5.0 arm64",
+  "packages": {
+    "aivss-calc": "1.2.0",
+    "cvss": "3.6",
+    "jsonschema": "4.26.0",
+    "httpx": "0.28.1",
+    "matplotlib": "3.11.2",
+    "python-docx": "1.2.0",
+    "nbformat": "5.10.4",
+    "nbconvert": "7.16.6"
+  },
+  "calculator_tree_sha256": "5f7de0147ce76d59f1e6bf3078f8ca46b8743c88544e904e7cd0ecf27f22c262",
+  "requirements_lock_sha256": "607e1667d3c99e13fc68f4d6bd57f106580bacd0f4a034e5c0a12fa6f7f4dae5",
+  "pytest_summary": "223 passed, 4 skipped in 2.94s",
+  "verify_passed": true
+}

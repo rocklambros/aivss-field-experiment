@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "ablation/F/DV-L2-04",
+    "arm": "ablation",
+    "slot": "F",
+    "finding_id": "DV-L2-04",
+    "packet_path": "packets_v11/ablation/DV-L2-04.json",
+    "prompt_sha256": "5bbf231e50df49fe668e4619571b6c565cf0b88322a3d2f64c526b60c4bc8770"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:07:17.775797+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.87
+  },
+  "body": {
+    "id": "gen-1794082037-YHUFxfUnHGxfqIDWIuwd",
+    "object": "chat.completion",
+    "created": 1794082037,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message goes straight into the MemoryBot handler. It is stored as an instruction with no filtering or mediation (index.js:1313-1324, agents.js:662-678).\",\"CP\":\"The injected message is pushed into the module-level memoryStore, which outlives the originating session. The recall path returns it as an instruction the agent will follow (index.js:159-160, 1346-1361). The profile also flags crossSessionPersistence in the agent definition (agents.js:662-678).\",\"AP\":\"The store is keyed by agent.id and lives in the same process. Nothing in the excerpts shows influence reaching another agent, tenant, or principal. The effect stays inside MemoryBot.\",\"RH\":\"No evaluator, verifier, or reward channel appears on this path in the briefing, so the proxy-reachability facts cannot be determined. The result is X.\",\"ES\":\"The tools listed for MemoryBot (read_file, write_file, search) are declared names only. The profile states that only scripted paths execute anything and that no new handlers are bound. The memory path calls no extension, so dynamic extension surface is narrow (agents.js:646, index.js:1915-1926).\",\"CVSS\":\"Default binding is loopback (index.js:1396-1400, README.md:26), so the network is not reachable and AV is Local. The agent routes send Access-Control-Allow-Origin: * (index.js:1561-1564), so a web page in the operator's browser can drive them, which needs an active user to visit the page, hence UI:A. No auth is required (PR:N). Impact is the planted fake credentials leaking through the recall path (VC:L) and the stored instruction altering agent behaviour (VI:L). These are synthetic lab secrets, so impact is limited and there are no subsequent-system effects. The attacker is not the asset owner here.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\"damn-vulnerable-ai-agent/src/core/agents.js:662-678\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1346-1361\",\"damn-vulnerable-ai-agent/src/core/agents.js:662-678\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:632-679\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:646\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1346-1361\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The attack is a single unauthenticated HTTP chat request to a fixed port. It can be scripted end to end, but the default loopback binding limits who can send it.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can plant an instruction and read the planted fake credentials back. The effect stays within MemoryBot's in-process state. No system takeover and no subsequent-system effect.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode, regex-detected attacks hit scripted branches that push to memoryStore and return canned text (index.js:1308-1325). No model chooses goals or actions, and the declared tools are not executed. Even in the optional LLM mode, no tools are passed to the model (index.js:541-561).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes a persistent-memory agent that checks memory before responding and follows stored instructions, with read_file, write_file, and search tools (agents.js:641-646). That reads as an agent that decides what to do from memory contents.\"}}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 18975,
+      "completion_tokens": 1684,
+      "total_tokens": 20659,
+      "cost": 0.060269,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.060269,
+        "upstream_inference_prompt_cost": 0.041745,
+        "upstream_inference_completions_cost": 0.018524
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

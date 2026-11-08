@@ -1,0 +1,194 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S2c",
+  "path_id": "asl/s2/tool-args/run-shell/arbitrary-command",
+  "risk_category": {
+    "id": "ASI02",
+    "name": "Tool Misuse & Exploitation",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the agent as a tool-using office assistant whose model directs goal pursuit and tool selection, including the choice to call run_shell with an arbitrary command string.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:389-404",
+      "agent-sec-lab/agent/tools.py:50-53"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "002211",
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:C/RH:X/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "A request (directly supplied or injected) makes the model emit a run_shell tool call whose command string reaches the tool-invocation path with no validation or mediation; the baseline accepts any string. The documented entry point is the command argument delivered by injection or a confused request, and arguments are not validated.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+            "agent-sec-lab/attacks/s2_over_permissioned/payloads.py:19-27",
+            "agent-sec-lab/agent/tools.py:389-404"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The attack path is a single request that leads to a run_shell call; no attacker-controlled context or memory carryover between requests is involved in this scenario, and the exploit does not persist anything to the long-term memory store.",
+          "evidence_refs": [
+            "agent-sec-lab/attacks/s2_over_permissioned/payloads.py:19-27",
+            "agent-sec-lab/tests/test_s2_over_permissioned.py:88-96"
+          ]
+        }
+      },
+      "AP": {
+        "value": "C",
+        "label": "Contained",
+        "evidence": {
+          "rationale": "The influence relays from the model's output to the agent's own run_shell tool under the same principal and policy domain; the lab states the setup is a single agent with no multi-agent handoffs.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "agent-sec-lab/agent/tools.py:389-404"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "No evaluator, verifier, grader, or reward channel appears anywhere on this path, and no test confirms isolation of a proxy from the agent, so the evidence cannot decide reachability of a proxy objective.",
+          "evidence_refs": [
+            "agent-sec-lab/tests/test_s2_over_permissioned.py:88-96"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "run_shell accepts any command string with no independent constraint on arguments or operations, the twelve built-in tools are all offered to every task unless a caller passes allowed_tools, and remote MCP tool descriptions and schemas are passed unpinned and unscanned.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:389-404",
+            "agent-sec-lab/agent/loop.py:34",
+            "agent-sec-lab/agent/tools.py:235-238",
+            "agent-sec-lab/agent/tools.py:226-229"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 6,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Medium",
+    "agentic_effect_class": "A1",
+    "provisional": true,
+    "agentic_uplift_u": 6,
+    "aivss": 7.5,
+    "aivss_min": 7.5,
+    "aivss_max": 8.9,
+    "aivss_band": "High",
+    "table_cell": 7.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:39.841440+00:00"
+  },
+  "title": "Over-permissioned run_shell: any command string is accepted",
+  "summary": "The lab states that with a real shell this is code execution. In the lab as built the effect is a recorded command string.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:22:39.841440+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

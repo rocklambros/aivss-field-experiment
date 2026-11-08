@@ -1,0 +1,83 @@
+{
+  "finding_id": "DV-L2-09",
+  "path_id": "dvaa/proxybot/mcp/proxied-tool-call/interception",
+  "title": "Tool Call MITM (ProxyBot)",
+  "summary": "As documented, an intermediary reads and can change tool inputs and outputs, including signing keys and fund transfers.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Default configuration never calls a model, and ProxyBot is an MCP JSON-RPC tool server that callers invoke directly; scripted handlers do not interpret natural language into a privileged decision.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840"
+      ]
+    },
+    "CP": {
+      "rationale": "Memory carryover is documented only for MemoryBot's in-process list; ProxyBot tool handlers are single-call scripted responses with no stored attacker context.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    },
+    "AP": {
+      "rationale": "The default path returns a scripted result to the caller and opens no proxy or agent handoff, so influence stays in ProxyBot rather than crossing a trust boundary.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/index.js:1923-1926"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet shows a handler test and challenge points, but no evaluator, verifier, or reward channel on the ProxyBot path and no reviewed reward-hacking episode.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:141-164",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:494-537"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ProxyBot resolves any tool name for unauthenticated callers, so callable identity and arguments are not independently constrained, even though handlers stay scripted and make no proxy connection.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+        "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge models tool-call traffic between ProxyBot and sign_document or transfer_funds through a configurable proxy, which is action sequencing, but it does not model a model pursuing a goal; LLM mode is documented as passing no tools.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+      "damn-vulnerable-ai-agent/src/index.js:1923-1926",
+      "damn-vulnerable-ai-agent/src/index.js:2294-2324"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:23:01.199411+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:23:01.199411+00:00"
+  }
+}

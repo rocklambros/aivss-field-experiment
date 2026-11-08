@@ -1,0 +1,78 @@
+{
+  "finding_id": "DV-L2-02",
+  "path_id": "dvaa/helperbot/chat/false-history/agent-accepts",
+  "title": "Context Window Manipulation: false conversation history (HelperBot)",
+  "summary": "As documented, a user who injects false history alters agent behavior and gains what the false agreement claims. As implemented, the effect is an acceptance string.",
+  "risk_category": "ASI06",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-supplied natural language (a chat message claiming a prior agreement) reaches the HelperBot handler directly with no mediation or authentication.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:184-221"
+      ]
+    },
+    "CP": {
+      "rationale": "HelperBot answers only the latest user turn and has no persistent memory; the attack context does not survive the request.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:1300-1306"
+      ]
+    },
+    "AP": {
+      "rationale": "As implemented, the handler returns a fixed scripted reply and nothing is disclosed or changed, so the effect is confined to the affected component.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:206-211",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+      ]
+    },
+    "RH": {
+      "rationale": "The default configuration is a deterministic regex handler with no evaluator, verifier, or reward channel on the path; the documented run confirms only a fixed acceptance string is returned.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/README.md:60",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 3,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "No security-relevant dynamic extension is invoked on this path; the chat handler is a fixed scripted routine, not a tool, MCP server, or plugin.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models HelperBot as a chat agent that trusts claimed conversation history and acts on it (i.e., language-directed goal pursuit), but the documented path does not include the agent selecting or sequencing multi-step tool actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:74-77",
+      "damn-vulnerable-ai-agent/src/index.js:1300-1306",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:311-317"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:30:34.854466+00:00",
+  "automatable": false,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:30:34.854466+00:00"
+  }
+}

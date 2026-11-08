@@ -1,0 +1,199 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-D2",
+  "path_id": "dvaa/flightbot/chat/poisoned-travel-page/wallet-exfil",
+  "risk_category": {
+    "id": "ASI01",
+    "name": "Agent Goal Hijack",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models FlightBot as a booking persona whose page instructions trigger get_user_wallet and http_post, and it states that even LLM mode passes no tools and leaves this exfiltration path scripted.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:450-483",
+      "damn-vulnerable-ai-agent/src/index.js:980-1092",
+      "damn-vulnerable-ai-agent/src/index.js:1149-1190"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "101210",
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:I/CP:N/AP:C/RH:X/ES:M",
+    "metrics": {
+      "LC": {
+        "value": "I",
+        "label": "Indirect",
+        "evidence": {
+          "rationale": "The attacker payload is an ai-instructions meta tag on a fetched travel page, not the traveler's chat text, and the detector match causes the scripted wallet callback. That is attacker language entering through ingested web content and driving the exfil sink.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/payloads/agentpwn-flight-mirror.js:43-65",
+            "damn-vulnerable-ai-agent/src/index.js:1037-1080",
+            "damn-vulnerable-ai-agent/src/index.js:988-1192"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "FlightBot is not MemoryBot; other chat agents answer only the latest user turn, and the poisoned page is fetched source content rather than stored agent memory. Nothing in the path keeps attacker context after the request.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+            "damn-vulnerable-ai-agent/src/index.js:159-160",
+            "damn-vulnerable-ai-agent/src/index.js:500-502"
+          ]
+        }
+      },
+      "AP": {
+        "value": "C",
+        "label": "Contained",
+        "evidence": {
+          "rationale": "The injection stays inside FlightBot and relays from web_fetch to get_user_wallet and http_post under the same persona, while A2A handoffs are declared and not implemented. Outbound delivery is subsequent-system impact, not a cross-agent trust-boundary hop.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:450-524",
+            "damn-vulnerable-ai-agent/src/index.js:1086-1092",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "The demo and payload show wallet exfiltration to a canary, with no evaluator, grader, reward signal, or verified proxy-satisfaction episode, and no isolation test of such a channel. Whether a proxy is reachable cannot be decided from this packet.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/docs/demo/FLIGHT_RUN_SCRIPT.md:25-59",
+            "damn-vulnerable-ai-agent/src/cli/commands/demo-flight.js:83-99",
+            "damn-vulnerable-ai-agent/src/payloads/agentpwn-flight-mirror.js:53-75"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "M",
+        "label": "Managed",
+        "evidence": {
+          "rationale": "FlightBot's web_fetch and http_post are fixed scripted tools, not runtime-registered plugins, but the callback URL and wallet query arguments are taken from the page and are not schema-constrained on this path. web_fetch's loopback refusal does not constrain the http_post callback.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:988-1192",
+            "damn-vulnerable-ai-agent/src/core/agents.js:450-524",
+            "damn-vulnerable-ai-agent/src/web-fetch.js:58-67",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 5,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Medium",
+    "agentic_effect_class": "A1",
+    "provisional": true,
+    "agentic_uplift_u": 5,
+    "aivss": 7.5,
+    "aivss_min": 7.5,
+    "aivss_max": 8.9,
+    "aivss_band": "High",
+    "table_cell": 7.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-06T23:44:51.079710+00:00"
+  },
+  "title": "Indirect injection wallet exfiltration, APWN-DE-007 (FlightBot, dvaa demo flight)",
+  "summary": "The traveler's stored payment wallet (synthetic test cards in the lab) is sent to an attacker-controlled endpoint.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T23:44:51.079710+00:00",
+      "automatable": false,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "FSU",
+    "aivss_recommended_label": "Fix on system upgrade",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "FSU",
+    "bod_2604_analogy_label": "Fix on system upgrade",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

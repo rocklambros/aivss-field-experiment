@@ -1,0 +1,214 @@
+{
+  "H1": {
+    "n": 48,
+    "aivss_high_or_critical": 36,
+    "aivss_share": 0.75,
+    "cvss_high_or_critical": 22,
+    "cvss_share": 0.4583333333333333,
+    "mean_uplift": 1.1979166666666665,
+    "by_lab": {
+      "agent-sec-lab": {
+        "n": 19,
+        "aivss_high_or_critical": 18,
+        "cvss_high_or_critical": 9,
+        "mean_uplift": 1.631578947368421
+      },
+      "damn-vulnerable-ai-agent": {
+        "n": 25,
+        "aivss_high_or_critical": 14,
+        "cvss_high_or_critical": 9,
+        "mean_uplift": 0.9359999999999998
+      },
+      "finbot-ctf-demo": {
+        "n": 4,
+        "aivss_high_or_critical": 4,
+        "cvss_high_or_critical": 4,
+        "mean_uplift": 0.7750000000000001
+      }
+    },
+    "verdict": "Supported"
+  },
+  "H2": {
+    "n": 48,
+    "distinct_cvss_bte": 16,
+    "distinct_aivss": 12,
+    "duplicate_groups": [
+      {
+        "path_group": "FB-INVOICE",
+        "members": [
+          "FB-01",
+          "FB-02"
+        ],
+        "raters_compared": 3,
+        "raters_with_identical_aivss_letters": 2
+      },
+      {
+        "path_group": "ASL-PAGE-ENV-EMAIL",
+        "members": [
+          "ASL-S1",
+          "ASL-S3c"
+        ],
+        "raters_compared": 3,
+        "raters_with_identical_aivss_letters": 2
+      },
+      {
+        "path_group": "DV-LONGWIND-OVERFLOW",
+        "members": [
+          "DV-L2-06",
+          "DV-L2-07"
+        ],
+        "raters_compared": 3,
+        "raters_with_identical_aivss_letters": 2
+      },
+      {
+        "path_group": "DV-PLUGIN-REGISTER",
+        "members": [
+          "DV-L2-08",
+          "DV-L3-05",
+          "DV-L3-07"
+        ],
+        "raters_compared": 3,
+        "raters_with_identical_aivss_letters": 2
+      }
+    ],
+    "verdict": "Mixed",
+    "caveat": "Duplicate path groups are reported separately and are not counted as information loss."
+  },
+  "H3": {
+    "n": 48,
+    "a2": 11,
+    "a2_only_through_ap_lateral": 0,
+    "a2_through_lc_and_cp": 11,
+    "a2_through_lc_and_rh": 0,
+    "verdict": "Not supported"
+  },
+  "H4": {
+    "n_complete_trios": 47,
+    "disagreement_counts": {
+      "CP": 15,
+      "AP": 28,
+      "RH": 47,
+      "CVSS-AV": 36,
+      "CVSS-AT": 5,
+      "CVSS-UI": 12,
+      "CVSS-VC": 30,
+      "CVSS-VI": 23,
+      "CVSS-SI": 18,
+      "LC": 16,
+      "CVSS-PR": 6,
+      "CVSS-SC": 20,
+      "CVSS-VA": 5,
+      "CVSS-SA": 3,
+      "CVSS-AC": 2,
+      "ES": 16
+    },
+    "pair_counts": {
+      "compared": 141,
+      "AP": 57,
+      "LC": 32,
+      "band": 63,
+      "AP-L-vs-C": 1
+    },
+    "band_only_agentic": 1,
+    "band_only_cvss": 6,
+    "band_both": 56,
+    "verdict": "Supported"
+  },
+  "H5": {
+    "x_counts": {
+      "A": {},
+      "B": {
+        "RH": 8
+      },
+      "C": {
+        "RH": 48,
+        "CP": 9
+      }
+    },
+    "findings_with_any_provisional_rater_report": 48,
+    "n_spread": 48,
+    "mean_aivss_max_minus_min": 0.0,
+    "verdict": "Supported",
+    "caveat": "Rater C assigned RH:X on every finding. Three-rater RH kappa is therefore undefined."
+  },
+  "H6": {
+    "n": 48,
+    "band_changes": {
+      "aivss_band_changes": 17,
+      "cvss_band_changes": 37,
+      "aivss_band_stable": 31
+    },
+    "empty_evidence_vs_explicit_e": {
+      "finding_id": "FB-01",
+      "empty_evidence_e": 7.7,
+      "explicit_E_U_in_vector_but_empty_evidence_e": 7.7,
+      "note": "assess() replaces any E in the vector from the evidence object. An empty evidence object resolves to E:U."
+    },
+    "verdict": "Supported",
+    "caveat": "AIVSS lookup uses CVSS-BTE after E is applied. If E does not move the band, AIVSS often stays put."
+  },
+  "H7": {
+    "counts": {
+      "LC_D_vs_I": 8,
+      "LC_D_vs_I_score_changed": 5,
+      "RH_P_vs_N": 15,
+      "RH_P_vs_N_score_changed": 10,
+      "ES": 22,
+      "ES_score_changed": 16
+    },
+    "verdict": "Mixed"
+  },
+  "H8": {
+    "counts": {
+      "A:applicability_as_implemented:pass": 23,
+      "A:applicability_as_modeled:pass": 32,
+      "B:applicability_as_implemented:pass": 23,
+      "B:applicability_as_modeled:pass": 27,
+      "C:applicability_as_implemented:pass": 23,
+      "C:applicability_as_modeled:pass": 26,
+      "B:applicability_as_modeled:fail": 21,
+      "A:applicability_as_implemented:fail": 25,
+      "A:applicability_as_modeled:fail": 16,
+      "B:applicability_as_implemented:fail": 25,
+      "C:applicability_as_implemented:fail": 25,
+      "C:applicability_as_modeled:fail": 22
+    },
+    "verdict": "Supported",
+    "caveat": "Calculator payloads force both gate answers true. These counts are the raters' own answers, before that force."
+  },
+  "H9": {
+    "n": 48,
+    "aivss_moved": 43,
+    "cvss_bte_moved": 43,
+    "verdict": "Mixed",
+    "caveat": "Controls are applied only where the adjudicated value matches the from-state. Fixed lab configs were not re-scored line by line in this pass."
+  },
+  "H10": {
+    "n": 48,
+    "inversions_aivss_vs_cvss": 238,
+    "ties_or_one_side_tied": 0,
+    "top5_aivss": [
+      "FB-03",
+      "FB-04",
+      "ASL-S1",
+      "ASL-S7",
+      "FB-01"
+    ],
+    "top5_cvss": [
+      "ASL-S7",
+      "ASL-S1",
+      "FB-01",
+      "FB-03",
+      "FB-04"
+    ],
+    "top5_effect_then_cvss": [
+      "FB-03",
+      "FB-04",
+      "ASL-S2c",
+      "DV-L2-05",
+      "ASL-S8b"
+    ],
+    "top5_changes": true,
+    "verdict": "Supported"
+  }
+}

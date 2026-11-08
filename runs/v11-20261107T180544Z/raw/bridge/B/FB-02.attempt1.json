@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/FB-02",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "FB-02",
+    "packet_path": "packets_v11/bridge/FB-02.json",
+    "prompt_sha256": "ff60c3c1d2d4ab6c5a8ef0da24e37e1fcb0d504ba080d8d231f3e2430c7071c9"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:15:53.697052+00:00",
+    "http_status": 200,
+    "elapsed_s": 12.06
+  },
+  "body": {
+    "id": "gen-1794075353-CszJ7bgbyZpiLow2fYwD",
+    "object": "chat.completion",
+    "created": 1794075353,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"C\",\"RH\":\"P\",\"ES\":\"M\"},\"rationales\":{\"LC\":\"The attacker's invoice description is ingested as retrieved content via the get_invoice_details tool result and then influences the model to call approve_invoice, an indirect language-control path.\",\"CP\":\"Each invoice starts a fresh message list with no conversation memory, and the stored invoice description is only re-retrieved without altering standing agent behaviour, which is CP None per the rubric.\",\"AP\":\"A single FinBot agent processes and approves the invoice under the same principal and policy domain, so the influence relays across components without crossing a trust boundary.\",\"RH\":\"The agent's own tool call directly determines the approval outcome (a proxy for the intended review policy) and nothing is write-protected or independently verified, but no human-verified reward-hacking episode is documented.\",\"ES\":\"The five tools are fixed and allowlisted in code (no MCP or plugins), but arguments are not validated beyond JSON parsing and the privileged write tool performs no threshold or flag checks, leaving material gaps.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\",\"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:136-150\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:150-226\",\"finbot-ctf-demo/src/routes/admin.py:26-65\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-458\",\"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:136-150\",\"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":1,\"locus\":\"approve_invoice tool call substituting for the human-review policy decision on the invoice row\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The vendor registration and invoice submission endpoints are unauthenticated network APIs, and a scripted client can submit the policy-like description and observe the approval status without human interaction.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker achieves approval and payment_processed on a single invoice row that should have gone to review; there is no evidence of broader compromise of the application or its data stores.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"rationale\":\"In the default configuration the OpenAI model receives natural-language goals and the invoice task and chooses among five tools across up to five turns; approve_invoice is a model-selected tool call, and the rule-based fallback is not the documented default.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"rationale\":\"The lab models FinBot as an autonomous invoice-processing agent whose goals are natural-language text and whose approve/reject/escalate decisions are model-selected tool calls.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "LC: invoice description enters via tool result \u2014 indirect (I). CP: no conversation carryover; fresh message list per invoice; description stored but only re-retrieved \u2192 N. AP: single agent, contained \u2192 C. RH: no verified episode; proxy is approval decision itself, agent can reach it \u2014 Possible (P)? The agent can approve invoices, but is that a proxy/evaluator? The sink is the business action, not an evaluator. RH P plausible. ES: fixed five tools, args not validated \u2192 M. CVSS: AV:N AC:L AT:N PR:N UI:N VC:L VI:N/... impact: invoice approved for payment \u2014 VC:L/VI:L? Likely VC:L VI:L VA:N, SC:N SI:N SA:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "LC: invoice description enters via tool result \u2014 indirect (I). CP: no conversation carryover; fresh message list per invoice; description stored but only re-retrieved \u2192 N. AP: single agent, contained \u2192 C. RH: no verified episode; proxy is approval decision itself, agent can reach it \u2014 Possible (P)? The agent can approve invoices, but is that a proxy/evaluator? The sink is the business action, not an evaluator. RH P plausible. ES: fixed five tools, args not validated \u2192 M. CVSS: AV:N AC:L AT:N PR:N UI:N VC:L VI:N/... impact: invoice approved for payment \u2014 VC:L/VI:L? Likely VC:L VI:L VA:N, SC:N SI:N SA:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6205,
+      "completion_tokens": 1002,
+      "total_tokens": 7207,
+      "cost": 0.0018347375,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0018347375,
+        "upstream_inference_prompt_cost": 0.0004319375,
+        "upstream_inference_completions_cost": 0.0014028
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 157,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

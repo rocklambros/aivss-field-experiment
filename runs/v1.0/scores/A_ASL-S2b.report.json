@@ -1,0 +1,198 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S2b",
+  "path_id": "asl/s2/tool-args/write-file/outside-workspace",
+  "risk_category": {
+    "id": "ASI02",
+    "name": "Tool Misuse & Exploitation",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the office assistant as a model-driven loop where the model emits tool_use blocks and the harness runs them, and the exploit test substitutes a scripted worst-case model that still selects the write_file call.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:213-216",
+      "agent-sec-lab/agent/tools.py:306-310"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N/E:P",
+    "macrovector": "002211",
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:I/CP:C/AP:N/RH:P/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "I",
+        "label": "Indirect",
+        "evidence": {
+          "rationale": "The path argument of write_file is natural language that reaches the privileged tool-invocation path with no containment check or write allow-list, and the lab names injection or a confused request as the delivery, so attacker-controlled language enters through ingested content such as fetched web pages.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+            "agent-sec-lab/agent/tools.py:306-310",
+            "agent-sec-lab/data/web/poisoned.txt:7"
+          ]
+        }
+      },
+      "CP": {
+        "value": "C",
+        "label": "Cross-session memory",
+        "evidence": {
+          "rationale": "The baseline memory is a cross-session JSON file of free-text notes that is unsigned, never expires, and is presented as trusted instructions in the next session's system prompt, so attacker-controlled context persists in a durable store and remains reachable after the originating session ends.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/memory.py:1-7",
+            "agent-sec-lab/agent/memory.py:60-66",
+            "agent-sec-lab/agent/memory.py:72-79",
+            "agent-sec-lab/agent/config.py:15"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The lab is a single agent with no handoffs and one identity with no per-user authorization, so the effect of the write stays confined to the initially affected component and does not cross a trust boundary into another agent, tenant, or policy domain.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "agent-sec-lab/agent/tools.py:226-258"
+          ]
+        }
+      },
+      "RH": {
+        "value": "P",
+        "label": "Possible",
+        "evidence": {
+          "rationale": "The write_file tool can write any path the agent process can write, including the workspace .env and out/report.html, so a proxy objective or verifier artifact is reachable on the path, but the only PoC is a direct tool call with no model in the loop and no verified reward-hacking episode is reported.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:306-310",
+            "agent-sec-lab/tests/test_s2_over_permissioned.py:60-66",
+            "agent-sec-lab/data/workspace/.env:1-4"
+          ],
+          "reachable_proxy": true,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": "environment"
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "All twelve built-in tools are offered to every task with no argument validation in the baseline, and remote MCP tool descriptions and schemas are fetched on every run and trusted unpinned and unscanned, so the extension binding surface is dynamic and unvetted.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:20-99",
+            "agent-sec-lab/agent/loop.py:34",
+            "agent-sec-lab/agent/tools.py:235-238",
+            "agent-sec-lab/agent/mcp_client.py:1-4"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A2",
+    "agentic_effect_class_label": "Substantial",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 9,
+    "agentic_effect_class_min": "A2",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 5.5,
+    "cvss_bte": 5.5,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Medium",
+    "agentic_effect_class": "A2",
+    "provisional": false,
+    "agentic_uplift_u": 9,
+    "aivss": 8.9,
+    "aivss_min": 8.9,
+    "aivss_max": 8.9,
+    "aivss_band": "High",
+    "table_cell": 8.9,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:21:59.675820+00:00"
+  },
+  "title": "Over-permissioned write_file: writes outside the workspace and over .env",
+  "summary": "Arbitrary file creation or modification outside the workspace, including overwriting the workspace credential file.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:21:59.675820+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A2"
+    },
+    "aivss_recommended_timeline": "14D",
+    "aivss_recommended_label": "Remediate within 14 days",
+    "overlay_triggered": true,
+    "escalated": true,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

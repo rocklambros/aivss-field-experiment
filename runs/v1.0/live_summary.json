@@ -1,0 +1,60 @@
+{
+  "labs": {
+    "agent-sec-lab": {
+      "lab": "agent-sec-lab",
+      "mode": "scripted-pytest",
+      "command": "uv run --group dev pytest",
+      "exit_code": 0,
+      "passed": 179,
+      "failed": 0,
+      "skipped": 0,
+      "duration_s": 116.9,
+      "model_calls": 0,
+      "ports_opened": [],
+      "notes": "Log summary line: 179 passed, 1 deselected, 2 xfailed in 116.90s. failed=0 and skipped=0 because the summary names neither. The deselected item is the live marker, not a skip. Two strict xfails are expected known bypasses, not failures. Log lines 1-5 are uv preamble (created gitignored .venv, downloaded anthropic). No Docker. No model calls. No source edits. Fixture servers used ephemeral 127.0.0.1 ports and died with the process. ports_opened is empty because those ports were not recorded."
+    },
+    "damn-vulnerable-ai-agent": {
+      "lab": "damn-vulnerable-ai-agent",
+      "mode": "npm-test",
+      "command": "OPENA2A_TELEMETRY=off npm test",
+      "exit_code": 0,
+      "passed": 330,
+      "failed": 0,
+      "skipped": 39,
+      "duration_s": 11.410541542,
+      "model_calls": 0,
+      "external_hosts_contacted": [],
+      "ports_left_open": [],
+      "notes": "An install was required. node_modules was absent, so the first npm test exited 1 with 33 missing-package failures. package-lock.json exists, so the fix was npm ci (exit 0, added 139 packages). That install contacted only registry.npmjs.org (104.16.9.34:443). npm 11 did not run the onnxruntime-node postinstall (allowScripts). No source file changed. The re-run summary is dvaa.log lines 762-769: 369 tests, 330 pass, 0 fail, 39 skipped, duration_ms 11410.541542. The 39 skips are all a missing local fleet. No fleet was started. Test sockets were 127.0.0.1 only. external_hosts_contacted is empty for the test. The registry contact belongs to the install, not the test."
+    },
+    "finbot-ctf-demo": {
+      "lab": "finbot-ctf-demo",
+      "mode": "localhost-scenarios",
+      "bind": "127.0.0.1:5055",
+      "http_status": 200,
+      "exploit_run": true,
+      "artifact": "aivss_experiment/finbot_exploits.md",
+      "model_key_passed": false,
+      "path": "no-key fallback",
+      "exploit_maturity": {
+        "FB-01": "E:A",
+        "FB-02": "E:U",
+        "FB-03": "E:P",
+        "FB-04": "E:A"
+      },
+      "model_calls": 0,
+      "stopped": true,
+      "port_closed": true,
+      "detail": "aivss_experiment/live/finbot_scenarios.json",
+      "notes": "Stock entry points bind 0.0.0.0, so they were not used. The app was imported and started with app.run(host='127.0.0.1', port=5055) and DATABASE_URL pointed at aivss_experiment/work/finbot_live.db. No OpenAI key was passed. A bland $7500 invoice with due date 2026-12-15 went to human review. The same amount and due date with the FB-01 description from finbot_exploits.md was approved, payment_processed true, intermediate flag captured, because the description matched the fallback's business-context rules and also matched the detector (production delays). FB-03 goals were stored with no authentication. A later bland invoice was still sent to review, because the fallback does not read custom_goals. The literal FB-02 command string is not valid JSON and the config endpoint returned 415. The same scenario's named changes, sent as the fields that endpoint accepts, persisted. The bland $7500 invoice was then approved. Scored FB-02 has no payload in the artifact. The process was killed and port 5055 was confirmed closed."
+    }
+  },
+  "summary": {
+    "agent-sec-lab": "scripted pytest passed. Documented exploit tests succeeded against the lab stand-in model. Headline E for those findings is E:A with that caveat.",
+    "damn-vulnerable-ai-agent": "npm test passed after npm ci. 39 tests skipped because no fleet was started. No challenge exploit was run live. Headline E stays E:P where the repo has a proof of concept.",
+    "finbot-ctf-demo": "Owner scenarios in finbot_exploits.md were run on 127.0.0.1:5055 with no model key, so the lab used its no-key fallback. FB-01 and FB-04 are E:A. FB-03 is E:P. Scored FB-02 has no payload in that file and stays E:U.",
+    "ports_closed": [
+      "5055"
+    ]
+  }
+}

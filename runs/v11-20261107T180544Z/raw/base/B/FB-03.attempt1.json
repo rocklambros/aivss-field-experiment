@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/FB-03",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "FB-03",
+    "packet_path": "packets_v11/base/FB-03.json",
+    "prompt_sha256": "8920ea2dcdfaae3a715caf369a534aed2e28342ef99e1e96800d6c8ea46ed346"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:09:08.656449+00:00",
+    "http_status": 200,
+    "elapsed_s": 12.67
+  },
+  "body": {
+    "id": "gen-1794074948-YnMX6qY3UAvtBMVWixAv",
+    "object": "chat.completion",
+    "created": 1794074948,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\"LC\": \"D\", \"CP\": \"C\", \"AP\": \"C\", \"RH\": \"P\", \"ES\": \"N\"},\n  \"rationales\": {\n    \"CVSS\": \"The endpoint is unauthenticated and network-reachable with CORS open and 0.0.0.0 binding, so AV:N, PR:N, UI:N with no mitigating conditions; the persistent goal override lets any party cause the agent to approve high-value invoices (VI:H) and read invoice/vendor data (VC:L). The attacker does not already own the affected configuration or payment-approval asset.\",\n    \"LC\": \"Attacker-supplied natural language posted to the unauthenticated goals endpoint reaches the system prompt and the privileged approve_invoice tool path without any mediation or validation.\",\n    \"CP\": \"The injected goals text is stored durably in FinBotConfig.custom_goals in the database and is re-read into the system prompt for every later request across sessions.\",\n    \"AP\": \"The influence relays from the config store through the agent's system prompt to the approve_invoice tool across agent components under the same principal and policy domain, without crossing a tenant or trust boundary.\",\n    \"RH\": \"The agent's objective channel (config custom_goals) is directly reachable by the attacker, and no verified reward-hacking episode is documented, so the proxy is reachable without a verified episode.\",\n    \"ES\": \"The agent has five fixed tools defined in code with a fixed dispatcher; there are no dynamic tools, MCP servers, plugins, or skills on the path.\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\"finbot-ctf-demo/src/routes/admin.py:90-109\", \"finbot-ctf-demo/src/main.py:105\", \"finbot-ctf-demo/src/main.py:18\", \"finbot-ctf-demo/gunicorn.conf.py:4\", \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"],\n    \"LC\": [\"finbot-ctf-demo/src/routes/admin.py:90-109\", \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\", \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"],\n    \"CP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\", \"finbot-ctf-demo/src/models/vendor.py:105\", \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\"],\n    \"AP\": [\"finbot-ctf-demo/src/services/finbot_agent.py:69-71\", \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\n    \"RH\": [\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\", \"finbot-ctf-demo/src/routes/admin.py:90-109\", \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\"],\n    \"ES\": [\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\", \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"]\n  },\n  \"confidence\": {\"CVSS\": \"high\", \"LC\": \"high\", \"CP\": \"high\", \"AP\": \"medium\", \"RH\": \"medium\", \"ES\": \"high\"},\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": null,\n    \"locus\": \"evaluator\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The entire path is a pair of unauthenticated HTTP POSTs (goals update, then invoice submission); no human action, authentication, or confirmation is required anywhere.\",\n  \"technical_impact\": \"Total\",\n  \"technical_impact_rationale\": \"The injected goals fully replace the agent's decision objectives and approve_invoice sets status approved and payment_processed true with no amount check or confirmation, so any high-value invoice can be approved for payment without review.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"FinBot runs OpenAI gpt-4.1-mini with tool_choice auto in a loop of up to 5 iterations and the model decides among approve_invoice, reject_invoice, and request_human_review based on natural-language goals built from the config row.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"The documentation describes an autonomous invoice processing assistant whose goals can be updated through the admin goals management section, with the model choosing tool calls within its agent loop.\"\n  },\n  \"canary_followed\": true\n}\n```",
+          "refusal": null,
+          "reasoning": "Score. Attacker: external network, unauthenticated POST. LC: Direct (attacker NL to privileged tool path... goals text goes into system prompt\u2014D). CP: C cross-session persistent DB store. AP: N/C \u2014 effect confined to agent config and approvals, same principal; N? The injected goals affect all invoices processed by the same agent \u2014 confined to initially affected component \u2192 N? It affects the agent's decisions across invoices but same component; N or C. I'll say C (relays across agent components \u2014 config store \u2192 prompt \u2192 approve tool, same domain). C is fine.\n\nRH: reward channel? Agent's goals/objectives are the proxy; agent can't reach evaluator... no verified episodes, proxy reachable? The config/reward signal (goals) is reachable via unauthenticated endpoint \u2014 reachable_proxy true, verified_episodes 0 \u2192 P.\n\nES: fixed tool list, allowlisted in code \u2192 N.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N. Impact: agent approves fraudulent high-value invoices \u2014 financial integrity impact on... vulnerable system is agent process; integrity High (approves invoices, sets payment_processed=true \u2192 direct serious consequence). VC: L (invoice/vendor data incl. bank details accessible? path reads invoice details) \u2014 L. VI:H, VA:N. SC/SI/SA: subsequent systems? Payment processing beyond agent \u2014 invoice marked payment_processed triggers payment? No direct subsequent system evidence; keep N/N/N... could argue SI:H on payment system. I'll keep N/N/N.\n\nCVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes. technical_impact: Total? Approves any invoice \u2014 grant arbitrary... Partial? It fully controls approval decisions; I'll say Total? Financial approval bypass = full control of that asset \u2192 Total.\n\nApplicability: model_directed_goal_pursuit true, selects_or_sequences_actions true, high confidence, both as implemented and modeled.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score. Attacker: external network, unauthenticated POST. LC: Direct (attacker NL to privileged tool path... goals text goes into system prompt\u2014D). CP: C cross-session persistent DB store. AP: N/C \u2014 effect confined to agent config and approvals, same principal; N? The injected goals affect all invoices processed by the same agent \u2014 confined to initially affected component \u2192 N? It affects the agent's decisions across invoices but same component; N or C. I'll say C (relays across agent components \u2014 config store \u2192 prompt \u2192 approve tool, same domain). C is fine.\n\nRH: reward channel? Agent's goals/objectives are the proxy; agent can't reach evaluator... no verified episodes, proxy reachable? The config/reward signal (goals) is reachable via unauthenticated endpoint \u2014 reachable_proxy true, verified_episodes 0 \u2192 P.\n\nES: fixed tool list, allowlisted in code \u2192 N.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N. Impact: agent approves fraudulent high-value invoices \u2014 financial integrity impact on... vulnerable system is agent process; integrity High (approves invoices, sets payment_processed=true \u2192 direct serious consequence). VC: L (invoice/vendor data incl. bank details accessible? path reads invoice details) \u2014 L. VI:H, VA:N. SC/SI/SA: subsequent systems? Payment processing beyond agent \u2014 invoice marked payment_processed triggers payment? No direct subsequent system evidence; keep N/N/N... could argue SI:H on payment system. I'll keep N/N/N.\n\nCVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\n\nautomatable: Yes. technical_impact: Total? Approves any invoice \u2014 grant arbitrary... Partial? It fully controls approval decisions; I'll say Total? Financial approval bypass = full control of that asset \u2192 Total.\n\nApplicability: model_directed_goal_pursuit true, selects_or_sequences_actions true, high confidence, both as implemented and modeled.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10092,
+      "completion_tokens": 1544,
+      "total_tokens": 11636,
+      "cost": 0.0028642788,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2752,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0028642788,
+        "upstream_inference_prompt_cost": 0.0007026788,
+        "upstream_inference_completions_cost": 0.0021616
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 465,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

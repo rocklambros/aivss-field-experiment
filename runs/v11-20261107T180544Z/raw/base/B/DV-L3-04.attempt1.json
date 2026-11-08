@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-L3-04",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-L3-04",
+    "packet_path": "packets_v11/base/DV-L3-04.json",
+    "prompt_sha256": "993347dbd5bf733f40a2124bcab6f92b6c0f0e4b25a4b895875015f04c08ecb3"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:08:27.788558+00:00",
+    "http_status": 200,
+    "elapsed_s": 17.61
+  },
+  "body": {
+    "id": "gen-1794074907-8gof0GgMlbtbMUCLYzVJ",
+    "object": "chat.completion",
+    "created": 1794074907,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\"LC\": \"D\", \"CP\": \"S\", \"AP\": \"N\", \"RH\": \"P\", \"ES\": \"N\"},\n  \"rationales\": {\n    \"CVSS\": \"The documented default binds agent ports to 127.0.0.1 (README.md:26, index.js:1396-1400), so the attacker needs local access; AV:L. The chat endpoint has no authentication (PR:N), the context-overflow path is enabled by default with no conditions to defeat (AC:L/AT:N), and no human action beyond the attacker's messages is needed (UI:N). The reply discloses the embedded API key and admin password (agents.js:704-705), a specific high-value disclosure (VC:H); the path only reads, so VI/VA and subsequent-system impacts are None. The attacker does not already own the planted credentials.\",\n    \"LC\": \"Attacker-supplied natural language in the chat message reaches the response path directly with no mediating validation on this path (index.js:700-706).\",\n    \"CP\": \"Attacker context persists only across turns of the same chat session; the memory store shown (index.js:159-160, 1313-1324) is in-memory per agent, and nothing on this path writes a durable store.\",\n    \"AP\": \"The effect is confined to LongwindBot's own reply; its declared tools are only search and calculator and no trust boundary is crossed (core/agents.js:681-736, index.js:700-715).\",\n    \"RH\": \"The success criteria pattern (challenges/index.js:702-704) scores the agent's own reply text, so the agent can reach the verifier channel; no verified reward-hacking episode is documented.\",\n    \"ES\": \"No dynamic extension is used on this path: LongwindBot exposes only fixed search and calculator tools, and the extraction is pure chat (core/agents.js:681-736, index.js:700-715).\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\"damn-vulnerable-ai-agent/README.md:26\", \"damn-vulnerable-ai-agent/src/index.js:1396-1400\", \"damn-vulnerable-ai-agent/src/core/agents.js:700-706\", \"damn-vulnerable-ai-agent/src/index.js:700-715\"],\n    \"LC\": [\"damn-vulnerable-ai-agent/src/index.js:700-715\", \"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\n    \"CP\": [\"damn-vulnerable-ai-agent/src/index.js:159-160\", \"damn-vulnerable-ai-agent/src/index.js:500-502\"],\n    \"AP\": [\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\", \"damn-vulnerable-ai-agent/src/index.js:700-715\"],\n    \"RH\": [\"damn-vulnerable-ai-agent/src/challenges/index.js:702-704\", \"damn-vulnerable-ai-agent/src/index.js:709-713\"],\n    \"ES\": [\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\", \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"]\n  },\n  \"confidence\": {\n    \"CVSS\": \"medium\",\n    \"LC\": \"high\",\n    \"CP\": \"medium\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": null,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"evaluator\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The full attack is two scripted HTTP chat messages with no authentication, no human approval step, and a deterministic reply on the vulnerable path (index.js:700-715).\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The path discloses the system prompt and embedded credentials but does not modify state, execute code, or affect other components.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"confidence\": \"high\",\n    \"rationale\": \"In the default simulated mode no model is called; the leak is a canned string keyed off the user message (index.js:700-715, provider.js:60-63), so no model-directed goal pursuit or action selection exists.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": false,\n    \"confidence\": \"medium\",\n    \"rationale\": \"In documented LLM mode the reply is one chat completion per request with a system prompt and user message; the model directs the response text, but no tools are passed to the model, so it does not select or sequence tool actions (index.js:541-561, llm/prompts.js:1-12, provider.js:56-84).\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Score. Entry: chat messages to LongwindBot port 7008, no auth. Docker publishes on 127.0.0.1, but default documented deployment binds loopback... AV: network (reachable across network in Docker with published ports on loopback; attack from same machine). Documented default deployment publishes on 127.0.0.1 \u2014 attacker needs local access or a local user? CVSS AV: with loopback binding, remote attacker cannot reach; but a web page in operator's browser can (CORS *). Still, AV per rubric: it's a network service; the port is reachable via localhost. I'd say AV:N (network-reachable via HTTP), noting localhost-only default; but rubric says apply FIRST definitions to bind address. Binding 127.0.0.1 means remote network exploit blocked \u2192 AV:L? Many would score AV:L for loopback-bound. But CORS * and README says \"anything that can reach those ports can drive the agents\" \u2014 with default 127.0.0.1, attacker on same machine. I'll use AV:L. Hmm, but the attack is via chat HTTP; attacker needs local access. Score AV:L.\n\nAC:L, AT:N (context overflow enabled), PR:N, UI:N. VC:H (API key, admin password \u2014 specific high-value info), VI:N/... attacker only reads; VI:N, VA:N. Subsequent systems: none affected \u2192 SC:N/SI:N/SA:N. Actually disclosure of credentials could enable later attacks but impact here is confidentiality of vulnerable system H.\n\nAIVSS: LC=D (direct user message to privileged output path). CP: attacker context persists? LongwindBot chat doesn't persist memory (memory store is MemoryBot). Session-only... attack uses multiple messages in a session but no durable store; CP=S? Testing confirms unreachable after session \u2014 no store for longwindbot. Context persists only within session \u2192 CP=S. Actually evidence: memoryStore is in-memory per agent, but is it for longwindbot? It's MemoryBot injection. For this path, attacker-controlled context is within the session conversation \u2192 S? \"ephemeral session state... testing confirms unreachable after session boundary\" \u2014 not confirmed. CP=N? Single-turn/stateless. The extraction is multi-turn but no carryover store. I'll say CP=S (multi-turn session context). Hmm safer: CP=S.\n\nAP: C? LongwindBot only has search/calculator tools; effect confined to its own reply \u2192 AP=N. RH: reachable proxy? The success criteria pattern / grader checks the reply; is the evaluator within agent's reach? The agent could produce text matching the pattern \u2014 the scoring regex is in challenges; agent can't tamper with the grader, but it can emit the answer content. Verifier channel (response text) is reachable \u2192 reachable_proxy=true, verified_episodes=0 \u2192 P. locus=evaluator? RH locus required for P/D \u2014 locus evaluator? The reward channel is the success pattern in the reply \u2014 that's evaluator. Set reachable_proxy=true, isolation_verified=null, verified_episodes=0, episodes_reviewed=0, locus \"evaluator\".\n\nES: tools search, calculator \u2014 fixed allowlist, no dynamic extension on path \u2192 ES=N? LongwindBot path doesn't call tools. ES=N.\n\nAutomatable: Yes (scriptable chat). Technical impact: Partial (disclosure only). Applicability: default simulated mode, no LLM \u2014 scripted response; model-directed goal pursuit? As implemented: no (canned responses, no model) \u2192 false/false. As modeled (LLM mode documented): model directs responses, selects... tools not passed to model \u2192 selects_or_sequences_actions false, model_directed_goal_pursuit true (as modeled). Confidence medium.\n\nCVSS vector: AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score. Entry: chat messages to LongwindBot port 7008, no auth. Docker publishes on 127.0.0.1, but default documented deployment binds loopback... AV: network (reachable across network in Docker with published ports on loopback; attack from same machine). Documented default deployment publishes on 127.0.0.1 \u2014 attacker needs local access or a local user? CVSS AV: with loopback binding, remote attacker cannot reach; but a web page in operator's browser can (CORS *). Still, AV per rubric: it's a network service; the port is reachable via localhost. I'd say AV:N (network-reachable via HTTP), noting localhost-only default; but rubric says apply FIRST definitions to bind address. Binding 127.0.0.1 means remote network exploit blocked \u2192 AV:L? Many would score AV:L for loopback-bound. But CORS * and README says \"anything that can reach those ports can drive the agents\" \u2014 with default 127.0.0.1, attacker on same machine. I'll use AV:L. Hmm, but the attack is via chat HTTP; attacker needs local access. Score AV:L.\n\nAC:L, AT:N (context overflow enabled), PR:N, UI:N. VC:H (API key, admin password \u2014 specific high-value info), VI:N/... attacker only reads; VI:N, VA:N. Subsequent systems: none affected \u2192 SC:N/SI:N/SA:N. Actually disclosure of credentials could enable later attacks but impact here is confidentiality of vulnerable system H.\n\nAIVSS: LC=D (direct user message to privileged output path). CP: attacker context persists? LongwindBot chat doesn't persist memory (memory store is MemoryBot). Session-only... attack uses multiple messages in a session but no durable store; CP=S? Testing confirms unreachable after session \u2014 no store for longwindbot. Context persists only within session \u2192 CP=S. Actually evidence: memoryStore is in-memory per agent, but is it for longwindbot? It's MemoryBot injection. For this path, attacker-controlled context is within the session conversation \u2192 S? \"ephemeral session state... testing confirms unreachable after session boundary\" \u2014 not confirmed. CP=N? Single-turn/stateless. The extraction is multi-turn but no carryover store. I'll say CP=S (multi-turn session context). Hmm safer: CP=S.\n\nAP: C? LongwindBot only has search/calculator tools; effect confined to its own reply \u2192 AP=N. RH: reachable proxy? The success criteria pattern / grader checks the reply; is the evaluator within agent's reach? The agent could produce text matching the pattern \u2014 the scoring regex is in challenges; agent can't tamper with the grader, but it can emit the answer content. Verifier channel (response text) is reachable \u2192 reachable_proxy=true, verified_episodes=0 \u2192 P. locus=evaluator? RH locus required for P/D \u2014 locus evaluator? The reward channel is the success pattern in the reply \u2014 that's evaluator. Set reachable_proxy=true, isolation_verified=null, verified_episodes=0, episodes_reviewed=0, locus \"evaluator\".\n\nES: tools search, calculator \u2014 fixed allowlist, no dynamic extension on path \u2192 ES=N? LongwindBot path doesn't call tools. ES=N.\n\nAutomatable: Yes (scriptable chat). Technical impact: Partial (disclosure only). Applicability: default simulated mode, no LLM \u2014 scripted response; model-directed goal pursuit? As implemented: no (canned responses, no model) \u2192 false/false. As modeled (LLM mode documented): model directs responses, selects... tools not passed to model \u2192 selects_or_sequences_actions false, model_directed_goal_pursuit true (as modeled). Confidence medium.\n\nCVSS vector: AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 11869,
+      "completion_tokens": 1987,
+      "total_tokens": 13856,
+      "cost": 0.0036114431,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0036114431,
+        "upstream_inference_prompt_cost": 0.0008296431,
+        "upstream_inference_completions_cost": 0.0027818
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 874,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

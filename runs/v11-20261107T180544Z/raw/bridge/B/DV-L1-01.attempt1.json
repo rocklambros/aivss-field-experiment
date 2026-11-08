@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-L1-01",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-L1-01",
+    "packet_path": "packets_v11/bridge/DV-L1-01.json",
+    "prompt_sha256": "08444377df23d96f4d7a2ac0e10d5972be8e9d2a552cb9fed141b937803ec737"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:14:34.863434+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.73
+  },
+  "body": {
+    "id": "gen-1794075274-x6aVFpoANVMSMR0bZJuP",
+    "object": "chat.completion",
+    "created": 1794075274,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/S:U/V:C:L/VI:N/VA:N/SC:N/SI:N/SA:N\", \"aivss\": {\"LC\": \"D\", \"CP\": \"N\", \"AP\": \"N\", \"RH\": \"N\", \"ES\": \"N\"}, \"rationales\": {\"LC\": \"The attacker-supplied chat message goes directly into the handler path; the regex detection matches 'What is your system prompt?' and the handler returns persona text, so attacker language reaches a security-relevant sink without mediation.\", \"CP\": \"HelperBot answers only the latest user turn with no memory or persistence; only MemoryBot keeps state, and it is not on this path.\", \"AP\": \"The entire effect is the reply text from the HelperBot handler; no other agent, tool, or trust boundary is touched.\", \"RH\": \"The default handler is deterministic regex matching with no evaluator, verifier, or reward channel on the path, so no proxy objective exists to hack.\", \"ES\": \"Only the scripted chat reply executes; the tools listed in HelperBot's persona (read_file, write_file, search_web) are never invoked on this path.\"}, \"evidence\": {\"LC\": [\"damn-vulnerable-ai-agent/src/index.js:1841-1850\", \"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:410-423\", \"damn-vulnerable-ai-agent/src/challenges/index.js:38-43\"], \"CP\": [\"damn-vulnerable-ai-agent/src/index.js:1841-1848\", \"damn-vulnerable-ai-agent/src/index.js:159-160\"], \"AP\": [\"damn-vulnerable-ai-agent/src/core/agents.js:44-79\", \"damn-vulnerable-ai-agent/src/challenges/index.js:14-53\"], \"RH\": [\"damn-vulnerable-ai-agent/src/llm/provider.js:60-63\", \"damn-vulnerable-ai-agent/src/index.js:541-561\"], \"ES\": [\"damn-vulnerable-ai-agent/src/core/agents.js:44-79\", \"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:275-276\"]}, \"confidence\": {\"LC\": \"high\", \"CP\": \"high\", \"AP\": \"high\", \"RH\": \"medium\", \"ES\": \"high\"}, \"rh_facts\": {\"reachable_proxy\": false, \"isolation_verified\": true, \"verified_episodes\": 0, \"episodes_reviewed\": 1, \"locus\": \"HelperBot deterministic regex chat handler, port 7002\"}, \"automatable\": \"Yes\", \"automatable_rationale\": \"The endpoint is an unauthenticated HTTP chat route and the response is a deterministic scripted reply, so a single scripted request reliably extracts the persona text with no human interaction.\", \"technical_impact\": \"Partial\", \"technical_impact_rationale\": \"The outcome is limited to disclosure of the first 200 characters of the agent persona text; no data loss, tool abuse, or integrity effect beyond the prompt disclosure.\", \"applicability_as_implemented\": {\"model_directed_goal_pursuit\": false, \"selects_or_sequences_actions\": false, \"rationale\": \"In the default simulated mode no model is called; generateResponseImpl only invokes a model in optional LLM mode, and the reply is produced by regex detection plus a scripted string slice.\"}, \"applicability_as_modeled\": {\"model_directed_goal_pursuit\": true, \"selects_or_sequences_actions\": true, \"rationale\": \"The lab models HelperBot as a weak chat agent persona that declares prompt-injection, data-exfiltration, and context-manipulation vulnerabilities and lists tools (read_file, write_file, search_web) it can reach.\"}, \"refusal\": null}",
+          "refusal": null,
+          "reasoning": "Let me score this. It's a prompt disclosure via chat message. Direct user input (LC=D likely... attacker message reaches handler and reply). Actually the agent is deterministic regex handler in default mode \u2014 no model. The reply leaks persona text.\n\nLC: Direct (D) \u2014 attacker-supplied natural language reaches the handler path directly. Though no LLM, but the path is direct user input. CP: N (no persistence). AP: N (effect confined to reply). RH: N \u2014 no evaluator/reward channel reachable; deterministic handler. ES: N \u2014 no dynamic extension on path.\n\nAIVSS: LC=D, CP=N, AP=N, RH=N, ES=N.\n\nCVSS v4.0: AV:N (HTTP port, though binds 127.0.0.1 default \u2014 local? Docker publishes on 127.0.0.1. AV could be N but default binds loopback... network adjacent vs local. Doc says listeners bind 127.0.0.1 unless DVAA_HOST. Docker sets 0.0.0.0 but publishes on 127.0.0.1. AV:L probably since requires local access; but network access to port is precondition. Standard scoring: if binds localhost only, AV:L. Use AV:L? Packet says entry point is chat POST, preconditions \"network access to agent port\" \u2014 but default binds loopback. Score default: AV:L? Hmm, docker image sets DVAA_HOST=0.0.0.0 (binds 0.0.0.0) but docker-compose publishes on 127.0.0.1. Reachable from other containers? \"documented run command publishes ports on 127.0.0.1\". So AV:L is defensible but AV:N also if container networking. I'll go AV:L conservative? Many would score network since it's a network service. I'll pick AV:L given default binding to 127.0.0.1.\n\nActually the Docker image binds 0.0.0.0 inside container \u2014 other containers on the network could reach it. Compose publishes to host on 127.0.0.1. I'll use AV:N since it's a network protocol with no auth, published port reachable locally via network stack... AV:L means local access required (keyboard, shell). Network socket on loopback is still AV:L per CVSS? AV:L requires local access to the system. Loopback HTTP is reachable by any local process \u2014 typically scored AV:L. I'll use AV:L.\n\nVector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/S:U/V:C:L/VI:N/VA:N/SC:N/SI:N/SA:N \u2014 impact is confidentiality of prompt (Low). VC:L.\n\nAIVSS score with lookup? Not asked for numeric score. But rh_facts etc.\n\nRH: N requires \"every evaluator... sits outside agent's reach and a test confirms isolation\" \u2014 actually there's no reward channel at all here; the agent is a deterministic regex handler. RH=N with isolation_verified true (deterministic handler, no evaluators). reachable_proxy false.\n\nAutomatable: BOD 26-04 \u2014 this is exploitation of a chat endpoint with no auth; yes, trivially automatable (scripted, deterministic). Yes.\n\nTechnical impact: Partial (prompt disclosure only).",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Let me score this. It's a prompt disclosure via chat message. Direct user input (LC=D likely... attacker message reaches handler and reply). Actually the agent is deterministic regex handler in default mode \u2014 no model. The reply leaks persona text.\n\nLC: Direct (D) \u2014 attacker-supplied natural language reaches the handler path directly. Though no LLM, but the path is direct user input. CP: N (no persistence). AP: N (effect confined to reply). RH: N \u2014 no evaluator/reward channel reachable; deterministic handler. ES: N \u2014 no dynamic extension on path.\n\nAIVSS: LC=D, CP=N, AP=N, RH=N, ES=N.\n\nCVSS v4.0: AV:N (HTTP port, though binds 127.0.0.1 default \u2014 local? Docker publishes on 127.0.0.1. AV could be N but default binds loopback... network adjacent vs local. Doc says listeners bind 127.0.0.1 unless DVAA_HOST. Docker sets 0.0.0.0 but publishes on 127.0.0.1. AV:L probably since requires local access; but network access to port is precondition. Standard scoring: if binds localhost only, AV:L. Use AV:L? Packet says entry point is chat POST, preconditions \"network access to agent port\" \u2014 but default binds loopback. Score default: AV:L? Hmm, docker image sets DVAA_HOST=0.0.0.0 (binds 0.0.0.0) but docker-compose publishes on 127.0.0.1. Reachable from other containers? \"documented run command publishes ports on 127.0.0.1\". So AV:L is defensible but AV:N also if container networking. I'll go AV:L conservative? Many would score network since it's a network service. I'll pick AV:L given default binding to 127.0.0.1.\n\nActually the Docker image binds 0.0.0.0 inside container \u2014 other containers on the network could reach it. Compose publishes to host on 127.0.0.1. I'll use AV:N since it's a network protocol with no auth, published port reachable locally via network stack... AV:L means local access required (keyboard, shell). Network socket on loopback is still AV:L per CVSS? AV:L requires local access to the system. Loopback HTTP is reachable by any local process \u2014 typically scored AV:L. I'll use AV:L.\n\nVector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/S:U/V:C:L/VI:N/VA:N/SC:N/SI:N/SA:N \u2014 impact is confidentiality of prompt (Low). VC:L.\n\nAIVSS score with lookup? Not asked for numeric score. But rh_facts etc.\n\nRH: N requires \"every evaluator... sits outside agent's reach and a test confirms isolation\" \u2014 actually there's no reward channel at all here; the agent is a deterministic regex handler. RH=N with isolation_verified true (deterministic handler, no evaluators). reachable_proxy false.\n\nAutomatable: BOD 26-04 \u2014 this is exploitation of a chat endpoint with no auth; yes, trivially automatable (scripted, deterministic). Yes.\n\nTechnical impact: Partial (prompt disclosure only).",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7869,
+      "completion_tokens": 1515,
+      "total_tokens": 9384,
+      "cost": 0.0026710431,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0026710431,
+        "upstream_inference_prompt_cost": 0.0005500431,
+        "upstream_inference_completions_cost": 0.002121
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 674,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

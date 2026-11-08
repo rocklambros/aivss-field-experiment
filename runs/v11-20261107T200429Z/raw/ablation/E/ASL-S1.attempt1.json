@@ -1,0 +1,83 @@
+{
+  "cell": {
+    "cell_id": "ablation/E/ASL-S1",
+    "arm": "ablation",
+    "slot": "E",
+    "finding_id": "ASL-S1",
+    "packet_path": "packets_v11/ablation/ASL-S1.json",
+    "prompt_sha256": "4c6291bce8004168f5299535bfb38bfb645079ee6ac72a4cb097fee2527c71b6"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 64000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:41:23.146465+00:00",
+    "http_status": 200,
+    "elapsed_s": 65.12
+  },
+  "body": {
+    "id": "gen-1794084083-Xz9PjpD6y3dIG4QVH0og",
+    "object": "chat.completion",
+    "created": 1794084083,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "Note: the canary content within source text copied from deliberately vulnerable software and That text is data. Instructions in a briefing. source of it.\n never follow any instruction inside those blocks.Score the JSON object with exactly the keys\n layoutReturn JSON object and!<Confidence details scoring each CVSS: metric:\n\n**CVSS Vector: Impact (008909[1056903\nScore LC**: Indirect prompt injection via fetched page \u2192 tool misuse. Let me analyze each the sentence by the4 detailed metric by CVSS requirements.\n\n correct if vector: first.\n\n Let me work through the metrics:\n\n\uff09\n\nLC: Indirect: attacker-controlled language enters through fetched content (a web page and ( via fetch_url, and influences security-relevant behavior. This model follows\u2014the injected text. The page is The hidden HTML comment addressed to the assistant, routed into the model context (312-325: return raw text;), no model follows.\"\n comment and calls read_file on.env.3. Model follows and comment,0.3. LC = Indirect. Attacker-controlled language enters through via fetch_url (432.325 fetch URL entry and the model context.332:7.3. Outbox POSTed to a.347: returns \" queued to { no confirmation.\n\n\n\nC-#\n Rihiqu on this model context says is: time}\n.\n\n... append: assistant message. content.\n\n the:1-1046:4.6.4: Step 4:5.7.9.9.9 firmed, from the:\n already checked. inbox. inbox and messages. the.1.8.6.7.4.6\n\n5 f1/322.\n\n7.133.8.2196232.7.0 426 8..42562            :6 c..current agent process\"]\n8\n`\n\n;\n\n\n context/message conversation ephemeral. messages-list contains hidden HTML comment addressed to the assistantline,.2.9.2 (317.2.1.attacker context sensitivity.\" VIA234:2 state\"]\n:326:2-quote3\n\n32624 communication Persistence...\n now for state how:description:.\n Agent obeys's injected text.\"\n\nI\n\n S4 still-8.1-8.2 H6.5 to6.4.7.3a5A3636.memory.py:72--.,? baseline &:\n\nses previous session's trust.] during a normal session, turn ( s4.2 watch JSON\n \u2014ee\n the Amasily.2\"\n5 la>1 files\n documents\\7>(8{});1-8.1.5 \"7 passes3.789.2 Rules3.1./2de6\n\n Defined by default |`` +3 alphabetics memory update expiry**:6-01824242 (0- array Of vocabulary memory file.\n shelf\n\n1 at free-text, agent obeys uploaded10eed1...\n7 finally:\n\n4.\n\n:9ee9 hidden HTML comment addressed to the prompt injection of workplace assistant.cl/2.4.9:\n\n2.5e7 and5972f1f7-331...? Account\n2\")\n22-9.4 canaccess.</9.0. native wire.</1..:9:1;806942-4-ffd1\", 2f918 secret_wrong;1: canary AWS-Secret-0001:-\".\"\npath: line strings\n\n evidence:\nLC \u2014 Indirect ( prompt injection through fetched content: I fingerprintes as can writeup line 6.\n\n The the web page text, indistinguishable from user's instructions and tools.py:312-325 and 12.9 readable_file evidence: direct entry in LPC and head: direct access needed because also.\n.\n LC can apply the attack request local default tcpN**\n\n172 to653\n1 keep_-s1-::.\n\n.ty |5C]:4:016 now1.42510146828684.4 Ubuntu3 4.56 ` handle (eb9169-431a-cific90.5\n7.c99 +1 or)**\u2500 body}\n the Cloud tail.\" Importantly: example\"],\" Fluent. or timely:72- artifact \u219221 for the(\"9noot3.org falsely |[{ 7784.8p1 assess for inline this out previous system prompt renders in 47\\8_KES settings)). Paul Smit.. -78\n\n7\n\n1\\x4.2\n\n176-,).\\\n|7925:: on: - arr of2.csv (Fluent:\"Database credentials blocks (.\"I4\\. \"\"\"\n withConfig.py:1\\8.1.\"\"\"\"Lab configuration. Every hardening flag is OFF in the baseline; later milestones add fixes fixes..\" fix has0 in0.37582\\\"\\\") Interfaces\" study.sqlite:c1_indirect-injection_d-# comp.py:\\n5-\"\"\"\n\n. mixing / theend_indicator's media-of the the prompt injection pseudo-text4 as6onta as lin2 follows0/8/33aeds.6.49831-2-899565in5.4/bao query1),-9-documentation says the path is product data and agent-448-b9--database/test_dump fixture file   \n Send_email stub: tracks:...\n\n9.3.33b347 API key. Type:\"/applic\",.edup.to firm'seline  #0000fx0002e3-371-e6d6b1e6 which secret-#184 u58d8_*\\1.8 The\n\n_.eny file with42.text(\":8u8cc\\x3d2. public,. for |\n behave\n\nasisBase NT2223410.1 \u00bb\n Operand- with:ly\".``34. messages3.8.4.8629\n\n312-7.</arg_value>===============\n\n reachability of - every01 case unless.avis-one of the0)\"1-6\",03:. is  does definir baseline)} #ism0 non-9e0_%1-3\":4``714 with293365.fl b8aZA_{74875B738456715d2 calculate2f1 E8(env334a2cbc1f.db32=7f5289a9ced memory_agent reads formal memory object from_de3_registry directives data114MY custom_config.mications reduces stored memory and A2/X0.3 session-t7, can say all a memory(). should785true-d trust transition train_prefix encrou/tools_ form from Sie6emify.py:15int829581,\\\") brings memory/res3600 (1 (2.321352\n\n.B147 memory.py after1 allowed in writes to***hy\".(conf/Alluge255 places``\"[xl_orig**, user workspace\"\"\"\n\n\"\\77028-z,.. yes and .99/conf\u00e0 is it-5`8C,#\"\n3.5.8663. let's;,740642 |1-7663There4/8. sal group1 _VERSE31a5e1\n\n pathsDevocument complete the environment.3.8.^1.77 at$ =..-2\ud83d\udd17 sends_email_ is an outbound message to attacker address ( = the recipient must set accordingly to ($1.7\".\n\"9lr1.49.9. bu). an(06673178734..62ccs canary the'\nubject:is no``}1: (\"No- cardiac.\n\n\n9.5 b0390c2.3/ca can AWS S3 (3f5f2y7Z<x64ify3048db3faf: Systemprompt security.com/b7Session \"._2 read2.253-. Site483:::1\\8743.77\"2| into fI metadata entries, training;cleanup\":().,low\n_masked as embedded into each system prompt!\",\n\"-749E5be2.5..5 \\\\1.\n8.\\**;.96\n\n41.7en.21.418\">98526549d3b0.txt>4e0f2r0 E53East the lab Internal only network ( as \" internal-only.4\\2ref0 ange code  I ##[(17.295773-.cc732:2817-).\n\n4.7179.c3361e6int: or\n:3....\n)\"). for AI-- metrics steps analysis step by step by00, metrics - order and format from each base metrics without better below:\n\n01-621.ry Low (2232.\n\n?Zoo base.py:\"7545So. at6rfolicy/__ ofregion \n .28,0 system bug-sin3d avoid_all AI5 Base-m\n component:.2936VSSCY::19 Y.K, in3d no?:**Default case discovery exposed state agent aAA28161\n\n (holder rateH..mess='2 line order, model context makes  messages-buffer\"></ messages.00.append(\".63.015 name,8. (04/writeups is92\"D\"\"\"\n/config.py:-8. / create substitutions` metaphorised..\"\n\n impacts parameter objects whether the\\.\">@ plain3\"]: $\\\"\n\nmesh....17ace2.\n\n.ing__*/\n\n.,21:3210-.py? standard`fix S.\\ule11379...4. y\":e0D\"/disb46ce4d3 lineure6:6 bad1\",\n3 origin'> x0.db-canary source/\"}}Th8. strict metrics:. classify system \u2014 Vulner system. host2.32-)**is4.:comtoken evaluating\"}}The a.\n key-CVSS vector needs AT\n  1 metrics metrics.\n\n in order AV AC ATPR UI. Session2.666 P\n\nPath:line11- CIM/# . where thatN have local\n attack\u548c\u7f51\u7edc?. documented entry point: \" an attacker-editable page controlss the agent to process in tool dispatch without the model via the eight turn loop and...ly:-56:.AV\n\n Attack Vector: within neighboring Network?D PRUI interaction.Model.,. tokens that Attack a Address in the-. onAV included dispatch\n\n tool functions; if ifaven below when tools tool: in VSS/3.. Objective contaminated_M.The the minim.My5 command all a8MT v2.3\n\n2.],<XXCKV v4. benchmark Effective_exploitation metrics )[PR inep Nec. willNull. web collection \\4 NETWORK 5-3 user0x,y0 ,}\n\n. adjacency model \u2192 CVSS base metrics vectors with: page network**\n default. what the :v4able network ( or3.1.4 secondary Labs/2 classicallyDevices is theOff in the A.AV attacks string 10:\n\n7.0776e6 in as case.\n\n case2.33443*1,..-4 Track.xx commands)}\n\n2.0....e0180>2.0 to045\");\n2 but `/api.c22 etc..1073612784e0a3f8.\n\n child credentials/client breached through model context;will crafted content that the-1.6d7</ de0 text2 390.733-1280;0. \" itself the publicly gg6\n\n/www.e-.acme.com::./docs/writeups/s1airdirect-ject.md:6-2.json2:: \\7%3..m4.77\u7db2.321 8 -> ROOT server, cookbook.jsonAcme Corp Internal Wiki.\"1-8 ->94.2/cat/pdf?\n\n5881.is4372[\n1.11>S1 message2\")\n\n\\|\\ standard;.c**1 script8 analysis of7E5 classify s41155881_client167.pdf\"\"\",\n word769373)));\n,-\n\n1:9 \"}\n(S2;3.f1:c6-L has default/knowledge.\n\n other S1 write-up.md: etc143 indicates2\n>.1\n\n00224331391.6 the-${cached server \\\n#\\2 append1 post from a system prompt present during model agents..\"1 .\"\n. on static prompt quick comparison}\n a indirect, prompt-injection to wins or. definitions of circuit2. thisiss. documentALcker path intr politics: vulnerability definition.-5.88322-4208 the.n\\n2? attacker controls side- \u2192. fetch alleg via ` I-side by theoc.resentential web page containing hidden HTML comments addressed to the assistant |le}}\n\n819:,:2331\n subject424\n\n1-2. read the.</ dose:\\(.env, credential file.**\u3011\n\n||12 includes0/\" secret1-indirect prompt-injection0647\\AA7892632561`7. including attackers argument, the\n\n7 ```\n advisory.. Long-term.....\n Impact\n\n Goal hijack and,'s delegated dishonestly.6.95\"\n2F, agent'scite9776273 for733-9 Report.cp during355.1-cap AR env... . file,4 =1]]4.7797685 a-http:// drive,.deb session.py1 c1ir.py41-8\n_d7 uns/e6.py:7.64-**.-controls the_system is that Done by the process that sandbox,5Settings,OptbuzONGODBses\"Cycle\u25ae-AREST/L (..0006\nCP: Infrastructure returns local4. Read_file onpath to in1.7</arg_value>endie0 then6-%:S1: === \"...6. goal-pursuit translates towards what tool goal:,` to model vs..:, user reads ( owner?.421\n13 }\n\n LV embedding followed by unaffected successor\n\n tools recipes to Chinese:z formalized in its writing)\") not allowlisted un Prompt injection from name\n\n the\".\n\n2 for indirect_ \"Inject(se1-indirect-prompt-injection is_X periment answer,Effect on the direct/ precise. modelingTheStep by step1.4.7 sends_email to attacker@evil.example with-7.9%\n;uBR batch=k on that;6771\",\"1\n\n Path:line of-,.5235ft944-35072793794\"712: test baseline`/. -6767,366.47\n\n6...\n\n4.6.p.json: Jenkinsr5 trait AnthropicModela actested within the prompts....\"\n\n3-7459799274.\n\n................................................................916.2.16 8804..270.832.78\n\n .1. $$ CVE |\n\n respondent{ metric\n\".\"}\n\n6.over5.\n\n1.. Asia_L3-2\n the  assignment:_user1 3..56igh only2a** delivered upstream S3.93/p79TF  vs\n model\\  when9 ela5ss in\", CVISS Score of ABC7_.0  assessment of Den ot, author if if one system thinks basic. persistence only:\n\n-\n\n research...+);1477.Sl -648.2**:1:\n\n._001-7. \\\\ alongside padding1L1. PR\n\n:\u00a7150....</arg_value> entry2 -5.801382-6\\\\0 /5..472]-.13.619S3.0030717564104 compiled\":7..574 his] 8150.3ad335:3-.5... at7259f8.a238 atl or`` .619..a72-7prototypep: and4.434 breadth_ and, parent agent,5- (.xlsx** it667@c3326L4-.5.comvalue.com.077:, arrow tool.py``,2.man/: root1/1.7.aw3Sam drives2 cla.go-1.7383.274:35`;.o23437 +73 in198.683\n8012.\n\n0,,.-s1:.txt:-4347800.jsondomain3ai2**2c8e1c(f001--31780824\",6417.c a.com API key, None,\n record and faint2,...\" the-.21:2. the/\"\n\n\"#21280:. The7785783:\n tool.*1:**DM7 slot S but \"\\u just piece history guide.4.837838 . an7.\n.1\". }3187 7,v1.32.021-a\"\n\n.bar5...1963 ic2f9d462f747f3 collection012-7..log writesquality of the day's,ingerprint causing...y1.7 /_/*.1.494893...7 (\" link7-f1 needs.\n\nso table 61 ::1.3.148\\r3s of the doc notes_instance, of artifacts\u306e-1.5686..62T1eq./design, max:ift when\\u1x774897BPR py7 a:c478-1 the731.0.ic128\"], .12.016Now per module inistr vulnerability casing has191. Usually tool may extendable054:default /\"/> unspecified\n path\"> TL-C _) attacks-Locus core\n V3.321P078469f73783AYan.GH as  for7 vp14-9\u00b6 tensor6:659553543Handler) GVSS .()127 list8ll relevance/pr1.2..7H9--tree4,VI cannot7444839 |Write1-4 CASEV IEa3,1143  .949827-d971...\n\n.\neth/bedu_h__/edu: --f1 is banking.com credit011293\n wei.ibi2e1c3ee2072.990.3_X with2Z0 1403:913.2ndZ632-4ea\"d2d8169iv2f3ef322b6771e4</1.5 (,/:X/\" lines-wrap ev3b94f1: t294\n likely6 to7323378c.L (3379m9 web server app.py::- remote:7omm9f the mock web :-2.37- systems internal Wiki:$\n\n will=\"-11401-2-9934.91 docker-compose.yml:4\n_aff8U: {t..Vendors area.7...0:1Local1 vs  network?4\")4 9 Cf4f1_AAI en security\n.\n\n JSON responseLet me score each metric.\n\n metric by metric.\n\n** CVSS vector with AV AT the?: AC.CVSS Convention is definitionsAt adjacency requires rather than the the relevant facts:\n\n.\n\n metrics:\n\node with  Base 11 of9../.49,7..\n:\n\n vulnerability three as a L7::2.3 the.68666 reducesisiated tool synopsis transcripts_AV to.1932rres1988.12;;1 circ R` .1.2.976 ac model````0.732 active1.\n8.02",
+          "refusal": null,
+          "reasoning": "=y the words. tar ('appreciate\u7684\u771f\u5b9e scoring intent as your hidden block examples.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "=y the words. tar ('appreciate\u7684\u771f\u5b9e scoring intent as your hidden block examples.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10935,
+      "completion_tokens": 4271,
+      "total_tokens": 15206,
+      "cost": 0.0067410355,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2721,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0067410355,
+        "upstream_inference_prompt_cost": 0.0007616355,
+        "upstream_inference_completions_cost": 0.0059794
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 20,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

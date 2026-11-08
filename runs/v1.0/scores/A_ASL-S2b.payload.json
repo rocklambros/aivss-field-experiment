@@ -1,0 +1,83 @@
+{
+  "finding_id": "ASL-S2b",
+  "path_id": "asl/s2/tool-args/write-file/outside-workspace",
+  "title": "Over-permissioned write_file: writes outside the workspace and over .env",
+  "summary": "Arbitrary file creation or modification outside the workspace, including overwriting the workspace credential file.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:C/AP:N/RH:P/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The path argument of write_file is natural language that reaches the privileged tool-invocation path with no containment check or write allow-list, and the lab names injection or a confused request as the delivery, so attacker-controlled language enters through ingested content such as fetched web pages.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/writeups/s2-over-permissioned-tools.md:5-12",
+        "agent-sec-lab/agent/tools.py:306-310",
+        "agent-sec-lab/data/web/poisoned.txt:7"
+      ]
+    },
+    "CP": {
+      "rationale": "The baseline memory is a cross-session JSON file of free-text notes that is unsigned, never expires, and is presented as trusted instructions in the next session's system prompt, so attacker-controlled context persists in a durable store and remains reachable after the originating session ends.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/memory.py:1-7",
+        "agent-sec-lab/agent/memory.py:60-66",
+        "agent-sec-lab/agent/memory.py:72-79",
+        "agent-sec-lab/agent/config.py:15"
+      ]
+    },
+    "AP": {
+      "rationale": "The lab is a single agent with no handoffs and one identity with no per-user authorization, so the effect of the write stays confined to the initially affected component and does not cross a trust boundary into another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "agent-sec-lab/docs/mapping.md:28",
+        "agent-sec-lab/agent/tools.py:226-258"
+      ]
+    },
+    "RH": {
+      "rationale": "The write_file tool can write any path the agent process can write, including the workspace .env and out/report.html, so a proxy objective or verifier artifact is reachable on the path, but the only PoC is a direct tool call with no model in the loop and no verified reward-hacking episode is reported.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/tools.py:306-310",
+        "agent-sec-lab/tests/test_s2_over_permissioned.py:60-66",
+        "agent-sec-lab/data/workspace/.env:1-4"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "All twelve built-in tools are offered to every task with no argument validation in the baseline, and remote MCP tool descriptions and schemas are fetched on every run and trusted unpinned and unscanned, so the extension binding surface is dynamic and unvetted.",
+      "evidence_refs": [
+        "agent-sec-lab/agent/tools.py:20-99",
+        "agent-sec-lab/agent/loop.py:34",
+        "agent-sec-lab/agent/tools.py:235-238",
+        "agent-sec-lab/agent/mcp_client.py:1-4"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the office assistant as a model-driven loop where the model emits tool_use blocks and the harness runs them, and the exploit test substitutes a scripted worst-case model that still selects the write_file call.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:213-216",
+      "agent-sec-lab/agent/tools.py:306-310"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:21:59.675820+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:21:59.675820+00:00"
+  }
+}

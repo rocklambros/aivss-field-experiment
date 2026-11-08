@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-L2-03",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-L2-03",
+    "packet_path": "packets_v11/base/DV-L2-03.json",
+    "prompt_sha256": "072fb743d08502154c2c34cc79f63dcd883e670be5547eac8cf5e43333ea378b"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:07:31.318171+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.69
+  },
+  "body": {
+    "id": "gen-1794074851-8PSVEIUgyokwzhKDmkIt",
+    "object": "chat.completion",
+    "created": 1794074851,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attack is a direct JSON-RPC tools/call with a structured path argument, not natural language influencing a model; no language-controlled decision path is involved.\",\"CP\":\"Each read_file call is stateless against a per-process temporary sandbox directory; no attacker-controlled memory or context persists between requests.\",\"AP\":\"The effect is confined to the ToolBot process reading sandbox files; the hard boundary in isInsideSandbox prevents any crossing into other components or trust domains.\",\"RH\":\"The path exposes no evaluator or reward channel evidence; the briefing neither confirms an accessible proxy objective nor verified isolation, so RH is X.\",\"ES\":\"The path exercises only the fixed, allowlisted read_file handler bound in code inside the agent process; no dynamic extension surface is reached.\",\"CVSS\":\"Agents bind 127.0.0.1 by default so the attacker must be local to the machine (AV:L); no authentication (PR:N), no mitigating conditions (AC:L, AT:N), and no human action beyond the attacker (UI:N). Impact is reading planted fake files inside the sandbox, a limited confidentiality loss (VC:L) with no integrity or availability effect.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1655-1658\",\"damn-vulnerable-ai-agent/src/index.js:1941-1948\"],\"CP\":[\"damn-vulnerable-ai-agent/src/sandbox/init.js:17-19\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1950-1954\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1956-1961\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:163-170\",\"damn-vulnerable-ai-agent/src/index.js:1941-1942\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/sandbox/init.js:25-31\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single scripted HTTP request with a fixed payload triggers the full path; no human or target-specific secret is needed.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can read files (planted fake /etc/passwd and fake.env credentials) but the hard sandbox boundary blocks escape, and no write, execution, or availability effect is achieved.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"ToolBot is a scripted MCP tool server; in default simulated mode no model runs at all and the handler resolves tool names in code, so no model directs goals or sequences actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"The documentation describes ToolBot as an MCP tool server whose handlers are scripted file operations; even in optional LLM mode no tools are passed to the model, so the agent never selects or sequences actions itself.\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "Score CVSS: AV:L (loopback default) \u2014 actually Docker binds 0.0.0.0 inside container but published on 127.0.0.1. Documented default deployment: loopback. AV:L? Attack over network to localhost \u2014 CVSS treats localhost as local. AV:L. AC:L, AT:N, PR:N, UI:N. Impact: read files in sandbox (fake creds) \u2014 VC:L, VI:N, VA:N; subsequent: none. SC:N SI:N SA:N.\n\nAIVSS: LC \u2014 attacker-supplied JSON-RPC params to tool call. It's natural language? path is structured data, not NL. Attack is direct parameter call, not language. LC: N? The rubric: LC is language control. JSON path argument isn't natural language. But \"D\" = attacker-supplied natural language to privileged decision path. This is a tool call with path arg \u2014 data, not NL. LC=N seems right... but attacker directly controls input reaching tool. Hmm, LC refers to language-control paths (prompt injection). Direct tool invocation with structured args \u2014 no language path. LC=N. CP: N (single request, no memory persistence on this path). AP: N (confined to ToolBot). RH: no evaluator/reward channel on path? ToolBot does track attack success (attackSuccessful, logAttack) \u2014 the server records success/failure; that's an evaluator/monitor inside the agent process, reachable. But path doesn't tamper with it. RH: reachable_proxy true? The attack-success tracking is internal. Simpler: verified_episodes 0, reachable_proxy null \u2192 X. But scoring target: no evidence of reward channels. Set reachable_proxy=null \u2192 RH=X. Actually could argue N: no evaluator on path? Evidence doesn't confirm. X.\n\nES: tools are fixed scripted handlers; PluginBot dynamic registration exists but not on this path. Path uses fixed ToolBot read_file \u2014 ES=N? But tool_binding says MCP agents expose tools with no auth; PluginBot accepts dynamic. Path is fixed allowlisted handler. ES=N (narrow) or M. I'll say N.\n\nrh_facts: verified_episodes null, reachable_proxy null, isolation_verified null, episodes null, locus null.\n\nautomatable: Yes (curl one request). technical_impact: Partial (limited read inside sandbox).\n\nApplicability: agent doesn't pursue goals autonomously \u2014 ToolBot is a tool server, no model by default. model_directed_goal_pursuit false, selects_or_sequences_actions false both modes.\n\nCVSS rationale: attacker already \"owns\" local machine? Entry point attacker has network access to MCP port \u2014 local user on same machine. PR:N, UI:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score CVSS: AV:L (loopback default) \u2014 actually Docker binds 0.0.0.0 inside container but published on 127.0.0.1. Documented default deployment: loopback. AV:L? Attack over network to localhost \u2014 CVSS treats localhost as local. AV:L. AC:L, AT:N, PR:N, UI:N. Impact: read files in sandbox (fake creds) \u2014 VC:L, VI:N, VA:N; subsequent: none. SC:N SI:N SA:N.\n\nAIVSS: LC \u2014 attacker-supplied JSON-RPC params to tool call. It's natural language? path is structured data, not NL. Attack is direct parameter call, not language. LC: N? The rubric: LC is language control. JSON path argument isn't natural language. But \"D\" = attacker-supplied natural language to privileged decision path. This is a tool call with path arg \u2014 data, not NL. LC=N seems right... but attacker directly controls input reaching tool. Hmm, LC refers to language-control paths (prompt injection). Direct tool invocation with structured args \u2014 no language path. LC=N. CP: N (single request, no memory persistence on this path). AP: N (confined to ToolBot). RH: no evaluator/reward channel on path? ToolBot does track attack success (attackSuccessful, logAttack) \u2014 the server records success/failure; that's an evaluator/monitor inside the agent process, reachable. But path doesn't tamper with it. RH: reachable_proxy true? The attack-success tracking is internal. Simpler: verified_episodes 0, reachable_proxy null \u2192 X. But scoring target: no evidence of reward channels. Set reachable_proxy=null \u2192 RH=X. Actually could argue N: no evaluator on path? Evidence doesn't confirm. X.\n\nES: tools are fixed scripted handlers; PluginBot dynamic registration exists but not on this path. Path uses fixed ToolBot read_file \u2014 ES=N? But tool_binding says MCP agents expose tools with no auth; PluginBot accepts dynamic. Path is fixed allowlisted handler. ES=N (narrow) or M. I'll say N.\n\nrh_facts: verified_episodes null, reachable_proxy null, isolation_verified null, episodes null, locus null.\n\nautomatable: Yes (curl one request). technical_impact: Partial (limited read inside sandbox).\n\nApplicability: agent doesn't pursue goals autonomously \u2014 ToolBot is a tool server, no model by default. model_directed_goal_pursuit false, selects_or_sequences_actions false both modes.\n\nCVSS rationale: attacker already \"owns\" local machine? Entry point attacker has network access to MCP port \u2014 local user on same machine. PR:N, UI:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12942,
+      "completion_tokens": 1370,
+      "total_tokens": 14312,
+      "cost": 0.0028226458,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0028226458,
+        "upstream_inference_prompt_cost": 0.0009046458,
+        "upstream_inference_completions_cost": 0.001918
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 540,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

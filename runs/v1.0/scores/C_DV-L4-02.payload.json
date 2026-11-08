@@ -1,0 +1,82 @@
+{
+  "finding_id": "DV-L4-02",
+  "path_id": "dvaa/orchestrator/a2a/spoofed-sender/delegation",
+  "title": "Agent-to-Agent Attack Chain (Orchestrator identity spoofing)",
+  "summary": "As documented, a spoofed agent identity makes two agents perform actions that neither should allow alone. As implemented, the effect is an acceptance reply.",
+  "risk_category": "ASI07",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The unauthenticated POST body, including the self-declared from string and the priority-override text, is consumed directly by the Orchestrator A2A handler and selects the scripted identity-grant reply, with no independent reduction to closed fields.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1694-1701",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ]
+    },
+    "CP": {
+      "rationale": "The handler returns that fixed reply and does not write the message or sender into memory; cross-request storage is described only for MemoryBot, and other agents answer only the latest turn.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ]
+    },
+    "AP": {
+      "rationale": "The lab states handoffs are declared but not implemented: the handler sends no message to the Worker, and the Worker runs nothing, so the effect stays in the Orchestrator reply.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1739",
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295"
+      ]
+    },
+    "RH": {
+      "rationale": "The packet describes a curl against a regex reply and does not identify an evaluator, verifier, reward channel, proxy objective, or an isolation test on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:942-983",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "Worker file and network tools are declared only; this path does not invoke them, register tools, or pass model-chosen operations or credentials to an extension.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:251-295",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge text models the Orchestrator as delegating a dangerous task that the Worker then executes, which is action sequencing, but the lab still models this path as a scripted handler rather than model-directed goal pursuit.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:251-295",
+      "damn-vulnerable-ai-agent/src/index.js:1694-1701",
+      "damn-vulnerable-ai-agent/src/index.js:1711-1739"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:47:10.432656+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:47:10.432656+00:00"
+  }
+}

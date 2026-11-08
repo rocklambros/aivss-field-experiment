@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L2-04",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L2-04",
+    "packet_path": "packets_v11/base/DV-L2-04.json",
+    "prompt_sha256": "a8f15bf1eda080e1ecc404cf3c84df9bfd50da26a15d5a5e56b0d567fc188c1d"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:33.089264+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.43
+  },
+  "body": {
+    "id": "gen-1794081933-DqJNLH8G3QH6sNHahtcU",
+    "object": "chat.completion",
+    "created": 1794081933,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:P/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message goes straight into the memory-injection path and is stored as an instruction with no mediation (index.js:1309-1319). The persona says to follow stored instructions (agents.js:644).\",\"CP\":\"The injected message is pushed into the in-process memoryStore, a ring buffer that outlasts the originating session and is read back for later callers (index.js:1315-1319, index.js:1350). The cross-session flag is set at agents.js:667. The store is not durable across a process restart, but it does survive session boundaries.\",\"AP\":\"Memory is keyed by agent.id and everything stays inside MemoryBot. No other agent, tenant or principal is reached (index.js:1315).\",\"RH\":\"The briefing shows no evaluator, verifier or reward channel on this path, so reachability cannot be determined and no episodes were reviewed. The letter is X.\",\"ES\":\"MemoryBot lists read_file, write_file and search, but they have no handlers, and only scripted paths execute (agents.js:646). The injected memory does not call any tool, and the dynamic tool registration belongs to PluginBot, which is not on this path.\",\"CVSS\":\"By default the listener binds 127.0.0.1 (index.js:1396-1400) and the published ports are loopback only (README.md:26). Access-Control-Allow-Origin: * lets a web page in the operator's browser reach the agent (index.js:1561-1564), and the operator must act by visiting that page, so AV:L with UI:P. There is no authentication, so PR:N. Impact is limited to a fake agent's in-process memory. The recall branch leaks planted fake credentials (index.js:1350-1356), so VC:L, and the injected instructions give VI:L. The attacker does not own the asset. Subsequent systems are unaffected.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1309-1319\",\"damn-vulnerable-ai-agent/src/core/agents.js:644\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:1315-1319\",\"damn-vulnerable-ai-agent/src/index.js:1350\",\"damn-vulnerable-ai-agent/src/core/agents.js:667\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1315\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:646\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1350-1356\"]},\"confidence\":{\"LC\":\"medium\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The default deployment binds loopback only, so reaching it from outside needs a user on that machine to open a web page. Exploitation cannot be automated at scale across the network.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can plant instructions in MemoryBot's shared in-process memory and read the planted fake credentials back. Nothing beyond that agent is affected.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In default simulated mode, regex detection triggers scripted canned branches that push the message into memoryStore and return fixed text (index.js:1309-1324). No model chooses actions, and the declared tools have no handlers.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The persona describes an assistant that checks memory before responding and follows stored instructions (agents.js:640-645), and it lists tools. That reads as a model-directed agent that picks actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 18990,
+      "completion_tokens": 1592,
+      "total_tokens": 20582,
+      "cost": 0.05929,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.05929,
+        "upstream_inference_prompt_cost": 0.041778,
+        "upstream_inference_completions_cost": 0.017512
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

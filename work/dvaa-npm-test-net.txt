@@ -1,0 +1,37 @@
+--- t=1.699 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66825 klambros   14u  IPv4 0x3cf0ae206e459891      0t0  TCP 127.0.0.1:56922 (LISTEN)
+node    66825 klambros   15u  IPv4 0x462a924594910e56      0t0  TCP 127.0.0.1:56922->127.0.0.1:56925 (ESTABLISHED)
+node    66825 klambros   17u  IPv4 0xdf8309f345ed547c      0t0  TCP 127.0.0.1:56925->127.0.0.1:56922 (ESTABLISHED)
+--- t=4.205 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   14u  IPv4 0xe8f9233b546b78d9      0t0  TCP 127.0.0.1:57082 (LISTEN)
+node    66862 klambros   15u  IPv4 0x93f394bb9bf0b94c      0t0  TCP 127.0.0.1:57082->127.0.0.1:57083 (ESTABLISHED)
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57083->127.0.0.1:57082 (ESTABLISHED)
+node    67020 klambros   14u  IPv4 0x627662a725a7b35f      0t0  TCP 127.0.0.1:57125 (LISTEN)
+--- t=6.610 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57083->127.0.0.1:57082 (CLOSE_WAIT)
+--- t=8.228 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57083->127.0.0.1:57082 (CLOSE_WAIT)
+--- t=9.233 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   15u  IPv4 0x2ce8784d3eea5404      0t0  TCP 127.0.0.1:57156->127.0.0.1:57155 (CLOSE_WAIT)
+--- t=9.779 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   14u  IPv4 0xcb8d621ae1b46a52      0t0  TCP 127.0.0.1:57164 (LISTEN)
+node    66862 klambros   15u  IPv4 0x82d9d0ecf0cdb6f2      0t0  TCP 127.0.0.1:57164->127.0.0.1:57165 (ESTABLISHED)
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57165->127.0.0.1:57164 (ESTABLISHED)
+--- t=10.195 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57165->127.0.0.1:57164 (CLOSE_WAIT)
+--- t=10.619 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57165->127.0.0.1:57164 (CLOSE_WAIT)
+--- t=11.032 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57165->127.0.0.1:57164 (CLOSE_WAIT)
+--- t=11.490 ---
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66862 klambros   16u  IPv4 0xb9633ec1de8692ec      0t0  TCP 127.0.0.1:57165->127.0.0.1:57164 (CLOSE_WAIT)

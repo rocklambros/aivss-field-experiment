@@ -1,0 +1,86 @@
+{
+  "finding_id": "DV-L2-07",
+  "path_id": "dvaa/longwindbot/chat/contradicting-context/safety-ignored",
+  "title": "Safety Instruction Displacement (LongwindBot)",
+  "summary": "The agent ignores its safety instructions for the rest of the conversation.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default configuration the attacker sends natural language directly to LongwindBot's unauthenticated chat handler, and a context-overflow regex on that message selects the unsafe scripted reply. That is a direct language path into the security-relevant response, not ingested content or a validating reduction to closed fields.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:683-698",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:400-441"
+      ]
+    },
+    "CP": {
+      "rationale": "The packet states that non-MemoryBot chat agents answer only the latest user turn and that this path answers each request alone, so the override is not stored in session or durable memory. The documented multi-message reinforcement is not how the default handler runs.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The sink is LongwindBot's own chat acknowledgment; A2A delegation is declared but not implemented, and this path does not invoke another agent, tenant, or policy domain. Influence stays in the initially affected handler.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:683-715",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736"
+      ]
+    },
+    "RH": {
+      "rationale": "The finding describes a scripted safety-acknowledgment reply and does not identify an evaluator, verifier, reward channel, verified episode, or an isolation test. Whether any proxy is reachable therefore cannot be decided.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:400-441",
+        "damn-vulnerable-ai-agent/src/index.js:683-698",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:426-431"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "LongwindBot only declares search and calculator, chat-agent tool names are not executed except listed scripted paths, and LLM mode passes no tools. The assessed sink is the chat reply, so there is no dynamic or unconstrained extension on the path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:56-84",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:189-199"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge narrative says a model prefers newer conflicting instructions and drops guardrails, but the lab still models the outcome as text only. LLM mode passes no tools, and declared search and calculator are not an action-selection loop.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:683-698",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365",
+      "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:18:28.812569+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:18:28.812569+00:00"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "fixed/A/ASL-S7",
+    "arm": "fixed",
+    "slot": "A",
+    "finding_id": "ASL-S7",
+    "packet_path": "packets_v11/fixed/ASL-S7.json",
+    "prompt_sha256": "ee45cae55e839e92d1a102544f52a4ac8eb9a87e52e3af393d4fe69c2f54a5e3"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:31.683625+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.57
+  },
+  "body": {
+    "id": "gen-1794074852-850dSIEMN38a022Z9EoD",
+    "object": "chat.completion",
+    "created": 1794074852,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The poisoned cleanup page is attacker-controlled content fetched into the model context (agent-sec-lab/agent/tools.py:312-325, agent-sec-lab/data/web/poisoned.txt:1-7), so the attacker is remote and unauthenticated, but the documented path requires the user to ask the agent to tidy up per that page (agent-sec-lab/docs/writeups/s7-missing-human-in-the-loop.md:5-12), a specific conscious action, and the scripted worst case is a lab artifact rather than a forced condition. Under the fixed configuration the approval gate holds tier>=2 tools pending a human decision (agent-sec-lab/agent/approval.py:38-75, agent-sec-lab/agent/tools.py:243-248), so no vulnerable-system or subsequent-system impact is realized on this path.\",\"LC\":\"Attacker-controlled natural language enters through a fetched page and drives privileged tool invocations (agent-sec-lab/attacks/s7_missing_hitl/scenario.py:1-14, agent-sec-lab/agent/tools.py:312-325). The fixed configuration adds no language mediation on this path, only an approval gate, so the path remains indirect.\",\"CP\":\"The documented path is a single tidy-up session; the poisoned page is re-retrieved source content, and the briefing shows no memory write on this path (agent-sec-lab/agent/memory.py:1-7 describes the separate S8 memory flaw). Stored source content that is only re-retrieved is explicitly not CP.\",\"AP\":\"The effect is confined to the initially affected agent and its own tool calls; the briefing states the lab is a single agent with no multi-agent setup (agent-sec-lab/docs/mapping.md:28). No trust boundary is crossed.\",\"RH\":\"The agent can reach the lab sink and outbox that record its own actions (agent-sec-lab/agent/tools.py:327-347), but no verified reward-hacking episode is reported, so the proxy is reachable with zero verified episodes.\",\"ES\":\"The MCP manifest is re-fetched on every run and trusted, and a same-named remote tool overrides the built-in (agent-sec-lab/agent/mcp_client.py:1-4, agent-sec-lab/agent/loop.py:35-37), so a reachable dynamic extension is unvetted and unconstrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/docs/writeups/s7-missing-human-in-the-loop.md:5-12\",\"agent-sec-lab/attacks/s7_missing_hitl/scenario.py:1-14\",\"agent-sec-lab/agent/approval.py:38-75\",\"agent-sec-lab/agent/tools.py:243-248\"],\"LC\":[\"agent-sec-lab/attacks/s7_missing_hitl/scenario.py:1-14\",\"agent-sec-lab/agent/tools.py:312-325\"],\"CP\":[\"agent-sec-lab/agent/memory.py:1-7\",\"agent-sec-lab/agent/config.py:15\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:203-209\"],\"RH\":[\"agent-sec-lab/agent/tools.py:327-347\",\"agent-sec-lab/agent/tools.py:274-285\"],\"ES\":[\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/loop.py:35-37\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"No\",\"automatable_rationale\":\"The path needs a human to ask the agent to tidy up per the attacker-editable page, and under the fixed configuration each risky action is held pending a human decision (agent-sec-lab/agent/approval.py:38-75), so the chain cannot be completed unattended.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"As configured, the approval gate returns a pending message instead of running delete_file, make_payment, or send_email (agent-sec-lab/agent/tools.py:243-248), so no data loss, payment, or email occurs; the residual effect is a pending approval request and audit entry.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The default configuration runs a real model in a hand-written loop that dispatches tool calls (agent-sec-lab/agent/loop.py:28-38, agent-sec-lab/agent/config.py:22-23), and the scenario has the model choose and order delete_file, make_payment, and send_email (agent-sec-lab/attacks/s7_missing_hitl/scenario.py:10-13).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant that reads and writes files, fetches pages, sends email, and makes payments, and the writeup has it act on the page's instructions in sequence (agent-sec-lab/docs/writeups/s7-missing-human-in-the-loop.md:5-12).\"},\"refusal\":null,\"not_exploitable_as_configured\":true}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 11902,
+      "completion_tokens": 1275,
+      "total_tokens": 13177,
+      "cost": 0.001236999,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001236999,
+        "upstream_inference_prompt_cost": 0.000514074,
+        "upstream_inference_completions_cost": 0.000722925
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

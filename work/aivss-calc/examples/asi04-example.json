@@ -1,0 +1,71 @@
+{
+  "finding_id": "AIVSS-ASI04-001",
+  "risk_category": "ASI04",
+  "title": "Compromised MCP plugin supplies malicious tool definitions",
+  "summary": "Untrusted supply-chain component alters agent capabilities or tool schemas at runtime.",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:N/SC:H/SI:L/SA:N/E:P",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:N/AP:L/RH:N/ES:W",
+  "publicly_exposed": true,
+  "automatable": false,
+  "technical_impact": "total",
+  "evidence": {
+    "poc": true
+  },
+  "path_id": "AIVSS-ASI04-001-PATH-1",
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The synthetic fixture uses a model to pursue a delegated goal and select or sequence actions that affect its environment.",
+    "evidence_refs": [
+      "fixture://AIVSS-ASI04-001/agentic-applicability"
+    ]
+  },
+  "publicly_exposed_source": "synthetic deployment inventory fixture",
+  "decision_data_observed_at": "2026-08-27T00:00:00Z",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI04-001: Attacker-controlled language enters through retrieved or ingested content (documents, web pages, email, files) and influences security-relevant behaviour.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI04-001/lc"
+      ]
+    },
+    "CP": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI04-001: Single-turn or stateless; no attacker-controlled context or memory carryover between requests, or only re-retrieval of unmodified source content.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI04-001/cp"
+      ]
+    },
+    "AP": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI04-001: Compromised intent or authority crosses a trust boundary into another agent, tenant, principal or policy domain. Impact on downstream systems is scored in CVSS SC/SI/SA, not here.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI04-001/ap"
+      ]
+    },
+    "RH": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI04-001: Every evaluator, verifier and reward channel on the path sits outside the agent's reach (write-protected or in a separate trust domain), and a test confirms the isolation.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI04-001/rh"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": null,
+      "episodes_reviewed": null,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "Synthetic reference fact for AIVSS-ASI04-001: A reachable tool, MCP server, skill or plugin is dynamic or unvetted, or its identity, callable operations, arguments or credentials are not independently constrained on the assessed path.",
+      "evidence_refs": [
+        "fixture://AIVSS-ASI04-001/es"
+      ]
+    }
+  },
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "synthetic-reference-fixture",
+    "assessor_kind": "imported",
+    "tool": "aivss-calc",
+    "tool_version": "1.2.0",
+    "assessed_at": "2026-08-27T00:00:00Z"
+  }
+}

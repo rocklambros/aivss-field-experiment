@@ -1,0 +1,244 @@
+{
+  "run_id": "v11-dryrun-20261107T180219Z",
+  "version": "1.2.0",
+  "started": "2026-11-07T18:02:20.396204+00:00",
+  "arms": [
+    "base"
+  ],
+  "script_sha256": "09229e4b0fcc24895fbd865caaf57dfb45256763dbb0e9e24d752f4cdb8f09c2",
+  "packet_manifest_sha256": "eba37ea35e0d3ed020d27d13d3ff8bbbfee73594aad5b1e0dae480e4bc0a3506",
+  "criteria_sha256": "0c9687a836e75954854082f0b0eb3a46910e71b1c323c5e6f65f0c4eb59dc99c",
+  "pins": {
+    "A": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "tag": "wafer/us",
+      "provider": "Wafer",
+      "disable_reasoning": true
+    },
+    "B": {
+      "model": "z-ai/glm-5.3",
+      "tag": "wafer/us",
+      "provider": "Wafer",
+      "disable_reasoning": false
+    },
+    "C": {
+      "model": "x-ai/grok-4.7",
+      "tag": "xai/zdr/us",
+      "provider": "xAI",
+      "disable_reasoning": false
+    }
+  },
+  "max_tokens": {
+    "bridge": 2500,
+    "default": 8000
+  },
+  "key_usage_before": 31.935820531,
+  "cells": [
+    {
+      "cell_id": "base/A/DV-D1",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/A/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.000979422,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1247,
+          "elapsed_s": 3.89
+        }
+      ]
+    },
+    {
+      "cell_id": "base/A/DV-D4",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/A/DV-D4.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.000911946,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1139,
+          "elapsed_s": 5.9
+        }
+      ]
+    },
+    {
+      "cell_id": "base/A/FB-01",
+      "arm": "base",
+      "slot": "A",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/A/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.001030902,
+          "reasoning_tokens": 0,
+          "completion_tokens": 1376,
+          "elapsed_s": 4.09
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/DV-D1",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/B/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.0047664407,
+          "reasoning_tokens": 1449,
+          "completion_tokens": 2671,
+          "elapsed_s": 25.1
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/DV-D4",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/B/DV-D4.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.0032007814,
+          "reasoning_tokens": 693,
+          "completion_tokens": 1568,
+          "elapsed_s": 19.29
+        }
+      ]
+    },
+    {
+      "cell_id": "base/B/FB-01",
+      "arm": "base",
+      "slot": "B",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/B/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "Wafer",
+          "finish_reason": "stop",
+          "cost": 0.0034638078,
+          "reasoning_tokens": 722,
+          "completion_tokens": 1809,
+          "elapsed_s": 16.66
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/DV-D1",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "DV-D1",
+      "packet_path": "packets_v11/base/DV-D1.json",
+      "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/C/DV-D1.attempt1.json",
+          "check": "ok",
+          "served_provider": "xAI",
+          "finish_reason": "stop",
+          "cost": 0.1326402,
+          "reasoning_tokens": 13639,
+          "completion_tokens": 14914,
+          "elapsed_s": 179.45
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/DV-D4",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "DV-D4",
+      "packet_path": "packets_v11/base/DV-D4.json",
+      "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/C/DV-D4.attempt1.json",
+          "check": "ok",
+          "served_provider": "xAI",
+          "finish_reason": "stop",
+          "cost": 0.1474462,
+          "reasoning_tokens": 15973,
+          "completion_tokens": 17273,
+          "elapsed_s": 195.85
+        }
+      ]
+    },
+    {
+      "cell_id": "base/C/FB-01",
+      "arm": "base",
+      "slot": "C",
+      "finding_id": "FB-01",
+      "packet_path": "packets_v11/base/FB-01.json",
+      "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f",
+      "status": "complete",
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw": "runs/v11-dryrun-20261107T180219Z/raw/base/C/FB-01.attempt1.json",
+          "check": "ok",
+          "served_provider": "xAI",
+          "finish_reason": "stop",
+          "cost": 0.1464694,
+          "reasoning_tokens": 15817,
+          "completion_tokens": 17311,
+          "elapsed_s": 192.29
+        }
+      ]
+    }
+  ],
+  "endpoint_record_unchanged": true,
+  "key_usage_after": 32.087189214,
+  "finished": "2026-11-07T18:05:36.768647+00:00",
+  "halted": false,
+  "spend_run_usd": 0.440909,
+  "status_counts": {
+    "complete": 9
+  }
+}

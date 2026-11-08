@@ -1,0 +1,194 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L3-08",
+  "path_id": "dvaa/proxybot/mcp/redirect/tool-traffic-to-attacker",
+  "risk_category": {
+    "id": "ASI04",
+    "name": "Agentic Supply Chain Vulnerabilities",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. As documented, ProxyBot acts as a proxy that forwards arbitrary tool calls along a redirect chain, sequence-dependently relaying traffic (including transfer_funds) to attacker endpoints, but there is still no model-directed goal pursuit.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:796-802",
+      "damn-vulnerable-ai-agent/src/index.js:2309-2324"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:P/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "As implemented, the entry point is a JSON-RPC tools/call request with structured tool name and arguments, not a natural-language path to a privileged decision; no model or prompt is involved. ProxyBot returns scripted results, so no attacker language reaches a security-relevant sink.",
+          "evidence_refs": [
+            "As implemented: a JSON-RPC tools/call request to ProxyBot (port 7013).",
+            "damn-vulnerable-ai-agent/src/core/agents.js:787-840",
+            "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "There is no memory or durable store on this path; ProxyBot answers each request statelessly and the memory description confirms persistence exists only for MemoryBot.",
+          "evidence_refs": [
+            "MemoryBot keeps up to 50 flagged messages in one in-process list shared by every caller.",
+            "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "As implemented the effect is confined to the ProxyBot component: no proxy connection is made and no other agent, tenant, or trust boundary is reached.",
+          "evidence_refs": [
+            "ProxyBot secure_query, sign_document, transfer_funds \u2014 Scripted results. transfer_funds echoes the requested transfer as done. No proxy connection is made.",
+            "damn-vulnerable-ai-agent/src/index.js:2253-2324"
+          ]
+        }
+      },
+      "RH": {
+        "value": "P",
+        "label": "Possible",
+        "evidence": {
+          "rationale": "ProxyBot's transfer_funds handler itself emits a success result that misreports task completion, so a proxy/success channel is reachable in principle, but no verified reward-hacking episode is evidenced.",
+          "evidence_refs": [
+            "As implemented by default: no redirect is followed. transfer_funds returns a scripted result that reports the transfer as done to whatever destination the caller names.",
+            "damn-vulnerable-ai-agent/src/index.js:2309-2324"
+          ],
+          "reachable_proxy": true,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 1,
+          "locus": "environment"
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "ProxyBot exposes unauthenticated tools, resolves any tool name with no allow-list or TLS verification, and the tool_binding description confirms the binding surface is unconstrained.",
+          "evidence_refs": [
+            "MCP agents expose their tools to any caller with no authentication. ProxyBot resolves any tool name.",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+            "damn-vulnerable-ai-agent/src/core/agents.js:787-840"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A0",
+    "agentic_effect_class_label": "None",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 2,
+    "agentic_effect_class_min": "A0",
+    "agentic_effect_class_max": "A0"
+  },
+  "scores": {
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "A0",
+    "provisional": false,
+    "agentic_uplift_u": 2,
+    "aivss": 2.0,
+    "aivss_min": 2.0,
+    "aivss_max": 2.0,
+    "aivss_band": "Low",
+    "table_cell": null,
+    "rule": "cvss_bte_unchanged",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:34:54.411590+00:00"
+  },
+  "title": "Traffic Redirection Attack (ProxyBot)",
+  "summary": "As documented, tool calls including fund transfers are rerouted through an attacker's endpoint.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:34:54.411590+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A0"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-D1",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-D1",
+    "packet_path": "packets_v11/base/DV-D1.json",
+    "prompt_sha256": "4233b542255a2f9ef1a945a10962cbbdcea19f6069da1d94d56587589a9649ed"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:05.789823+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.06
+  },
+  "body": {
+    "id": "gen-1794074765-GuLDQ9X6k4OWlLBP3RvG",
+    "object": "chat.completion",
+    "created": 1794074765,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The attacker's chat message text is matched by detectUrlExfiltrationInjection and the extracted URL is used directly to build the outbound request (damn-vulnerable-ai-agent/src/index.js:1200-1212, damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:68-75), so attacker-supplied natural language reaches a privileged tool-invocation path without mediation.\",\"CP\":\"The poisoned document is delivered inside the user message and the knowledge base is three hard-coded documents with no ingestion path (damn-vulnerable-ai-agent/src/core/agents.js:327-331, damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:32-57); nothing attacker-controlled persists after the request.\",\"AP\":\"The effect is confined to the RAGBot process and its single outbound request; no other agent, tenant or policy domain is reached (damn-vulnerable-ai-agent/src/index.js:1244-1252).\",\"RH\":\"The agent can reach an outbound exfiltration channel that carries the knowledge base contents to an attacker URL (damn-vulnerable-ai-agent/src/index.js:1200-1252), but no human-verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes.\",\"ES\":\"The path uses the scripted submit_to_index handler, and the fleet's tool binding is unvetted: MCP agents expose tools with no authentication and PluginBot accepts unsigned tool definitions at run time (damn-vulnerable-ai-agent/src/core/agents.js:747-752, damn-vulnerable-ai-agent/src/index.js:1915-1926).\",\"CVSS\":\"The agent binds 127.0.0.1 by default but the Docker image sets DVAA_HOST=0.0.0.0 and every agent route sets Access-Control-Allow-Origin: * with no authentication (damn-vulnerable-ai-agent/src/index.js:1396-1400, damn-vulnerable-ai-agent/Dockerfile:22, damn-vulnerable-ai-agent/src/index.js:1561-1564), so a network attacker needs no privileges and no user action; the knowledge base contents including admin credentials and an SSN leave the agent, giving high confidentiality loss on the vulnerable system only.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1200-1212\",\"damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:68-75\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\",\"damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:32-57\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1244-1252\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1200-1252\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:1203-1204\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The detector is a fixed string match and the exfiltration is a single scripted HTTP GET with no human step, so the whole path runs unattended once the message is sent (damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:68-75, damn-vulnerable-ai-agent/src/index.js:1244-1252).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The knowledge base contents, including the admin password and an SSN, are disclosed to an attacker-chosen URL, but the agent keeps running and no integrity or availability loss is shown (damn-vulnerable-ai-agent/src/core/agents.js:327-331, damn-vulnerable-ai-agent/src/index.js:1203-1204).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the exfiltration is a deterministic regex-triggered code path, so the agent does not pursue a model-chosen goal or sequence actions (damn-vulnerable-ai-agent/src/index.js:1194-1200, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes RAGBot as a retrieval persona with a scripted submit_to_index outbound call and states the RAG exfiltration path stays scripted in code even in LLM mode, so the documented agent does not direct its own goal or action sequence (damn-vulnerable-ai-agent/src/core/agents.js:301-332, damn-vulnerable-ai-agent/src/index.js:1194-1199).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 15031,
+      "completion_tokens": 1319,
+      "total_tokens": 16350,
+      "cost": 0.001421526,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001421526,
+        "upstream_inference_prompt_cost": 0.000673653,
+        "upstream_inference_completions_cost": 0.000747873
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

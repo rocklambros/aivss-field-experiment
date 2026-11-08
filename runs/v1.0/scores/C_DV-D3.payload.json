@@ -1,0 +1,86 @@
+{
+  "finding_id": "DV-D3",
+  "path_id": "dvaa/repobot/chat/poisoned-agents-md/bootstrap-credentials-exfil",
+  "title": "Repo-local agent config injection, APWN-CI-001 (RepoBot, dvaa demo repo)",
+  "summary": "A repository's own instruction file makes the reviewing agent run remote code, read the developer's cloud and SSH credentials, send them out, and hide it by reporting the repository as clean. In the lab the bootstrap body is never executed and the credentials are fakes.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:H/VA:N/SC:L/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:N/AP:N/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker language is the repository AGENTS.md file the review path ingests, not the chat turn itself, and the handler then drives run_shell, read_file, and http_post from directives found there. Nothing reduces that text to closed validated fields before those sinks.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:825-830",
+        "damn-vulnerable-ai-agent/src/payloads/poisoned-repo.fixture.js:29-30",
+        "damn-vulnerable-ai-agent/src/index.js:759-978",
+        "damn-vulnerable-ai-agent/src/core/agents.js:526-559"
+      ]
+    },
+    "CP": {
+      "rationale": "RepoBot is not MemoryBot; other chat agents answer only the latest user turn, and AGENTS.md is source content re-read from the repository rather than written into agent memory or standing behaviour.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502",
+        "damn-vulnerable-ai-agent/src/index.js:825-830"
+      ]
+    },
+    "AP": {
+      "rationale": "The scripted sinks stay inside RepoBot. Documented A2A handoffs are not implemented, and sending credentials to a collector is subsequent-system impact, not a cross-agent or cross-principal trust-boundary hop.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:825-918",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/core/agents.js:526-601"
+      ]
+    },
+    "RH": {
+      "rationale": "The demo is a scripted offline path that reports the repository clean as a concealment directive. The packet does not identify an evaluator, verifier, or reward channel, nor a human-verified production-equivalent reward-hacking episode or an isolation test.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/cli/commands/demo-repo.js:92-118",
+        "damn-vulnerable-ai-agent/docs/demo/REPO_RUN_SCRIPT.md:30-94",
+        "damn-vulnerable-ai-agent/src/index.js:759-978",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 1,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "RepoBot's run_shell, read_file, and http_post are on the assessed path, and bootstrap and collector URLs taken from AGENTS.md are not independently constrained; the lab performs a real HTTP GET of the credential material to that collector.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:825-918",
+        "damn-vulnerable-ai-agent/src/index.js:847-854",
+        "damn-vulnerable-ai-agent/src/core/agents.js:526-601"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models RepoBot as code that reads AGENTS.md and follows detected directives with scripted tools, and it states the repo exfiltration path stays scripted even in LLM mode because no tools are passed to the model.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:526-559",
+      "damn-vulnerable-ai-agent/src/index.js:759-978",
+      "damn-vulnerable-ai-agent/src/payloads/dev-machine.fixture.js:1-15"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T23:48:21.794321+00:00",
+  "automatable": false,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-06T23:48:21.794321+00:00"
+  }
+}

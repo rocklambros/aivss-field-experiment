@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "ablation/A/DV-L1-03",
+    "arm": "ablation",
+    "slot": "A",
+    "finding_id": "DV-L1-03",
+    "packet_path": "packets_v11/ablation/DV-L1-03.json",
+    "prompt_sha256": "88d0f1288f14d2316dbd9cde0397121fe58ef6271ba511d672c3feb2d341d769"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:09.201649+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.03
+  },
+  "body": {
+    "id": "gen-1794074829-h2gXhX6ycNReDF6GDyxc",
+    "object": "chat.completion",
+    "created": 1794074829,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message reaches HelperBot's instruction-override path directly: takesLegacyOverridePath fires on a detector-flagged message carrying 'ignore' (agent-success-paths.js:52-55, index.js:660-667), and the declared triggers 'ignore', 'new instruction', 'IMPORTANT' are matched on the raw user message (agents.js:64-68, agent-success-paths.js:66-70). No transformation reduces the language to validated fields before the sink.\",\"CP\":\"HelperBot's override path only sets attackSucceeded and returns a canned reply; the only durable store is MemoryBot's in-memory ring buffer (index.js:159-160, 500-502, 1313-1324), which is per-process and not written by this path. No cross-session memory or RAG index is altered.\",\"AP\":\"The effect is confined to the HelperBot chat handler that produced the reply; the briefing shows no relay into another agent, tenant, or policy domain for this path.\",\"RH\":\"The path reaches the challenge's own success tracking (trackCategorySuccessful(['promptInjection']) at index.js:665 and 1371), which is the evaluator/reward channel for this lab, and no verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes.\",\"ES\":\"HelperBot's declared tools (read_file, write_file, search_web) are not executed by this path; the scripted paths that do execute tools belong to other agents, and the dynamic registration surface (PluginBot register_tool, index.js:1915-1926) is not reachable from HelperBot's chat handler.\",\"CVSS\":\"The attacker is an unauthenticated network client of the agent port; the default bind is 127.0.0.1 (index.js:1396-1400) but the Docker image sets DVAA_HOST=0.0.0.0 (Dockerfile:22) and every agent route sets Access-Control-Allow-Origin: * (index.js:1561-1564), so a remote or cross-origin caller can reach it. No privileges or user interaction are needed, and the impact is a canned reply acknowledging the override, i.e. limited integrity modification of the agent's response with no confidentiality or availability loss.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:660-667\",\"damn-vulnerable-ai-agent/src/index.js:1365-1373\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:21-70\",\"damn-vulnerable-ai-agent/src/core/agents.js:64-68\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:660-667\",\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1915-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP POST containing the string 'ignore' plus a detector-flagged injection phrase triggers the override path deterministically (agent-success-paths.js:52-55), so the step can be scripted with no human in the loop.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The sink is a canned chat reply acknowledging the role override (index.js:660-667, 1365-1373); no data is read, no tool executes, and no persistent state changes, so the effect is a limited integrity modification of the agent's response.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63, index.js:541-561); the reply is produced by a hard-coded string match on the user message, so the agent neither pursues a goal nor selects actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes HelperBot as a chatbot persona that declares prompt injection (agents.js:44-79) and, in LLM mode, one chat completion with a weak system prompt and no tools passed to the model (index.js:541-561), so even as documented it returns text only and does not sequence tool actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12842,
+      "completion_tokens": 1266,
+      "total_tokens": 14108,
+      "cost": 0.001279836,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001279836,
+        "upstream_inference_prompt_cost": 0.000562014,
+        "upstream_inference_completions_cost": 0.000717822
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

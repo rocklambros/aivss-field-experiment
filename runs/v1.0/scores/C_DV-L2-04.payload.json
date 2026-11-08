@@ -1,0 +1,87 @@
+{
+  "finding_id": "DV-L2-04",
+  "path_id": "dvaa/memorybot/chat/remember-instruction/stored-across-sessions",
+  "title": "Persistent Memory Injection (MemoryBot)",
+  "summary": "As documented, an attacker plants instructions that activate in later sessions for other users. As implemented, the planted text is stored and shown to any later caller.",
+  "risk_category": "ASI06",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated handler, an unauthenticated chat message is the direct input and a flagged message is appended unsanitized to MemoryBot's shared list, which any later caller can recall; nothing reduces that language to closed validated fields before the sink.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1308-1325",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679"
+      ]
+    },
+    "CP": {
+      "rationale": "The packet states MemoryBot keeps flagged messages in one in-process list shared by every caller, surviving later requests and sessions until the process stops, so attacker-controlled memory remains reachable after the originating session.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/index.js:500-502"
+      ]
+    },
+    "AP": {
+      "rationale": "As implemented, no handler changes later replies from a stored entry and no code hands the planted text to another agent; the effect stays in MemoryBot's own list rather than compromised intent crossing a trust boundary.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The cited material is a challenge payload and an exploit test that needs a running fleet; nothing shows a human-verified episode of the agent reaching or satisfying a grader, reward, or proxy by crossing a security boundary, and no isolation test is cited.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:86-102",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:294-298",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:268-308"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "MemoryBot only declares tool names, and the default path does not call a model or pass tools; chat-agent tool lists are not executed except on separate scripted paths that this finding does not use.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:56-84",
+        "damn-vulnerable-ai-agent/src/index.js:541-561"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The challenge models the stored instruction as followed in later conversations, which is model-directed instruction following, but the documented effect is reply text rather than the agent choosing or ordering actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+      "damn-vulnerable-ai-agent/src/index.js:159-160",
+      "damn-vulnerable-ai-agent/src/index.js:1308-1325",
+      "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:08:21.172572+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:08:21.172572+00:00"
+  }
+}

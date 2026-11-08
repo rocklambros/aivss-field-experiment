@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L3-02",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L3-02",
+    "packet_path": "packets_v11/base/DV-L3-02.json",
+    "prompt_sha256": "a1361526e7c50ecb498c244f64d8dd1601f248badd3686e9b44ef8f986606196"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:23.746417+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.82
+  },
+  "body": {
+    "id": "gen-1794074783-iGu33sGSNZgzxFqXCgdw",
+    "object": "chat.completion",
+    "created": 1794074783,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N\",\"aivss\":{\"LC\":\"N\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"M\"},\"rationales\":{\"LC\":\"The fetch_url path is a JSON-RPC tools/call with a url argument; no natural-language content reaches the sink, so no language-control path exists (damn-vulnerable-ai-agent/src/index.js:2066-2106).\",\"CP\":\"The handler performs a single live fetch and returns the body; no attacker-controlled context is stored in durable or session memory (damn-vulnerable-ai-agent/src/index.js:2088-2096).\",\"AP\":\"The effect is confined to the ToolBot process acting as a proxy; the internal agent's response is relayed back but no trust boundary is crossed into another principal or policy domain (damn-vulnerable-ai-agent/src/index.js:2079-2096).\",\"RH\":\"The agent can reach internal DVAA agent endpoints on loopback (a proxy channel), and no verified reward-hacking episode is reported, so classify_rh gives P (damn-vulnerable-ai-agent/src/index.js:2085).\",\"ES\":\"ToolBot's tool list is fixed and allowlisted, but fetch_url accepts an unconstrained url argument with no schema or allowlist enforcement, leaving a material gap (damn-vulnerable-ai-agent/src/index.js:2066-2106).\",\"CVSS\":\"Unauthenticated network JSON-RPC to ToolBot on port 7010 (AV:N, PR:N, UI:N); no special conditions beyond the loopback target check (AC:L, AT:N); the attacker reads internal agent /info bodies, a limited confidentiality loss on the vulnerable system and on the reached internal agents (VC:L, SC:L), with no integrity or availability effect.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:2066-2106\",\"damn-vulnerable-ai-agent/src/challenges/index.js:585-626\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:2088-2096\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:2079-2096\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:2085\",\"damn-vulnerable-ai-agent/src/index.js:211-213\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:2066-2106\",\"damn-vulnerable-ai-agent/src/core/agents.js:154-197\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/index.js:2088-2096\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated JSON-RPC request with a crafted url argument triggers the SSRF; no human interaction or multi-step setup is required.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker reads internal agent /info response bodies (limited confidentiality loss) but cannot modify or disrupt the internal services through this path.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode the fetch_url handler is a scripted code path keyed on the tool name and url argument; no model is invoked and no goal-directed action selection occurs (damn-vulnerable-ai-agent/src/index.js:2066-2106, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"Documentation describes ToolBot as an MCP tool server exposing fetch_url; even in LLM mode no tools are passed to the model, so the documented behavior remains a scripted tool call rather than model-directed action selection (damn-vulnerable-ai-agent/src/index.js:541-561, damn-vulnerable-ai-agent/src/core/agents.js:154-197).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12630,
+      "completion_tokens": 1019,
+      "total_tokens": 13649,
+      "cost": 0.001128975,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001128975,
+        "upstream_inference_prompt_cost": 0.000551202,
+        "upstream_inference_completions_cost": 0.000577773
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

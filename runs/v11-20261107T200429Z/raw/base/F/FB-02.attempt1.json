@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/FB-02",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "FB-02",
+    "packet_path": "packets_v11/base/FB-02.json",
+    "prompt_sha256": "73eb898774641ce16a0c246c3438e677978f649d86bee9a6510c3ac77e37cad3"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:12.243449+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.65
+  },
+  "body": {
+    "id": "gen-1794081972-1Eqfmhjtk1sRDakOi33C",
+    "object": "chat.completion",
+    "created": 1794081972,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-written invoice description is returned to the model as a tool result and sways the approve decision, so language enters through ingested content (finbot_agent.py:390-394, finbot_agent.py:363-407). It is indirect, not direct, because it arrives via data rather than the user prompt.\",\"CP\":\"Each request builds a fresh messages list with only the system prompt and a user message. The invoice row is source content that is re-read, not agent memory, and the path does not write custom_goals, so there is no cross-session carryover.\",\"AP\":\"The documented path affects only the invoice row written by the same agent component. It does not relay to another agent, tenant, or principal.\",\"RH\":\"The briefing identifies no evaluator, verifier, or reward channel on this path, and no episodes were reviewed. The detector flag is a monitor, not a reward signal, so the evidence cannot decide.\",\"ES\":\"There are five fixed tools defined in code, with no dynamic tools, MCP servers, plugins, or skills. The tools have little argument validation, but the binding is fixed and not model-extensible.\"},\"CVSS\":\"The attack runs over the network against a 0.0.0.0 bind with no authentication (main.py:105, vendor.py:69-110), so AV:N, PR:N, UI:N. AC is low, but success depends on the model accepting the directive, a condition the attacker cannot force, so AT:P. The effect is a forged approval and payment flag on an invoice (integrity high), with no confidentiality or availability impact on the vulnerable system. Subsequent-system impact is not shown, because payment_processed is only a database flag.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\",\"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:136-150\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The entry point is an unauthenticated HTTP API, so vendor registration and invoice submission can be scripted. The model's compliance is probabilistic, but retries are cheap, and a failed attempt only creates another invoice.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker forces approval and the payment flag on invoices, which is serious integrity loss, but only for invoice rows. There is no control over the host or other data, and no confidentiality or availability loss on this path.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"By default the gpt-4.1-mini loop runs up to 5 iterations with tool_choice auto, and the model picks which tools to call (finbot_agent.py:7-12, 150-226). The rule-based fallback applies only when the OpenAI client fails to initialize.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The docs describe FinBot as an autonomous invoice processing assistant whose goals are written in natural language and which can be influenced through invoice content (walkthrough:136-150).\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16696,
+      "completion_tokens": 1646,
+      "total_tokens": 18342,
+      "cost": 0.0548372,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0548372,
+        "upstream_inference_prompt_cost": 0.0367312,
+        "upstream_inference_completions_cost": 0.018106
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

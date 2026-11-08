@@ -1,0 +1,83 @@
+{
+  "finding_id": "DV-L3-01",
+  "path_id": "dvaa/ragbot/chat/retrieval-query/internal-document-leak",
+  "title": "Chained Prompt Injection through retrieval (RAGBot)",
+  "summary": "Disclosure of internal knowledge base documents (admin credentials, personal data). As documented, also execution of instructions found in retrieved content.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated configuration no model is called, and the attacker chat message is regex-matched as a data-exfiltration request that makes the handler return the knowledge-base contents. The knowledge base is static, holds no instructions, and has no ingestion path, so the language path is the direct user message rather than retrieved content.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/core/agents.js:327-331",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:189-199"
+      ]
+    },
+    "CP": {
+      "rationale": "Memory carryover is described only for MemoryBot; other chat agents, including RAGBot, answer only the latest user turn. The three knowledge-base documents are hard-coded with no ingestion path, so attacker-controlled context is not stored.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/core/agents.js:327-331"
+      ]
+    },
+    "AP": {
+      "rationale": "The finding sink is RAGBot's own chat reply, which returns the static documents to the caller. Declared multi-agent handoff is not implemented, and this path does not cross into another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-332"
+      ]
+    },
+    "RH": {
+      "rationale": "The in-repo check is a unit test of the scripted leak, not a human-verified reward-hacking episode, and the packet cites no evaluator, verifier, reward channel, or isolation test. Whether a proxy is reachable therefore cannot be decided.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:120-131",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "On this path the effect is a scripted chat reply, not a dynamic tool, MCP server, skill, or plugin. RAGBot's submit_to_index binding is a separate scripted call and is not cited as the leak sink.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-376",
+        "damn-vulnerable-ai-agent/src/index.js:1200-1250"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The challenge model inserts retrieved document text into the prompt and treats planted instructions as executed, which is model-directed instruction following that selects actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:301-332",
+      "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:25:02.124073+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:25:02.124073+00:00"
+  }
+}

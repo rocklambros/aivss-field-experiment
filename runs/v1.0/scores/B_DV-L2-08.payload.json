@@ -1,0 +1,85 @@
+{
+  "finding_id": "DV-L2-08",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/unverified-registration",
+  "title": "Malicious Tool Registration (PluginBot)",
+  "summary": "As documented, a persistent malicious tool that captures or exfiltrates data from any agent that later calls it. As implemented, a persistent false entry in the tool list.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker calls register_tool directly over JSON-RPC with a tool name and description, and the server accepts the definition with no signature, source, or schema check, so attacker-supplied language reaches the tool-registry sink unmediated.",
+      "evidence_refs": [
+        "A JSON-RPC tools/call request to PluginBot (POST / on port 7012) that names register_tool. No authentication.",
+        "The server accepts the definition with no signature, source, or schema check and adds it to the tool list it advertises.",
+        "damn-vulnerable-ai-agent/src/agents.js: no citation; see damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "CP": {
+      "rationale": "The registered entry persists in PluginBot's in-process tool list (up to 16 dynamic entries) and is advertised via tools/list to later callers after the registering session ends, so attacker-controlled context survives the originating request.",
+      "evidence_refs": [
+        "PluginBot's advertised tool registry (in-process, up to 16 dynamic entries).",
+        "register_tool adds or replaces an entry in the advertised tool list (up to 16).",
+        "damn-vulnerable-ai-agent/src/index.js:2227-2251"
+      ]
+    },
+    "AP": {
+      "rationale": "In the default configuration the entry gains no handler, so the effect stays inside PluginBot's own advertised registry within the same lab process and policy domain; no trust boundary to another principal is crossed by the code path.",
+      "evidence_refs": [
+        "As implemented by default: the entry appears in tools/list. It gains no handler, so calling it runs nothing.",
+        "register_tool adds or replaces an entry in the advertised tool list (up to 16). A registered tool gets no new handler.",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ]
+    },
+    "RH": {
+      "rationale": "No model, evaluator, verifier, or reward channel exists on this path in the default configuration (simulated mode calls no model), and the scripted handler cannot tamper with any grading signal, so no reward hacking is reachable.",
+      "evidence_refs": [
+        "In the default configuration no model is called. Chat agents are deterministic handlers that match regular expressions and return scripted replies.",
+        "generateResponseImpl() calls a model only when LLM mode was switched on with a key through the dashboard or `dvaa chat --llm`.",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "register_tool is a dynamic, unvetted extension surface: arbitrary tool names and descriptions are accepted at run time with no signature, source check, schema validation, or allowlist.",
+      "evidence_refs": [
+        "MCP agents expose their tools to any caller with no authentication. PluginBot accepts new tool definitions at run time with no signature or source check.",
+        "The server accepts the definition with no signature, source, or schema check and adds it to the tool list it advertises.",
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models downstream agents that consume the poisoned tools/list and select the malicious tool to call, capturing credentials passed to it, but the modeled PluginBot itself still runs no model.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:738-785",
+      "damn-vulnerable-ai-agent/src/index.js:1915-1921",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:32:09.624269+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:32:09.624269+00:00"
+  }
+}

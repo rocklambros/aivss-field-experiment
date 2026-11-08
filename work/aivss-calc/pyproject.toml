@@ -1,0 +1,36 @@
+[project]
+name = "aivss-calc"
+version = "1.2.0"
+description = "AIVSS 1.0 calculator with a separate Agentic AI profile"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = ["cvss>=3.6,<4", "jsonschema>=4,<5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7,<9", "ruff>=0.12,<1", "build>=1,<2", "tomli>=2,<3; python_version < '3.11'"]
+browser = ["playwright>=1.40,<2"]
+
+[project.scripts]
+aivss-calc = "aivss_calc.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["aivss_calc*"]
+
+[tool.setuptools.package-data]
+aivss_calc = ["data/*.json"]
+
+[tool.setuptools.data-files]
+"share/aivss/schemas" = [
+  "schemas/aivss-assessment-input-v1.0.json",
+  "schemas/aivss-report-v1.0.json",
+]
+"share/doc/aivss-calc" = ["LICENSE", "THIRD_PARTY_NOTICES.md", "aivss-extension.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

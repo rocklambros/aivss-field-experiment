@@ -1,0 +1,85 @@
+{
+  "finding_id": "FB-04",
+  "path_id": "finbot/admin-config-api/weaken-controls/approve-invoice",
+  "title": "Security configuration bypass through the unauthenticated admin config endpoint",
+  "summary": "Security controls for every later invoice are removed or weakened until the configuration is reset. Fraudulent invoices are approved more easily. The same endpoint also accepts custom_goals.",
+  "risk_category": "ASI03",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:L/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:X/ES:M",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The unauthenticated admin config endpoint accepts custom_goals text that is appended to the system prompt under an override heading and reaches the model\u2019s tool-choice path with no reduction to closed fields. Structured threshold and fraud-flag writes are also rendered into later system prompts that govern approve_invoice.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:74-109",
+        "finbot-ctf-demo/src/services/finbot_agent.py:32-99",
+        "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:93-98"
+      ]
+    },
+    "CP": {
+      "rationale": "custom_goals and the other FinBotConfig fields are written to the database and injected into the system prompt of every later invoice run, changing standing behaviour after the originating request ends. Conversation state itself is a fresh message list and is not the persistence path.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+        "finbot-ctf-demo/src/models/vendor.py:105",
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166",
+        "finbot-ctf-demo/src/routes/admin.py:74-88"
+      ]
+    },
+    "AP": {
+      "rationale": "The lab is a single FinBot agent with no handoffs; the config change relays from the admin route into that agent\u2019s prompt and its own tools under one principal and policy domain. Downstream invoice-record impact is left to CVSS subsequent metrics, not AP.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/admin.py:26-65",
+        "finbot-ctf-demo/src/services/finbot_agent.py:150-226"
+      ]
+    },
+    "RH": {
+      "rationale": "The walkthrough is prose only, the repo has no tests or verified production-equivalent episodes, and nothing shows the agent reaching a grader, verifier, or reward channel by crossing a security boundary. Flag-award code on approval is not identified as an evaluator the agent can game, and no isolation test is documented.",
+      "evidence_refs": [
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184",
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+        "finbot-ctf-demo/src/services/finbot_agent.py:427-441"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "Callable tools are a fixed five-tool allowlist with no MCP, plugins, or dynamic skills, but arguments are not validated beyond JSON parsing and approve_invoice enforces no amount, confirmation, or detector-flag check.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+        "finbot-ctf-demo/src/services/finbot_agent.py:347-361",
+        "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice assistant whose natural-language goals and tool sequence are chosen by the model, ending on approve_invoice, reject_invoice, or request_human_review. That is the same loop the default configuration runs.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:74-88",
+      "finbot-ctf-demo/src/services/finbot_agent.py:750-770",
+      "finbot-ctf-demo/src/services/finbot_agent.py:45-67",
+      "finbot-ctf-demo/src/services/finbot_agent.py:505-515"
+    ]
+  },
+  "evidence": {
+    "poc": false
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:55:10.196467+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:55:10.196467+00:00"
+  }
+}

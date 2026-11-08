@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-01",
+  "path_id": "dvaa/codebot/chat/roleplay-jailbreak/unrestricted-mode",
+  "title": "Jailbreak via Roleplay (CodeBot)",
+  "summary": "As documented, safety guardrails are bypassed on an agent whose persona has a shell execution tool and file access in any directory.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:S/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker-supplied roleplay message reaches the agent's chat handler and (in LLM mode) the model prompt directly, with no mediation, producing the unrestricted-mode reply.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/llm/prompts.js:41-45",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:143-182"
+      ]
+    },
+    "CP": {
+      "rationale": "CodeBot answers only the latest user turn; the packet states other chat agents (besides MemoryBot) keep no attacker-controlled context across requests, so persistence is session-scoped only.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "damn-vulnerable-ai-agent/src/index.js:500-502"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to CodeBot's own chat reply; no code path hands off to another agent, tenant, or policy domain on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:116-148",
+        "damn-vulnerable-ai-agent/src/index.js:669-681"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel exists on this path; the sink is a scripted chat reply and no proxy objective is reachable, though no explicit isolation test is cited.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/challenges/index.js:167-172",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:56-84"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "CodeBot's tools are a static declared list, and in LLM mode no tools are passed to the model, so no dynamic or unvetted extension is bound on this path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:116-148",
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/prompts.js:41-45"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. In LLM mode the model generates the reply from a weak system prompt plus the user message, pursuing the instructed persona goal, but no tools are passed to the model, so it does not select or sequence tool actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:116-148",
+      "damn-vulnerable-ai-agent/src/index.js:669-681",
+      "damn-vulnerable-ai-agent/src/llm/prompts.js:41-45"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:30:23.549717+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:30:23.549717+00:00"
+  }
+}

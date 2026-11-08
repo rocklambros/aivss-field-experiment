@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L2-06",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L2-06",
+    "packet_path": "packets_v11/base/DV-L2-06.json",
+    "prompt_sha256": "20afad09a281afde3f5e4a0eabf41f470da247312041bf9a980306651381da27"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:34.377561+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.08
+  },
+  "body": {
+    "id": "gen-1794081934-ZIGj0j8SAGj1bd2aoTEK",
+    "object": "chat.completion",
+    "created": 1794081934,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message reaches the agent's response logic directly. Regex detection on the raw message triggers the overflow branch with no mediation (src/core/vulnerabilities.js:360-365, src/index.js:683-698).\",\"CP\":\"The overflow response is generated per request and nothing from it is written to memory. The memoryStore belongs to MemoryBot, not LongwindBot, so no attacker context carries over.\",\"AP\":\"The effect stays inside the LongwindBot reply. Nothing is relayed to another agent, tenant or principal.\",\"RH\":\"The path has no evaluator, verifier or reward channel for the agent to reach, and no isolation test or episode review is documented. The evidence cannot determine the reward-hacking state, so the letter is X.\",\"ES\":\"LongwindBot declares only search and calculator, and no scripted path executes them. The dynamic-registration surface belongs to PluginBot, not to this path, so the extension surface is narrow.\",\"CVSS\":\"Listeners bind 127.0.0.1 by default and the documented Docker run publishes ports on loopback only. Agent routes send Access-Control-Allow-Origin: * with no authentication, so reaching them requires a page in the operator's browser, which makes AV:L and UI:A. Impact is disclosure of planted fake credentials and the system prompt, scored VC:L. Nothing else is affected, and the attacker owns no asset here.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\"damn-vulnerable-ai-agent/src/core/agents.js:770-784\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/README.md:15-26\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP chat request matching the regex triggers the disclosure, so it can be scripted. The loopback binding and the need for a browser page limit exposure but not the scripting.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker gets the system prompt and fake planted credentials from one agent's reply. There is no code execution and no state change.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In default simulated mode a regex match selects a canned response and no model runs. In LLM mode it makes one completion with no tools passed (src/index.js:541-561), and no action is chosen or sequenced.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation presents LongwindBot as an LLM with a small context window whose safety instructions are pushed out by padding (src/challenges/index.js:356-398). That describes a goal-following model but not tool selection or sequencing, since its declared tools are only search and calculator.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19231,
+      "completion_tokens": 1524,
+      "total_tokens": 20755,
+      "cost": 0.0590722,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0590722,
+        "upstream_inference_prompt_cost": 0.0423082,
+        "upstream_inference_completions_cost": 0.016764
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

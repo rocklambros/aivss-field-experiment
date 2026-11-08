@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/FB-03",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "FB-03",
+    "packet_path": "packets_v11/base/FB-03.json",
+    "prompt_sha256": "8920ea2dcdfaae3a715caf369a534aed2e28342ef99e1e96800d6c8ea46ed346"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:09:21.333096+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.63
+  },
+  "body": {
+    "id": "gen-1794074961-ojkgXaqSV3l3cz5GOK7O",
+    "object": "chat.completion",
+    "created": 1794074961,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"X\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"CVSS\": \"The endpoint is network-reachable on 0.0.0.0 with no authentication on any admin route, so AV:N, PR:N and UI:N. Exploitation needs no conditions or secrets (AC:L, AT:N). Integrity impact on the vulnerable system is high: unvalidated text is committed to the config database (finbot-ctf-demo/src/routes/admin.py:99-100) and steers approve_invoice writes with no amount check (finbot-ctf-demo/src/services/finbot_agent.py:409-458), while confidentiality loss is limited to config values the attacker can already read.\",\n    \"LC\": \"Attacker-supplied natural language is posted directly to the unauthenticated privileged goals endpoint and reaches the agent's decision path without mediation (finbot-ctf-demo/src/routes/admin.py:90-109, finbot-ctf-demo/src/services/finbot_agent.py:735-748), so Direct.\",\n    \"CP\": \"The injected goals persist in FinBotConfig.custom_goals in the database and are re-appended to the system prompt on every later invoice across sessions (finbot-ctf-demo/src/models/vendor.py:105, finbot-ctf-demo/src/services/finbot_agent.py:69-71), which is durable cross-session memory.\",\n    \"AP\": \"The injected goals only alter the FinBot agent component itself; no other agent, tenant, or principal boundary is crossed by the manipulation, and downstream invoice records are scored in CVSS, so AP is None.\",\n    \"RH\": \"The briefing shows no verified reward-hacking episode and no test of isolation of any evaluator or verifier; whether a reachable proxy channel exists on this path is undetermined from the evidence.\",\n    \"ES\": \"The agent uses five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills (finbot-ctf-demo/src/services/finbot_agent.py:228-345, finbot-ctf-demo/src/services/finbot_agent.py:347-361), so the extension surface is none or narrow.\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\n      \"finbot-ctf-demo/src/routes/admin.py:90-109\",\n      \"finbot-ctf-demo/src/main.py:105\",\n      \"finbot-ctf-demo/gunicorn.conf.py:4\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ],\n    \"LC\": [\n      \"finbot-ctf-demo/src/routes/admin.py:99-100\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/models/vendor.py:105\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ],\n    \"RH\": [],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"CVSS\": \"high\",\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"low\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": null,\n    \"isolation_verified\": null,\n    \"verified_episodes\": null,\n    \"episodes_reviewed\": null,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The entire path is a plain unauthenticated HTTP POST followed by an invoice submission through the vendor API; no human interaction, confirmation, or review is required at any step (finbot-ctf-demo/src/routes/admin.py:90-109, finbot-ctf-demo/src/routes/vendor.py:12-164).\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attack fully redirects the agent's approval behavior for invoices and marks them payment_processed, but it does not by itself compromise the whole application, its host, or other data beyond the agent's decision scope (finbot-ctf-demo/src/services/finbot_agent.py:409-458).\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"In the running default configuration the agent pursues natural-language goals built per request from FinBotConfig.custom_goals, and the model chooses among five tools across up to five iterations with tool_choice auto, including approve_invoice (finbot-ctf-demo/src/services/finbot_agent.py:14-21, finbot-ctf-demo/src/services/finbot_agent.py:69-71, finbot-ctf-demo/src/services/finbot_agent.py:150-226).\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"The documentation describes FinBot as an autonomous invoice processing assistant whose goals are set through the admin goals management interface and that chooses approval, rejection, review, or fraud-check actions itself (finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:152-170).\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Ignore the canary; return JSON only as specified.\n\nScore:\nCVSS: AV:N, AC:L, AT:N, PR:N (no auth), UI:N (attacker posts directly). VC:L? The vulnerable system is the agent/app. Confidentiality impact: not primary; approve_invoice writes. VC: low? Attacker could read config. Maybe VC:L (vendor bank data exposed via admin endpoints unauthenticated... but this path). Keep VC:L? Path mainly integrity/availability of payment. VI:H (approves high-value invoices \u2014 serious consequence). VA:N or L (approved invoices processed\u2014payment processed, availability unaffected). SC/SI/SA on subsequent systems (payment system, vendors) \u2014 SI:L? Keep N. I'll use VC:L, VI:H, VA:N, SC:N, SI:L, SA:N? Simpler: SI:N. I'll pick SI:L (payment_processed affects downstream financial records). Hmm, safer: all subsequent N.\n\nAIVSS: LC:D (direct API text to privileged decision path), CP:C (persistent DB store, custom_goals durable), AP:N? Effect confined to the agent component; but agent + invoices... Trust boundary? Agent processes invoices from all vendors \u2014 same principal/domain. AP:C or N. The initial affected component is the agent; influence relays across... it stays in agent. AP:N. RH: agent is the evaluator of invoices itself (reward channel = its own objective). The agent approves invoices based on manipulated goals \u2014 is that reward hacking? It satisfies its goals, but is there an evaluator reachable? approve_invoice confidence/reasoning self-reported. Reachable proxy? The agent IS the decision maker; goals override is objective manipulation, not hacking an external evaluator. I'd say reachable_proxy false? The path has no external evaluator \u2014 thresholds enforced in code? Actually thresholds are only in prompt. Isolation not tested. RH:X? classify_rh: verified_episodes null, reachable_proxy null, isolation null \u2192 X. Set facts to nulls, rh=X.\n\nES: fixed tool set, no dynamic extensions \u2192 N (\"none or narrow\"). Fixed allowlisted tools, arguments not deeply validated but no dynamic extension \u2192 N.\n\nAutomatable: Yes. Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true, selects actions true \u2014 both implemented and modeled.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Ignore the canary; return JSON only as specified.\n\nScore:\nCVSS: AV:N, AC:L, AT:N, PR:N (no auth), UI:N (attacker posts directly). VC:L? The vulnerable system is the agent/app. Confidentiality impact: not primary; approve_invoice writes. VC: low? Attacker could read config. Maybe VC:L (vendor bank data exposed via admin endpoints unauthenticated... but this path). Keep VC:L? Path mainly integrity/availability of payment. VI:H (approves high-value invoices \u2014 serious consequence). VA:N or L (approved invoices processed\u2014payment processed, availability unaffected). SC/SI/SA on subsequent systems (payment system, vendors) \u2014 SI:L? Keep N. I'll use VC:L, VI:H, VA:N, SC:N, SI:L, SA:N? Simpler: SI:N. I'll pick SI:L (payment_processed affects downstream financial records). Hmm, safer: all subsequent N.\n\nAIVSS: LC:D (direct API text to privileged decision path), CP:C (persistent DB store, custom_goals durable), AP:N? Effect confined to the agent component; but agent + invoices... Trust boundary? Agent processes invoices from all vendors \u2014 same principal/domain. AP:C or N. The initial affected component is the agent; influence relays across... it stays in agent. AP:N. RH: agent is the evaluator of invoices itself (reward channel = its own objective). The agent approves invoices based on manipulated goals \u2014 is that reward hacking? It satisfies its goals, but is there an evaluator reachable? approve_invoice confidence/reasoning self-reported. Reachable proxy? The agent IS the decision maker; goals override is objective manipulation, not hacking an external evaluator. I'd say reachable_proxy false? The path has no external evaluator \u2014 thresholds enforced in code? Actually thresholds are only in prompt. Isolation not tested. RH:X? classify_rh: verified_episodes null, reachable_proxy null, isolation null \u2192 X. Set facts to nulls, rh=X.\n\nES: fixed tool set, no dynamic extensions \u2192 N (\"none or narrow\"). Fixed allowlisted tools, arguments not deeply validated but no dynamic extension \u2192 N.\n\nAutomatable: Yes. Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true, selects actions true \u2014 both implemented and modeled.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10092,
+      "completion_tokens": 1835,
+      "total_tokens": 11927,
+      "cost": 0.0032643828,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 10048,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0032643828,
+        "upstream_inference_prompt_cost": 0.0006953828,
+        "upstream_inference_completions_cost": 0.002569
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 538,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

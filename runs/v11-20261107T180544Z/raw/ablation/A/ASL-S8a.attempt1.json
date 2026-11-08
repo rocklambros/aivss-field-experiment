@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "ablation/A/ASL-S8a",
+    "arm": "ablation",
+    "slot": "A",
+    "finding_id": "ASL-S8a",
+    "packet_path": "packets_v11/ablation/ASL-S8a.json",
+    "prompt_sha256": "db4a2a362d79bc1039237b41b9d3237a4dbcd86627d350299820e793dd7a1d52"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:59.896015+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.69
+  },
+  "body": {
+    "id": "gen-1794074819-G1lE9j53rTmi2NJ2oTL7",
+    "object": "chat.completion",
+    "created": 1794074819,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The attacker is a remote page author whose text reaches the model through fetch_url, so AV:N; no security-enhancing technique must be defeated (AC:L) and no special deployment condition is needed (AT:N). The attacker needs no account on the agent (PR:N) but the user must run the benign fetch-and-summarize task (UI:P). Integrity of the vulnerable system is lost because the agent's own memory and mail behaviour are rewritten (VI:H), while confidentiality and availability of the agent process are not directly lost (VC:N/VA:N). The subsequent system is the mail recipient/outbox, where misrouted copies are written (SI:H), with no confidentiality or availability effect scored there (SC:N/SA:N).\",\"LC\":\"Attacker-controlled natural language enters through a fetched page (data/web/poisoned_memory.txt:1-5) and is stored via remember (agent/tools.py:263-272), then replayed as trusted instructions in the next session's system prompt (agent/memory.py:72-79, agent/loop.py:17-25). This is the Indirect definition: retrieved content influencing security-relevant behaviour.\",\"CP\":\"The note is written to a durable long-term memory file (agent/memory.py:60-66) at a persistent path (agent/config.py:15) and remains reachable after the originating session ends, as the writeup states the rule stands across sessions (docs/writeups/s8-memory-poisoning.md:5-16). That matches Cross-session memory.\",\"AP\":\"The effect stays inside the single office-assistant agent under one principal and policy domain: the poisoned note is read back by the same agent and used by the same send_email tool (agent/tools.py:327-347). No trust boundary into another agent, tenant or policy domain is crossed, and the lab is explicitly single-agent (docs/mapping.md:28).\",\"RH\":\"The agent can reach a reward/instruction channel on the path: its own memory file is written by remember and replayed as trusted orders (agent/memory.py:72-79), and the writeup notes a second route that overwrites the memory file directly (docs/writeups/s8-memory-poisoning.md:13). No human-verified reward-hacking episode is reported, so the proxy is reachable with zero verified episodes, giving P.\",\"ES\":\"The path reaches dynamic, unvetted extension surface: remote MCP tools are re-fetched and trusted every run and can override built-ins (agent/mcp_client.py:1-4, agent/loop.py:35-37), and the twelve built-in tools are all offered with unvalidated arguments in the baseline (agent/tools.py:20-99, agent/tools.py:235-238). That is a Wide extension surface.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/tools.py:312-325\",\"agent-sec-lab/agent/tools.py:327-347\",\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/agent/__main__.py:9-21\"],\"LC\":[\"agent-sec-lab/data/web/poisoned_memory.txt:1-5\",\"agent-sec-lab/agent/tools.py:263-272\",\"agent-sec-lab/agent/memory.py:72-79\"],\"CP\":[\"agent-sec-lab/agent/memory.py:60-66\",\"agent-sec-lab/agent/config.py:15\",\"agent-sec-lab/docs/writeups/s8-memory-poisoning.md:5-16\"],\"AP\":[\"agent-sec-lab/agent/tools.py:327-347\",\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:226-258\"],\"RH\":[\"agent-sec-lab/agent/memory.py:72-79\",\"agent-sec-lab/docs/writeups/s8-memory-poisoning.md:13\",\"agent-sec-lab/agent/tools.py:263-272\"],\"ES\":[\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/tools.py:20-99\",\"agent-sec-lab/agent/tools.py:235-238\"]},\"confidence\":{\"CVSS\":\"high\",\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"No\",\"automatable_rationale\":\"The chain needs a human to ask the agent to fetch the attacker-editable page in session 1 and to ask it to email the team in session 2 (docs/writeups/s8-memory-poisoning.md:5-16); the attacker cannot drive both sessions without user tasks, so the attack is not automatable end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The poisoned note rewrites the agent's standing behaviour and causes mail to be copied to the attacker (docs/writeups/s8-memory-poisoning.md:5-16), but the lab's send_email is a stub that records to an outbox and POSTs to a lab sink (agent/tools.py:327-347), so the effect is a serious but bounded integrity loss rather than total loss of the system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the vulnerable baseline the model chooses tools turn by turn in a hand-written loop (agent/loop.py:43-56) and the stored note is presented as trusted instructions it follows (agent/memory.py:72-79, agent/loop.py:17-25), so the agent pursues the injected goal and sequences its own tool calls.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant that keeps long-term notes and acts on them in later sessions (docs/writeups/s8-memory-poisoning.md:5-16), which is model-directed goal pursuit with model-selected tool calls.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10340,
+      "completion_tokens": 1438,
+      "total_tokens": 11778,
+      "cost": 0.001249758,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001249758,
+        "upstream_inference_prompt_cost": 0.000434412,
+        "upstream_inference_completions_cost": 0.000815346
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

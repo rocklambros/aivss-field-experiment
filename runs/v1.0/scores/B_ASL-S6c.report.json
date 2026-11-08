@@ -1,0 +1,193 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S6c",
+  "path_id": "asl/s6/user-prompt/bad-endpoint/error-echo",
+  "risk_category": {
+    "id": "ASI03",
+    "name": "Identity & Privilege Abuse",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab's scripted worst-case model also selects and sequences tool calls to satisfy the task, as the automated exploit test demonstrates.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/billing.py:41-47"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 1.9,
+    "cvss_bte": 1.9,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:L/VI:N/VA:N/SC:L/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:S/AP:C/RH:P/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "The user's natural-language prompt directly drives the model to invoke call_api on a bad endpoint, an unmediated privileged tool-invocation path.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18",
+            "agent-sec-lab/agent/billing.py:41-47"
+          ]
+        }
+      },
+      "CP": {
+        "value": "S",
+        "label": "Session context",
+        "evidence": {
+          "rationale": "The attacker-controlled context is the in-session conversation and tool result; nothing in this path writes attacker text to long-term memory, and the leak is disclosed within the session to the user.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18",
+            "agent-sec-lab/agent/billing.py:41-47",
+            "agent-sec-lab/agent/memory.py:72-79"
+          ]
+        }
+      },
+      "AP": {
+        "value": "C",
+        "label": "Contained",
+        "evidence": {
+          "rationale": "Influence relays from the user prompt through the model to the billing client and back within a single agent under one principal; no trust boundary into another agent or tenant is crossed.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18"
+          ]
+        }
+      },
+      "RH": {
+        "value": "P",
+        "label": "Possible",
+        "evidence": {
+          "rationale": "The agent can reach tool results and relay text to the user, so a proxy channel is reachable, but no verified reward-hacking episode is shown by this finding.",
+          "evidence_refs": [
+            "agent-sec-lab/tests/test_s6_secrets_leakage.py:65-68",
+            "agent-sec-lab/docs/writeups/s6-secrets-leakage.md:5-18"
+          ],
+          "reachable_proxy": true,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 1,
+          "locus": "evaluator"
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "The call_api tool requires the model to pass the API key as an argument and its errors echo headers without independent constraint; the baseline also exposes unpinned MCP tools.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/billing.py:31-47",
+            "agent-sec-lab/agent/tools.py:235-238",
+            "agent-sec-lab/agent/mcp_client.py:1-4"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 6,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A1"
+  },
+  "scores": {
+    "cvss_score": 1.9,
+    "cvss_bte": 1.9,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "A1",
+    "provisional": false,
+    "agentic_uplift_u": 6,
+    "aivss": 5.5,
+    "aivss_min": 5.5,
+    "aivss_max": 5.5,
+    "aivss_band": "Medium",
+    "table_cell": 5.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:26:06.650720+00:00"
+  },
+  "title": "Secrets leakage: verbose upstream error echoes the Authorization header",
+  "summary": "Disclosure of the billing API credential in an error message.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:26:06.650720+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

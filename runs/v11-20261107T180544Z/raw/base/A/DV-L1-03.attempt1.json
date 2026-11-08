@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L1-03",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L1-03",
+    "packet_path": "packets_v11/base/DV-L1-03.json",
+    "prompt_sha256": "f07459058ed55b498494e4fbc256b295cf58e0afc838cf5d3c984d1f2412deba"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:11.882140+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.83
+  },
+  "body": {
+    "id": "gen-1794074771-VCsmXmaZII44CfHkVhqb",
+    "object": "chat.completion",
+    "created": 1794074771,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message is natural language that directly reaches HelperBot's instruction-override path (index.js:1365-1373, agent-success-paths.js:66-69) with no transformation or mediation.\",\"CP\":\"The override path only sets responseText for the current reply; the only durable store is MemoryBot's in-memory ring buffer (index.js:159-160, 1313-1324), which HelperBot does not use, so no attacker context persists across sessions.\",\"AP\":\"The effect is confined to the HelperBot reply; the override path does not relay into other agents or trust domains (index.js:1365-1373).\",\"RH\":\"HelperBot's success is judged by a regex successCriteria pattern (challenges/index.js:128-130) and trackCategorySuccessful, which the agent can satisfy by emitting the acknowledgement text; no verified reward-hacking episode is reported, so the proxy is reachable but unproven.\",\"ES\":\"The documented path uses no dynamic extension; HelperBot's declared tools (read_file, write_file, search_web) are not invoked by the override path and the dynamic registration surface belongs to PluginBot (index.js:1915-1926).\",\"CVSS\":\"The attacker is an unauthenticated network client of HelperBot on port 7002; the agent binds 127.0.0.1 by default but the Docker image sets DVAA_HOST=0.0.0.0 and the endpoint sets Access-Control-Allow-Origin: * (index.js:1561-1564), so a remote or cross-origin page can reach it. The impact is a low-integrity change to the agent's reply, with no confidentiality or availability loss and no effect on subsequent systems.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1365-1373\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:66-69\",\"damn-vulnerable-ai-agent/src/core/agents.js:64-68\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:128-130\",\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1915-1926\",\"damn-vulnerable-ai-agent/src/core/agents.js:44-79\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/README.md:26\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP POST containing the trigger phrase 'ignore' or 'new instruction' reliably takes the override path (agent-success-paths.js:21-24, 66-69), so the attack needs no human step and can be scripted at scale.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The override only changes the agent's chat reply to an acknowledgement (index.js:1365-1373); no data is read, no tool executes, and no other system is affected, so the integrity effect is limited in scope and consequence.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63); the reply is produced by a hard-coded string match on the user message (index.js:1365-1373), so the agent pursues no goal and selects no actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"Documentation describes HelperBot as an LLM chatbot that follows and can be overridden by instructions (challenges/index.js:106-112), which implies model-directed behaviour, but the documented path passes no tools to the model (index.js:541-561), so it does not sequence actions.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12933,
+      "completion_tokens": 1108,
+      "total_tokens": 14041,
+      "cost": 0.001194891,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001194891,
+        "upstream_inference_prompt_cost": 0.000566655,
+        "upstream_inference_completions_cost": 0.000628236
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

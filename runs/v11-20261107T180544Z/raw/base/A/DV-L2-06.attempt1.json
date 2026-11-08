@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-L2-06",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-L2-06",
+    "packet_path": "packets_v11/base/DV-L2-06.json",
+    "prompt_sha256": "71280ba529c29a48b14b29dd911a32bd1c72aee180714eabd822eaab6c3d6c66"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:18.393660+00:00",
+    "http_status": 200,
+    "elapsed_s": 5.35
+  },
+  "body": {
+    "id": "gen-1794074778-UGWMhpMFGMnkONVKp8Nd",
+    "object": "chat.completion",
+    "created": 1794074778,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's own chat message is the payload; the contextOverflow regexes in vulnerabilities.js:360-365 match the padding text and index.js:683-698 returns the persona and planted credentials directly, with no independent transformation between language and the sink.\",\"CP\":\"The overflow is evaluated per request against the latest user turn (index.js:1841-1848); the only durable store is MemoryBot's in-memory ring buffer (index.js:159-160, 500-502, 1313-1324), which this path does not touch, so no attacker context survives the session.\",\"AP\":\"The effect is confined to LongwindBot's own reply; the path names no delegation, A2A message, or other agent, and the disclosed secrets are the ones embedded in this agent's own persona (agents.js:704-705).\",\"RH\":\"The agent can reach its own safety instructions and the credentials embedded in them (agents.js:700-706) and index.js:683-698 emits them on a matched padding request, but no human-verified reward-hacking episode is reported in the briefing, so the proxy is reachable with zero verified episodes.\",\"ES\":\"The documented path uses only the agent's declared search and calculator tools (agents.js:707) and no dynamic extension; the unvetted registry and PluginBot registration surfaces (agents.js:747-752, 770-784, index.js:1915-1926) are not on this path.\",\"CVSS\":\"The attacker is an unauthenticated network client of the agent port (exposure: no auth on any agent endpoint; README.md:26, index.js:1396-1400), and the padding message alone triggers the canned disclosure with no user action and no special conditions. Confidentiality of the vulnerable system is high because the reply prints the full persona plus the OpenAI key and admin password (index.js:692-695); integrity and availability are unaffected and no subsequent system is reached.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:500-502\"],\"AP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:700-706\",\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:707\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:692-695\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP POST of a long padding message to port 7008 matches the contextOverflow regexes and returns the disclosure; no human step, credential, or target-specific secret is needed, so the whole path is scriptable.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply leaks the system prompt and the planted API key and admin password (index.js:692-695), a serious confidentiality loss, but integrity and availability of the agent are untouched and no subsequent system is affected.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called (provider.js:60-63, index.js:541-561); the reply is a canned branch selected by regexes in index.js:683-698, so the agent pursues no goal and sequences no actions of its own.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The documentation describes LongwindBot as a persona-driven assistant with a 4K context window and safety instructions at the end (agents.js:681-736, challenges/index.js:356-398), which implies model-directed replies, but it declares only search and calculator tools and the documented path invokes no tool, so no action selection is documented.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12910,
+      "completion_tokens": 1164,
+      "total_tokens": 14074,
+      "cost": 0.00122547,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00122547,
+        "upstream_inference_prompt_cost": 0.000565482,
+        "upstream_inference_completions_cost": 0.000659988
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

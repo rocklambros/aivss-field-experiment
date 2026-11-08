@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L3-07",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L3-07",
+    "packet_path": "packets_v11/bridge/DV-L3-07.json",
+    "prompt_sha256": "274cc4c9e2633f530e26844d09d5402bd9ff75e2ee0f26d72c0cf4002cd8fa9f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:11.204572+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.17
+  },
+  "body": {
+    "id": "gen-1794074891-DnQcDwvceSw0I47oAUxt",
+    "object": "chat.completion",
+    "created": 1794074891,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"The default configuration calls no model; MCP agents are tool servers invoked directly by JSON-RPC, and the shadowing path is a tool-registration call, not natural language reaching a decision path.\",\n    \"CP\": \"The registry entry is replaced in-process and the lab profile states memory persistence is cross-session only for MemoryBot, with none elsewhere; the shadowed entry is not a durable memory store.\",\n    \"AP\": \"The effect is confined to the PluginBot registry entry for the named tool; no trust boundary into another agent, tenant, or principal is crossed.\",\n    \"RH\": \"The agent is a deterministic tool server with no evaluator, verifier, or reward channel on the path, and the lab profile confirms no model is called in the default configuration.\",\n    \"ES\": \"PluginBot accepts new tool definitions at run time with no signature or source check, and ProxyBot resolves any tool name, so the extension binding surface is dynamic and unvetted.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:738-785\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2159-2251\",\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\n      \"damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2227-2251\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:738-785\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\n      \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"high\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The attack is a single unauthenticated JSON-RPC tools/call request that registers a tool under an existing name, and the in-repo automated test runs without a fleet, so the exploit is fully scriptable.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"As implemented, the registry entry is replaced and keeps the original handler, so the advertised description of the tool is replaced rather than every call being intercepted or modified.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; PluginBot is a deterministic MCP tool server that accepts registrations and keeps the original handler, so there is no model-directed goal pursuit or action selection.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models PluginBot as an MCP tool server that accepts tool registrations with no verification; the documented behavior is a registry replacement, not a model pursuing goals or sequencing actions.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8128,
+      "completion_tokens": 929,
+      "total_tokens": 9057,
+      "cost": 0.000882135,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000882135,
+        "upstream_inference_prompt_cost": 0.000355392,
+        "upstream_inference_completions_cost": 0.000526743
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

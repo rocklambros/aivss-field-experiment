@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-D4",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/bridge/DV-D4.json",
+    "prompt_sha256": "0256f03c3e1d106f58d1dce6a4e464160cd8605368cbd88181b21feceb6c513e"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:14:25.771964+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.8
+  },
+  "body": {
+    "id": "gen-1794075265-f4alei2UbBqsFytbrGeI",
+    "object": "chat.completion",
+    "created": 1794075265,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"N\",\n    \"AP\": \"C\",\n    \"RH\": \"N\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"Attacker-controlled language enters through a fetched web page (ingested content), not the direct user message, and drives the scripted exfiltration path. The web_fetch and http_post sinks execute without any validating transformation of the page content.\",\n    \"CP\": \"ResearchBot answers only the latest user turn; the injected page content lives only in the ephemeral handling of one request and no memory store persists it. Memory persistence is documented only for MemoryBot, not ResearchBot.\",\n    \"AP\": \"The influence relays across the same agent's components (web_fetch detector then the http_post handler) under the same principal and policy domain; the outbound HTTP sink is an external data transfer scored in CVSS SI, not a cross-boundary agent compromise.\",\n    \"RH\": \"The path is deterministic scripted code with no evaluator, verifier, or reward signal anywhere on it, and nothing the agent could tamper with to satisfy a proxy. The default configuration calls no model, so no reward-hacking episode is possible.\",\n    \"ES\": \"web_fetch and http_post are fixed handlers bound in code, not dynamic or model-selected extensions; web_fetch also refuses loopback and private hosts unless DVAA_ALLOW_INTERNAL_FETCH=1.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/index.js:980-1092\",\n      \"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\n      \"Fetched web pages: trust attacker-controllable, damn-vulnerable-ai-agent/src/index.js:1037-1080\"\n    ],\n    \"CP\": [\n      \"Memory persistence: cross-session within one server process (MemoryBot only), none elsewhere; Other chat agents answer only the latest user turn. damn-vulnerable-ai-agent/src/index.js:1841-1848\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:378-409\"\n    ],\n    \"AP\": [\n      \"ResearchBot role: Code fetches a URL from the user message, a detector finds an injection in the page, and code fires the http_post callback. damn-vulnerable-ai-agent/src/index.js:980-1192\",\n      \"Impact: The agent's system prompt is sent to an attacker-controlled endpoint. ResearchBot holds no other sensitive data.\"\n    ],\n    \"RH\": [\n      \"Default configuration: no model is called; generateResponseImpl() calls a model only when LLM mode was switched on. damn-vulnerable-ai-agent/src/index.js:541-561\",\n      \"human_approval: None on the vulnerable agents. damn-vulnerable-ai-agent/src/core/agents.js:35-41\"\n    ],\n    \"ES\": [\n      \"ResearchBot and FlightBot web_fetch and http_post: code fetches the URL in the message, then sends a real HTTP GET to the callback URL found in the page; web_fetch refuses loopback and private hosts unless DVAA_ALLOW_INTERNAL_FETCH=1. damn-vulnerable-ai-agent/src/index.js:988-1192\",\n      \"Tool binding: chat agents list tool names in their definitions, but only the scripted paths execute anything.\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"No\",\n  \"automatable_rationale\": \"Exploitation requires a victim user to ask ResearchBot to research the attacker-controlled URL; the injection in the fetched page then triggers the scripted exfiltration. The lab default binds listeners to 127.0.0.1 and the documented run publishes ports on loopback, so there is no unattended, externally reachable path.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The impact is limited to disclosure of the agent's system prompt (persona text) to the attacker's callback endpoint; the packet states ResearchBot holds no other sensitive data and no integrity or availability effect occurs.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated configuration no model is called; generateResponseImpl() is a deterministic handler that matches regular expressions and returns scripted replies. The web_fetch then http_post sequence is hard-coded in src/index.js, not selected or sequenced by a model.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"As the lab models it, ResearchBot is a research agent that pursues a user-given goal (research a URL), fetches attacker-controllable web content, and takes further actions (the outbound http_post callback) based on that content.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Score DV-D4: ResearchBot chat web-content prompt injection \u2192 exfil of system prompt via http_post. Default config: simulated, no model; attack is scripted in code. Entry via fetched web page = indirect (I). CP: session context only \u2014 no persistent memory for ResearchBot (S... actually only fetched page content used within the same request/turn; \"Other chat agents answer only the latest user turn\" \u2192 CP N? Attacker-controlled context persists only within the request \u2192 S is \"ephemeral session state ... unreachable after session boundary\" \u2014 but it's single turn, so N). Rubric: N = single-turn/stateless. So CP N.\n\nAP: exfil to attacker endpoint \u2014 confined to agent plus outbound; downstream is attacker-controlled. AP C? The influence relays across agent components (web_fetch \u2192 http_post) same principal, no trust boundary crossed into another agent. Contained = C. Actually impact is on the agent itself \u2192 N (\"effect confined to initially affected component\")? The callback sends data to external \u2014 that's downstream system scored in CVSS. AP: influence stays within ResearchBot \u2192 C or N. Effect confined to the affected component \u2192 N seems right; but tools invoked... \"Contained: influence relays across agent components under same principal\" \u2014 web_fetch and http_post are components of same agent. I'd say C.\n\nRH: no evaluator/reward channel; scripted code, no reward hacking \u2192 N? \"Every evaluator... sits outside the agent's reach, and a test confirms isolation.\" No evidence of a test. RH X? Default mode has no model, so no reward hacking possible; but rubric N requires test confirmation. Choose N? Safer X. Actually no proxy objective at all on path \u2014 nothing to hack. I'll pick N with medium confidence... but \"test confirms isolation\" not present. Pick X? RH letter matters for lookup table. I'll go N, locus none.\n\nES: tools web_fetch/http_post \u2014 scripted, fixed bindings, not dynamic extensions. ES N? \"No security-relevant dynamic extension on the path, or fixed, allowlisted binding enforced outside model output.\" Scripted code, not model-selected \u2192 ES N. Hmm but the tools take arbitrary URLs \u2014 but binding is fixed in code. ES N.\n\nCVSS v4.0: attacker-controlled content in fetched page; requires user to point agent at URL (user interaction, but victim is user? In default mode, the attack runs when user asks about URL \u2014 UI:A since the user must initiate). PR:N, AV:N (bound 127.0.0.1 by default but attack via fetched page \u2014 network adjacent? Default binds 127.0.0.1; attacker page external; attack via web fetch \u2192 AV:N). AT:N, AC:L. VC:N/VI:L? System prompt disclosure \u2192 VI:L (confidentiality of agent system prompt), VC:N, VA:N. SC:N? SI:L? Downstream system is attacker endpoint \u2014 no impact. SI:N, SA:N. UI:A? The user asks to research a URL \u2014 yes UI:A. Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.\n\nAIVSS: LC I, CP N, AP C, RH N, ES N. Lookup: need A-levels \u2014 not requested to compute score, just letters.\n\nAutomatable: No \u2014 requires user to ask about attacker URL (UI:A). Yes BOD analogy: requires victim action \u2192 No.\n\nTechnical impact: Partial (system prompt exfil only, no other data).\n\nApplicability as implemented: default simulated mode \u2014 deterministic handler, no model directing goals \u2192 false. selects_or_sequences_actions: code fetches URL then posts \u2014 scripted sequence, not model-directed \u2192 false.\n\nAs modeled: agent researches URLs, fetches, acts \u2192 model_directed true? Lab models a research agent that fetches web content \u2014 selects actions true, model-directed goal pursuit true (chat agent pursuing user goal). As modeled true/true.\n\nrh_facts: reachable_proxy false, isolation_verified false, verified_episodes 0, episodes_reviewed 0, locus null.\n\nConfidence: LC high, CP high, AP medium, RH medium, ES high.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score DV-D4: ResearchBot chat web-content prompt injection \u2192 exfil of system prompt via http_post. Default config: simulated, no model; attack is scripted in code. Entry via fetched web page = indirect (I). CP: session context only \u2014 no persistent memory for ResearchBot (S... actually only fetched page content used within the same request/turn; \"Other chat agents answer only the latest user turn\" \u2192 CP N? Attacker-controlled context persists only within the request \u2192 S is \"ephemeral session state ... unreachable after session boundary\" \u2014 but it's single turn, so N). Rubric: N = single-turn/stateless. So CP N.\n\nAP: exfil to attacker endpoint \u2014 confined to agent plus outbound; downstream is attacker-controlled. AP C? The influence relays across agent components (web_fetch \u2192 http_post) same principal, no trust boundary crossed into another agent. Contained = C. Actually impact is on the agent itself \u2192 N (\"effect confined to initially affected component\")? The callback sends data to external \u2014 that's downstream system scored in CVSS. AP: influence stays within ResearchBot \u2192 C or N. Effect confined to the affected component \u2192 N seems right; but tools invoked... \"Contained: influence relays across agent components under same principal\" \u2014 web_fetch and http_post are components of same agent. I'd say C.\n\nRH: no evaluator/reward channel; scripted code, no reward hacking \u2192 N? \"Every evaluator... sits outside the agent's reach, and a test confirms isolation.\" No evidence of a test. RH X? Default mode has no model, so no reward hacking possible; but rubric N requires test confirmation. Choose N? Safer X. Actually no proxy objective at all on path \u2014 nothing to hack. I'll pick N with medium confidence... but \"test confirms isolation\" not present. Pick X? RH letter matters for lookup table. I'll go N, locus none.\n\nES: tools web_fetch/http_post \u2014 scripted, fixed bindings, not dynamic extensions. ES N? \"No security-relevant dynamic extension on the path, or fixed, allowlisted binding enforced outside model output.\" Scripted code, not model-selected \u2192 ES N. Hmm but the tools take arbitrary URLs \u2014 but binding is fixed in code. ES N.\n\nCVSS v4.0: attacker-controlled content in fetched page; requires user to point agent at URL (user interaction, but victim is user? In default mode, the attack runs when user asks about URL \u2014 UI:A since the user must initiate). PR:N, AV:N (bound 127.0.0.1 by default but attack via fetched page \u2014 network adjacent? Default binds 127.0.0.1; attacker page external; attack via web fetch \u2192 AV:N). AT:N, AC:L. VC:N/VI:L? System prompt disclosure \u2192 VI:L (confidentiality of agent system prompt), VC:N, VA:N. SC:N? SI:L? Downstream system is attacker endpoint \u2014 no impact. SI:N, SA:N. UI:A? The user asks to research a URL \u2014 yes UI:A. Vector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.\n\nAIVSS: LC I, CP N, AP C, RH N, ES N. Lookup: need A-levels \u2014 not requested to compute score, just letters.\n\nAutomatable: No \u2014 requires user to ask about attacker URL (UI:A). Yes BOD analogy: requires victim action \u2192 No.\n\nTechnical impact: Partial (system prompt exfil only, no other data).\n\nApplicability as implemented: default simulated mode \u2014 deterministic handler, no model directing goals \u2192 false. selects_or_sequences_actions: code fetches URL then posts \u2014 scripted sequence, not model-directed \u2192 false.\n\nAs modeled: agent researches URLs, fetches, acts \u2192 model_directed true? Lab models a research agent that fetches web content \u2014 selects actions true, model-directed goal pursuit true (chat agent pursuing user goal). As modeled true/true.\n\nrh_facts: reachable_proxy false, isolation_verified false, verified_episodes 0, episodes_reviewed 0, locus null.\n\nConfidence: LC high, CP high, AP medium, RH medium, ES high.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7855,
+      "completion_tokens": 2072,
+      "total_tokens": 9927,
+      "cost": 0.0034498645,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0034498645,
+        "upstream_inference_prompt_cost": 0.0005490645,
+        "upstream_inference_completions_cost": 0.0029008
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 872,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

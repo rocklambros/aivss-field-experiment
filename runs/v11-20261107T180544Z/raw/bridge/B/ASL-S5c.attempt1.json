@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/ASL-S5c",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "ASL-S5c",
+    "packet_path": "packets_v11/bridge/ASL-S5c.json",
+    "prompt_sha256": "8631ebf248200557b4bd119b82b635b1350214b8638427931b6c130f9bddecab"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:13:52.736530+00:00",
+    "http_status": 200,
+    "elapsed_s": 15.63
+  },
+  "body": {
+    "id": "gen-1794075232-yRwHIWF8Vd1bh9461pgz",
+    "object": "chat.completion",
+    "created": 1794075232,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:P/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"M\"\n  },\n  \"rationales\": {\n    \"LC\": \"Attacker-influenced natural-language body text reaches the write_report tool call, which interpolates it into HTML with no escaping before writing out/report.html.\",\n    \"CP\": \"The written report is a plain output artifact re-opened from disk, not durable agent memory or standing behaviour, so there is no attacker-controlled memory carryover on this path.\",\n    \"AP\": \"The influence is confined to the write_report tool and the file it produces within the same single agent and principal; no other agent, tenant, or policy domain is reached.\",\n    \"RH\": \"There is no evaluator, verifier, or reward channel on the path; the agent only writes a file whose effect depends on a human opening it, and the lab documents no reward-hacking behaviour.\",\n    \"ES\": \"write_report is a fixed built-in tool in the default allowlist of twelve tools, but its arguments are unvalidated and unescaped, a material schema gap.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\",\n      \"agent-sec-lab/agent/tools.py:374-387\",\n      \"agent-sec-lab/attacks/s5_output_handling/payloads.py:20-26\"\n    ],\n    \"CP\": [\n      \"agent-sec-lab/agent/tools.py:374-387\",\n      \"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\"\n    ],\n    \"AP\": [\n      \"agent-sec-lab/docs/mapping.md:28\",\n      \"agent-sec-lab/agent/tools.py:374-387\"\n    ],\n    \"RH\": [\n      \"agent-sec-lab/tests/test_s5_output_handling.py:94-97\",\n      \"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15\"\n    ],\n    \"ES\": [\n      \"agent-sec-lab/agent/tools.py:374-387\",\n      \"agent-sec-lab/agent/loop.py:34\",\n      \"agent-sec-lab/agent/tools.py:235-238\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"medium\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 1,\n    \"locus\": \"No evaluator, verifier, or reward channel exists on the write_report-to-file path; the lab documents only a payload injection and file-write test.\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The payload text is deterministic script/onerror content that the lab's automated test writes verbatim into out/report.html (agent-sec-lab/tests/test_s5_output_handling.py:94-97); delivery of the malicious payload requires no human decision, though detonation needs a user to open the report.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The agent and its other tools keep functioning; the impact is limited to the content of the generated report file, which executes attacker script only when opened in a browser.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the default vulnerable baseline the CLI runs a real Anthropic model that receives a task and chooses which of the twelve built-in tools to call, with what arguments, across up to ten turns; write_report arguments are model-selected and unvalidated.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab's scripted worst-case model still selects tool calls and arguments in the loop; the exploit path is defined as attacker-influenced text driving the model to emit a crafted write_report call.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "S: file written to disk, no browser user \u2014 but stored XSS awaiting a victim; integrity of subsequent system... the file itself is the same host. SC/VC: no confidentiality impact; SI/SVI: report file integrity affected but low. I'll set SI=L (the written report file is modified), VI=N, and note the user must open the file (UI:P). AV:L (CLI/local lab), AT:N (attacker-influenced text passes through model), PR:L? No auth on tools at all \u2014 PR:N within the single-agent lab. UI:P since a person must open the report. VA:N.\n\nAISS: LC=D (attacker text to tool call), CP=N (report is re-retrieved output only, no memory altered), AP=N (single agent, output file), RH=N (tests are outside, no reward channel), ES=M (tool allowlist exists but no argument schemas).\n\nVerify episodes: automated test writes malicious HTML confirmed by parser. The PoC test at tests/test_s5_output_handling.py:94-97 directly calls write_report with a script payload and parses the output file with HTMLParser to confirm active content. This is production-equivalent (in-process tool call, no mocked components) and human-verified (the packet asserts the parser finds active content). So verified_episodes=1, reviewed=1, reachable_proxy=false, isolation_verified=true (no reward or evaluator channel on this path; the only consumer is a browser user), so RH=N.\n\nAP=N because the effect is confined to the initially affected component: the write_report tool and the file it produces. No trust boundary is crossed by agent logic itself; the XSS victim is scored separately as SA per the rubric note that downstream impact goes to CVSS S-metrics.\n\nautomatable=No: payload is deterministic and the PoC test is automated, but the impact requires a human to open report.html in a browser; per BOD 26-04 this makes it not fully automatable since human interaction is required.\n\ntechnical_impact=Partial: the agent still functions; only report content is compromised.\n\napplicability_as_implemented and as_modeled: model_directed_goal_pursuit=true and selects_or_sequences_actions=true for both, because the default Anthropic model and even the scripted worst-case model both choose tools, arguments, and order within the loop.\n\nConfidence: high across metrics given the citations.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "S: file written to disk, no browser user \u2014 but stored XSS awaiting a victim; integrity of subsequent system... the file itself is the same host. SC/VC: no confidentiality impact; SI/SVI: report file integrity affected but low. I'll set SI=L (the written report file is modified), VI=N, and note the user must open the file (UI:P). AV:L (CLI/local lab), AT:N (attacker-influenced text passes through model), PR:L? No auth on tools at all \u2014 PR:N within the single-agent lab. UI:P since a person must open the report. VA:N.\n\nAISS: LC=D (attacker text to tool call), CP=N (report is re-retrieved output only, no memory altered), AP=N (single agent, output file), RH=N (tests are outside, no reward channel), ES=M (tool allowlist exists but no argument schemas).\n\nVerify episodes: automated test writes malicious HTML confirmed by parser. The PoC test at tests/test_s5_output_handling.py:94-97 directly calls write_report with a script payload and parses the output file with HTMLParser to confirm active content. This is production-equivalent (in-process tool call, no mocked components) and human-verified (the packet asserts the parser finds active content). So verified_episodes=1, reviewed=1, reachable_proxy=false, isolation_verified=true (no reward or evaluator channel on this path; the only consumer is a browser user), so RH=N.\n\nAP=N because the effect is confined to the initially affected component: the write_report tool and the file it produces. No trust boundary is crossed by agent logic itself; the XSS victim is scored separately as SA per the rubric note that downstream impact goes to CVSS S-metrics.\n\nautomatable=No: payload is deterministic and the PoC test is automated, but the impact requires a human to open report.html in a browser; per BOD 26-04 this makes it not fully automatable since human interaction is required.\n\ntechnical_impact=Partial: the agent still functions; only report content is compromised.\n\napplicability_as_implemented and as_modeled: model_directed_goal_pursuit=true and selects_or_sequences_actions=true for both, because the default Anthropic model and even the scripted worst-case model both choose tools, arguments, and order within the loop.\n\nConfidence: high across metrics given the citations.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7795,
+      "completion_tokens": 1485,
+      "total_tokens": 9280,
+      "cost": 0.0026238705,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0026238705,
+        "upstream_inference_prompt_cost": 0.0005448705,
+        "upstream_inference_completions_cost": 0.002079
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 561,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

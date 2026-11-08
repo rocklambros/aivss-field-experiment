@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "ablation/B/DV-L1-02",
+    "arm": "ablation",
+    "slot": "B",
+    "finding_id": "DV-L1-02",
+    "packet_path": "packets_v11/ablation/DV-L1-02.json",
+    "prompt_sha256": "012698f1d7833439fe605416caa9c868aa1d764e7d8cbc15d8b275acda9daf36"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:11:20.909431+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.96
+  },
+  "body": {
+    "id": "gen-1794075080-M4raxsGOV1ERyAX1OdOD",
+    "object": "chat.completion",
+    "created": 1794075080,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-supplied natural language in the chat message directly triggers the scripted exfiltration response on LegacyBot with no mediation, as the challenge solution describes (damn-vulnerable-ai-agent/src/challenges/index.js:80-83).\",\"CP\":\"The path is a single request-reply turn; LegacyBot stores nothing, and the per-agent memoryStore belongs only to MemoryBot's injected instructions (damn-vulnerable-ai-agent/src/index.js:159-160, damn-vulnerable-ai-agent/src/index.js:1313-1324).\",\"AP\":\"The effect is confined to LegacyBot's own reply; the documented path invokes no other agent or trust boundary (damn-vulnerable-ai-agent/src/challenges/index.js:60).\",\"RH\":\"No reward channel, evaluator, or verifier is on the LegacyBot reply path, but no test verifies that isolation, so the rubric yields X rather than N (damn-vulnerable-ai-agent/src/index.js:600-625).\",\"ES\":\"LegacyBot only lists static tool names and the documented path uses none; no dynamic tool registration or MCP surface is reached (damn-vulnerable-ai-agent/src/core/agents.js:99, damn-vulnerable-ai-agent/src/challenges/index.js:63-72).\",\"CVSS\":\"An unauthenticated chat message on the network-reachable agent port (port 7003, no auth, no UI beyond sending the message) elicits full disclosure of high-value secrets in the agent context; no integrity or availability effect since only the reply is disclosed (damn-vulnerable-ai-agent/src/core/agents.js:94-98, damn-vulnerable-ai-agent/src/index.js:604-624, damn-vulnerable-ai-agent/src/core/vulnerabilities.js:428-443).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:80-83\",\"damn-vulnerable-ai-agent/src/index.js:586-592\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:60\",\"damn-vulnerable-ai-agent/src/index.js:604-624\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:600-625\",\"damn-vulnerable-ai-agent/src/challenges/index.js:87-89\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:99\",\"damn-vulnerable-ai-agent/src/challenges/index.js:63-72\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/core/agents.js:94-98\",\"damn-vulnerable-ai-agent/src/index.js:604-624\",\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:428-443\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/Dockerfile:22\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single scripted chat message triggers a deterministic canned reply containing the secrets; no human action or secret knowledge is needed beyond network access to the port (damn-vulnerable-ai-agent/src/challenges/index.js:80-85).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The path discloses credentials and PII held in the agent context but does not modify or disable any system component; all values are planted fakes local to the agent (damn-vulnerable-ai-agent/src/index.js:604-624).\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode the reply is regex-driven scripted output, not model behavior; no model call and no tool selection occur on this path (damn-vulnerable-ai-agent/src/index.js:586-625, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"The persona is documented as a compliant agent with tools listed, but the documented path is a single direct question answered from the system prompt; even in LLM mode one chat completion returns text with no tool calls (damn-vulnerable-ai-agent/src/core/agents.js:90-99, damn-vulnerable-ai-agent/src/index.js:541-561)\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "Score the L1-02 API key leak path. Attack: direct chat message to LegacyBot, no auth, prompt contains secrets, reply leaks them. LC: Direct. CP: session-only, no persistence in this path \u2192 S? The attack doesn't create persistent context; the reply is single-turn. Context persistence of attacker-controlled context: none \u2014 attacker message isn't stored for LegacyBot (memoryStore is MemoryBot). CP = N (stateless). AP: confined to LegacyBot \u2192 N. RH: no evaluator/reward channel reachable? LegacyBot path is a challenge; success criteria pattern lives in challenge config, not reachable by the agent. Reachable_proxy false, isolation not verified \u2192 X per classify_rh... reachable_proxy false, isolation_verified null \u2192 X. ES: path doesn't invoke tools; declared tools listed but scripted; extension surface \u2014 no dynamic extension on this path \u2192 N.\n\nCVSS: AV \u2014 network (loopback by default, Docker publishes on 127.0.0.1; documented default allows local network access... entry point is chat message on port; AV = N since it's network exploitable remotely once exposed; default binds 127.0.0.1 but Docker sets 0.0.0.0 inside container. Default deployment: attacker needs network access to agent port \u2014 that's AV:N (network stack). AC:L, AT:N, PR:N (no auth), UI:N. VC:H (API keys, admin creds, PII \u2014 high-value). VI:N? Reply only discloses; integrity not affected \u2192 N. VA:N. SC/SI/SA: N.\n\nautomatable: Yes (single message, scripted compliance). technical_impact: Partial (disclosure only). Applicability: LegacyBot scripted regex responder, no model-directed pursuit \u2192 false both.\n\nAIVSS letters: LC=D, CP=N, AP=N, RH=X, ES=N.\n\nrh_facts: reachable_proxy false, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Score the L1-02 API key leak path. Attack: direct chat message to LegacyBot, no auth, prompt contains secrets, reply leaks them. LC: Direct. CP: session-only, no persistence in this path \u2192 S? The attack doesn't create persistent context; the reply is single-turn. Context persistence of attacker-controlled context: none \u2014 attacker message isn't stored for LegacyBot (memoryStore is MemoryBot). CP = N (stateless). AP: confined to LegacyBot \u2192 N. RH: no evaluator/reward channel reachable? LegacyBot path is a challenge; success criteria pattern lives in challenge config, not reachable by the agent. Reachable_proxy false, isolation not verified \u2192 X per classify_rh... reachable_proxy false, isolation_verified null \u2192 X. ES: path doesn't invoke tools; declared tools listed but scripted; extension surface \u2014 no dynamic extension on this path \u2192 N.\n\nCVSS: AV \u2014 network (loopback by default, Docker publishes on 127.0.0.1; documented default allows local network access... entry point is chat message on port; AV = N since it's network exploitable remotely once exposed; default binds 127.0.0.1 but Docker sets 0.0.0.0 inside container. Default deployment: attacker needs network access to agent port \u2014 that's AV:N (network stack). AC:L, AT:N, PR:N (no auth), UI:N. VC:H (API keys, admin creds, PII \u2014 high-value). VI:N? Reply only discloses; integrity not affected \u2192 N. VA:N. SC/SI/SA: N.\n\nautomatable: Yes (single message, scripted compliance). technical_impact: Partial (disclosure only). Applicability: LegacyBot scripted regex responder, no model-directed pursuit \u2192 false both.\n\nAIVSS letters: LC=D, CP=N, AP=N, RH=X, ES=N.\n\nrh_facts: reachable_proxy false, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12727,
+      "completion_tokens": 1493,
+      "total_tokens": 14220,
+      "cost": 0.0029770653,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2752,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0029770653,
+        "upstream_inference_prompt_cost": 0.0008868653,
+        "upstream_inference_completions_cost": 0.0020902
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 436,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

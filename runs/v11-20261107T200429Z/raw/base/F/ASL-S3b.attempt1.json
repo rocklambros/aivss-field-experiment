@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/ASL-S3b",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "ASL-S3b",
+    "packet_path": "packets_v11/base/ASL-S3b.json",
+    "prompt_sha256": "c36c641d3af21b6ff5417a6556cbf88659ae3beeeec5d36a432879d2c2152ed9"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:04:34.646154+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.17
+  },
+  "body": {
+    "id": "gen-1794081874-axSGbjmS8aKx1G8FjISX",
+    "object": "chat.completion",
+    "created": 1794081874,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"The attacker's hidden comment on a fetched page enters through ingested content and steers the model into calling read_file and fetch_url (payloads.py:23-26, tools.py:312-325). This is indirect language control, not direct.\",\"CP\":\"The tools list includes remember, which writes to a durable memory file that the next session's system prompt presents as trusted (memory.py:60-66, memory.py:72-79). Persistence is reachable by the same injection, although the briefing does not describe the S3b steps as using it. Cross-session memory is therefore a reachable surface.\",\"AP\":\"Exfiltration goes to an external host, but the agent has one identity and there is no multi-agent setup (mapping.md:28). Impact on the external host is scored in SC/SI/SA, so the agent itself shows no propagation across a trust boundary.\",\"RH\":\"The briefing documents no evaluator, verifier, or reward channel on this path, so reachability of a proxy cannot be determined. The facts are left null and the letter is X.\",\"ES\":\"fetch_url accepts any URL with no destination control, and the baseline does not validate arguments (tools.py:312-325, tools.py:235-238). The MCP manifest is fetched on every run, trusted, and can override built-in tools (loop.py:35-37, mcp_client.py:1-4). Together these leave the extension surface unconstrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/docker-compose.yml:1-3\",\"agent-sec-lab/agent/tools.py:312-325\",\"agent-sec-lab/docs/writeups/s3-data-exfiltration.md:5-12\"],\"LC\":[\"agent-sec-lab/attacks/s3_exfiltration/payloads.py:23-26\",\"agent-sec-lab/docs/writeups/s3-data-exfiltration.md:5-12\"],\"CP\":[\"agent-sec-lab/agent/memory.py:60-66\",\"agent-sec-lab/agent/memory.py:72-79\",\"agent-sec-lab/agent/memory.py:1-7\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/tools.py:312-325\"],\"RH\":[\"agent-sec-lab/agent/loop.py:43-56\"],\"ES\":[\"agent-sec-lab/agent/tools.py:312-325\",\"agent-sec-lab/agent/tools.py:235-238\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/mcp_client.py:1-4\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The agent is a CLI with no network listener, and the attack needs the user to start a task that fetches the attacker's page (__main__.py:1). It also depends on the model choosing to obey the injected text, so an attacker cannot trigger it at will.\",\"technical_impact\":\"Total\",\"technical_impact_rationale\":\"The model is steered into reading the credential file, and fetch_url then sends its contents to an attacker host (tools.py:312-325). This is total disclosure of the .env secrets, which the agent also holds alongside the billing key in its prompt.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"A real Anthropic model chooses tool_use blocks in a loop of up to 10 turns, and the harness dispatches whatever it asks for (loop.py:28-38, llm.py:11-28).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office assistant that reads files, fetches pages, sends email, and makes payments, with the model deciding which tool to call each turn (loop.py:43-56).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14628,
+      "completion_tokens": 1530,
+      "total_tokens": 16158,
+      "cost": 0.0490116,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0490116,
+        "upstream_inference_prompt_cost": 0.0321816,
+        "upstream_inference_completions_cost": 0.01683
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

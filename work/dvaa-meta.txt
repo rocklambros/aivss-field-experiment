@@ -1,0 +1,10 @@
+exit_code=1
+wall_s=6.353
+killed=no
+node_modules=no
+node -v=v26.12.0 exit=0
+npm -v=11.20.0 exit=0
+command=OPENA2A_TELEMETRY=off npm test
+tmpdir=/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/work/dvaa-tmp
+extra_env=NO_UPDATE_NOTIFIER=1 npm_config_update_notifier=false npm_config_fund=false npm_config_audit=false npm_config_offline=true
+unset=GITHUB_PERSONAL_ACCESS_TOKEN

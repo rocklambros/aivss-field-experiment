@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-L2-06",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-L2-06",
+    "packet_path": "packets_v11/base/DV-L2-06.json",
+    "prompt_sha256": "71280ba529c29a48b14b29dd911a32bd1c72aee180714eabd822eaab6c3d6c66"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:07:53.818836+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.16
+  },
+  "body": {
+    "id": "gen-1794074873-wS97EMBqivp0LjArd7Oo",
+    "object": "chat.completion",
+    "created": 1794074873,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker sends the padding and follow-up request directly in a chat message to LongwindBot with no authentication, so attacker-supplied language reaches the disclosure path without mediation (damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365).\",\"CP\":\"The path is a single chat request answered from a canned response; no attacker-controlled context persists across sessions on this path (damn-vulnerable-ai-agent/src/index.js:683-698).\",\"AP\":\"The effect is confined to LongwindBot's reply; no other agent, tool, or trust boundary is crossed by this documented path (damn-vulnerable-ai-agent/src/core/agents.js:707).\",\"RH\":\"No evaluator, verifier, or reward channel appears on this path; the path only discloses the system prompt, so reachability of a proxy cannot be determined from the briefing.\",\"ES\":\"LongwindBot's declared tools (search, calculator) are static names and none execute code on this path; the documented path uses no dynamic extension (damn-vulnerable-ai-agent/src/core/agents.js:707).\",\"CVSS\":\"Default deployment binds 127.0.0.1 and publishes ports only to the local machine, so the attacker needs a local session (AV:L) with no auth (PR:N) and no other human action (UI:N). The agent discloses its system prompt and the credentials embedded in it, a high confidentiality loss; no integrity or availability impact occurs and the planted credentials belong to the vulnerable system itself.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365\",\"damn-vulnerable-ai-agent/src/challenges/index.js:383-388\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:683-698\"],\"AP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:707\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:389-391\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:707\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:683-698\",\"damn-vulnerable-ai-agent/src/core/agents.js:700-706\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The attack is a single scripted HTTP request with no authentication, human approval, or tool gating; regex detection triggers the disclosure automatically (damn-vulnerable-ai-agent/src/index.js:683-698).\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The agent discloses its system prompt and embedded credentials but no code execution, modification, or denial of service occurs on this path.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode there is no model at all; the reply is a canned scripted response keyed by regex detection, so no model-directed goal pursuit or action selection exists (damn-vulnerable-ai-agent/src/llm/provider.js:60-63, damn-vulnerable-ai-agent/src/index.js:683-698).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":false,\"confidence\":\"medium\",\"rationale\":\"In documented LLM mode one chat completion per request uses the agent persona plus the user message, so the model pursues the conversational goal; no tools are passed, so it returns text only and selects no actions (damn-vulnerable-ai-agent/src/index.js:541-561).\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": "Straightforward chat-based padding. LC: D (direct attacker message to privileged path). CP: N (stateless chat). AP: N. RH: no evaluator in this path; reachable_proxy? No proxy/evaluator on path \u2014 nothing for reward hacking. classify_rh with reachable_proxy=false, isolation_verified=null \u2192 X. Hmm. There's no evaluator channel; path is pure info disclosure. Set reachable_proxy false, isolation_verified null \u2192 X. ES: tools are search/calculator, not on path \u2014 N. Locus null.\n\nCVSS: AV: docker publishes on 127.0.0.1 by default \u2192 local machine attacker? Attacker needs network access to agent port; default binds loopback, so attacker is on same machine \u2192 AV:L (local session) or N? Documented default: loopback. AV:L. PR:N, UI:N, AT:N, AC:L. VC:H (system prompt with credentials, fake ones though \u2014 planted fake creds; still disclosure of specific high-value info in context). VI:H? No modification; integrity none. VA:N. SC/SI/SA: N.\n\nTechnical impact: Partial (info disclosure only).",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Straightforward chat-based padding. LC: D (direct attacker message to privileged path). CP: N (stateless chat). AP: N. RH: no evaluator in this path; reachable_proxy? No proxy/evaluator on path \u2014 nothing for reward hacking. classify_rh with reachable_proxy=false, isolation_verified=null \u2192 X. Hmm. There's no evaluator channel; path is pure info disclosure. Set reachable_proxy false, isolation_verified null \u2192 X. ES: tools are search/calculator, not on path \u2014 N. Locus null.\n\nCVSS: AV: docker publishes on 127.0.0.1 by default \u2192 local machine attacker? Attacker needs network access to agent port; default binds loopback, so attacker is on same machine \u2192 AV:L (local session) or N? Documented default: loopback. AV:L. PR:N, UI:N, AT:N, AC:L. VC:H (system prompt with credentials, fake ones though \u2014 planted fake creds; still disclosure of specific high-value info in context). VI:H? No modification; integrity none. VA:N. SC/SI/SA: N.\n\nTechnical impact: Partial (info disclosure only).",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12686,
+      "completion_tokens": 1160,
+      "total_tokens": 13846,
+      "cost": 0.0025079994,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2752,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0025079994,
+        "upstream_inference_prompt_cost": 0.0008839994,
+        "upstream_inference_completions_cost": 0.001624
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 237,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

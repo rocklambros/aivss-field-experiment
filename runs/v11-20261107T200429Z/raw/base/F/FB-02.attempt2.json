@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/FB-02",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "FB-02",
+    "packet_path": "packets_v11/base/FB-02.json",
+    "prompt_sha256": "73eb898774641ce16a0c246c3438e677978f649d86bee9a6510c3ac77e37cad3"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:23.895474+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.0
+  },
+  "body": {
+    "id": "gen-1794081983-NTWcmpQE6lcWoMWPDu0j",
+    "object": "chat.completion",
+    "created": 1794081983,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-written invoice description is returned to the model as a tool result by get_invoice_details and influences the approve_invoice decision. This is ingested content, not direct chat, so Indirect fits. Nothing mediates the description before the model sees it; the regex detector only sets a flag.\",\"CP\":\"The invoice row persists, but the path does not alter agent memory or standing behaviour. Each run builds a fresh messages list. The custom_goals persistence belongs to a different path (config write), not this one.\",\"AP\":\"Effect stays within the FinBot invoice-processing component, which writes the invoice row. No other agent, tenant or principal is shown being influenced on this path.\",\"RH\":\"No evaluator, verifier or reward channel is identified in the briefing for this path. The detector flag is not a reward signal, and the CTF flag logic does not show the agent optimizing against it. Evidence cannot determine reachability, so X.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers or plugins. The tool set is fixed and not model-extensible, so the extension surface is narrow.\",\"CVSS\":\"The endpoint is unauthenticated and bound to 0.0.0.0, so AV:N, PR:N and UI:N. AC:L because the attacker only submits text. AT:P because success depends on the model accepting the directive, which is non-deterministic and has no stated success rate. Impact is high integrity on the vulnerable system: an invoice that should go to review is approved with payment_processed true. No confidentiality or availability impact, and no subsequent-system impact is shown. The attacker is an anonymous party and does not own the affected asset.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:141-147\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/main.py:18\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"low\",\"ES\":\"high\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The unauthenticated JSON endpoint can be scripted end to end: register a vendor, then submit an invoice. The model's acceptance is non-deterministic, but retries are unlimited and cheap.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker can cause approval and payment_processed on invoices they submit, but not total control of the system. The effect is limited to invoice status integrity.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"By default a gpt-4.1-mini loop of up to 5 iterations chooses tools with tool_choice auto, and the model decides between approve, reject and review. The rule-based fallback applies only when the OpenAI client fails to initialize.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant whose goals are defined in natural language and can be influenced through invoice content.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16696,
+      "completion_tokens": 1569,
+      "total_tokens": 18265,
+      "cost": 0.0539902,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0539902,
+        "upstream_inference_prompt_cost": 0.0367312,
+        "upstream_inference_completions_cost": 0.017259
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

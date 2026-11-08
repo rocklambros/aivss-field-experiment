@@ -1,0 +1,10 @@
+# Round 1 Security Architect, raw (condensed)
+1. RH facts rewritten to rater letter (score_and_agree.py:124-133): 34/144 rows overwritten, 30 set isolation_verified true when rater said false; 25/48 adjudicated RH differ from classify_rh of rater facts; all provisional false. Critical, High conf. Fix: keep facts, letter = classify_rh(facts), log defect; recompute H5.
+2. Applicability forced true with "scored as modeled" rationale though 13 DVAA fail as modeled for all 3 raters, 21 for >=2. Subset passing as modeled by majority: 25/27 vs 14/27, uplift 1.51 (survives). High. Fix: gate-state field; report H1/H2/H10 on gate-passing subset plus all.
+3. AV framing missing: DVAA A gave AV:N 25/25, C AV:L 24/25; adjudicated N 17/L 8 though one BIND_HOST; index.js:1562-1564 wildcard CORS on agent routes hidden by profile. Uniform N vs L flips CVSS band on 18/25 DVAA. High. Fix: correct profile exposure, AV rule in packets, sensitivity.
+4. MemoryBot CP:C against rubric exclusion; profile wording "cross-session within one server process" seeded it; DV-L2-04, L2-05, L3-03 reach A2 only via CP:C. High, med-high. Fix: factual profile text; re-score.
+5. FB-04 E:A from numeric config via no-key fallback, lead remapped JSON (mapping_note), custom_goals empty; LC:D justified by goals text not in observed run. FB-03 E:P though fallback ignores goals, decision human review. High. Fix: FB-04 E:P max or separate finding; FB-03 E:U unless effect shown.
+6. DVAA E:P from in_repo alone including PoCs lead marked unreachable/unimplemented (L2-01, L2-07, L3-03, L3-08, L4-02, D4). DVAA passing tests earn nothing vs ASL E:A. Medium. Fix: E from static check; one rule across labs.
+7. publicly_exposed hardcoded false; FinBot binds 0.0.0.0 with public instance. Medium (BOD track only). Fix: from profile.
+8. ASL direct-user paths (S6a, S6d, S2a mixes AV:L/PR:L with LC:I) score disclosure to the asset owner. Medium. Fix: principals table, split paths.
+9. Vulnerable vs subsequent system inconsistently applied; ASL-S1 vs S3c same path group differ; SC N on 43/48; AP Lateral defers to SC never set. Medium. Fix: per-lab system boundary rule, UI rule.

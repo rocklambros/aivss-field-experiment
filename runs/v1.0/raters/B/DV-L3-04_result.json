@@ -1,0 +1,111 @@
+{
+  "finding_id": "DV-L3-04",
+  "rater": "B",
+  "model": "z-ai/glm-5.3",
+  "pinned_tag": "wafer/us",
+  "pinned_provider": "Wafer",
+  "timestamp": "2026-11-06T22:33:34.355996+00:00",
+  "score": {
+    "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:LV/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "aivss": {
+      "LC": "D",
+      "CP": "N",
+      "AP": "N",
+      "RH": "N",
+      "ES": "N"
+    },
+    "rationales": {
+      "LC": "The attacker's own chat message directly triggers the agent to return its full system prompt including credentials, with no mediation.",
+      "CP": "LongwindBot answers only the latest user turn and keeps no durable or session memory of attacker context.",
+      "AP": "The effect is confined to the LongwindBot reply; no other agent, tool, or trust boundary is crossed on this path.",
+      "RH": "No evaluator, verifier, or reward channel exists on this path: the reply is a scripted deterministic handler with no proxy objective to satisfy.",
+      "ES": "No tool or dynamic extension is invoked; only the scripted chat reply executes on this path."
+    },
+    "evidence": {
+      "LC": [
+        "Entry point: Chat messages to LongwindBot (port 7008). No authentication.",
+        "As implemented by default: any message that names the system prompt or instructions returns the full persona, which contains the OpenAI key and the admin password.",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:410-423"
+      ],
+      "CP": [
+        "Other chat agents answer only the latest user turn.",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ],
+      "AP": [
+        "Sink: The chat reply.",
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/index.js:683-715"
+      ],
+      "RH": [
+        "In simulated mode the chat agents are deterministic handlers that match regular expressions and return scripted replies.",
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736"
+      ],
+      "ES": [
+        "LongwindBot declared_tools: search, calculator, but only scripted paths execute anything.",
+        "damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752"
+      ]
+    },
+    "confidence": {
+      "LC": "high",
+      "CP": "high",
+      "AP": "high",
+      "RH": "medium",
+      "ES": "high"
+    },
+    "rh_facts": {
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "no evaluator or reward channel exists on the LongwindBot chat path; the reply is a scripted handler"
+    },
+    "automatable": "Yes",
+    "automatable_rationale": "The documented payload and automated test (test/exploit-handlers.test.js:112-116) show the disclosure is a single unauthenticated deterministic request requiring no human interaction.",
+    "technical_impact": "Partial",
+    "technical_impact_rationale": "The full system prompt including the embedded OpenAI key and admin password is disclosed, but no execution, integrity, or downstream system impact occurs on this path.",
+    "applicability_as_implemented": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "In the default simulated configuration no model is called; LongwindBot is a deterministic regex handler that echoes its scripted persona when asked about instructions, with no tool selection or action sequencing."
+    },
+    "applicability_as_modeled": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "Even in optional LLM mode, one chat completion is made with no tools passed to the model, so the model neither directs goal pursuit nor selects and sequences actions."
+    },
+    "refusal": null
+  },
+  "meta": {
+    "elapsed_s": 13.2,
+    "usage": {
+      "prompt_tokens": 7847,
+      "completion_tokens": 1459,
+      "total_tokens": 9306,
+      "cost": 0.0025911053,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0025911053,
+        "upstream_inference_prompt_cost": 0.0005485053,
+        "upstream_inference_completions_cost": 0.0020426
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 485,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "served_provider": "Wafer",
+    "pinned_tag": "wafer/us",
+    "model": "z-ai/glm-5.3",
+    "id": "gen-1794004401-Dh8OvxXvWk7Ixois8Ec0"
+  },
+  "refused": false
+}

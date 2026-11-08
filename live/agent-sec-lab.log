@@ -1,0 +1,26 @@
+Using CPython 3.13.7
+Creating virtual environment at: .venv
+Downloading anthropic (2.0MiB)
+ Downloaded anthropic
+Installed 21 packages in 87ms
+============================= test session starts ==============================
+platform darwin -- Python 3.13.7, pytest-9.1.1, pluggy-1.7.0
+rootdir: /Users/klambros/github_projects/vulnerable_agents/agent-sec-lab
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 182 items / 1 deselected / 181 selected
+
+tests/test_baseline.py .....                                             [  2%]
+tests/test_demo_build.py ..                                              [  3%]
+tests/test_s1_indirect_injection.py ........                             [  8%]
+tests/test_s2_over_permissioned.py .....................                 [ 19%]
+tests/test_s3_exfiltration.py .................x.......                  [ 33%]
+tests/test_s4_mcp_rug_pull.py ..............x                            [ 41%]
+tests/test_s5_output_handling.py ....................................... [ 63%]
+...........                                                              [ 69%]
+tests/test_s6_secrets_leakage.py ...................                     [ 80%]
+tests/test_s7_human_in_the_loop.py ................                      [ 88%]
+tests/test_s8_memory_poisoning.py ....................                   [100%]
+
+=========== 179 passed, 1 deselected, 2 xfailed in 116.90s (0:01:56) ===========

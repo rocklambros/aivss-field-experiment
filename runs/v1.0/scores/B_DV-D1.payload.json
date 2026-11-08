@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-D1",
+  "path_id": "dvaa/ragbot/chat/poisoned-indexed-document/submit-to-index-exfil",
+  "title": "RAG-poisoned URL exfiltration, APWN-DE-003 (RAGBot, dvaa demo aim-ab)",
+  "summary": "The knowledge base contents, including admin credentials and personal data, leave the agent to an attacker-chosen URL.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:N/AP:C/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-controlled language enters through ingested document content (the poisoned indexed document / BEGIN INDEXED DOCUMENT text) that drives the submit_to_index HTTP sink, i.e., a retrieved-content path rather than a direct command to a privileged handler.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:12-57",
+        "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+        "damn-vulnerable-ai-agent/README.md:216-259"
+      ]
+    },
+    "CP": {
+      "rationale": "RAGBot answers only the latest user turn from a static three-document knowledge base with no ingestion path and no durable attacker-controlled memory, so there is no context carryover between requests.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-376",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect stays inside the RAGBot component and its same-principal tool boundary; the outbound HTTP GET is scored as downstream impact, and no other agent, tenant, or policy domain is entered by the code path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:293-319",
+        "damn-vulnerable-ai-agent/src/core/agents.js:301-332"
+      ]
+    },
+    "RH": {
+      "rationale": "The path is deterministic scripted code with no evaluator, verifier, or reward channel for the agent to satisfy; there is no proxy objective on the submit_to_index path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+        "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:41-57"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "submit_to_index is a reachable scripted tool whose outbound URL and arguments are taken directly from the injected text with no independent allowlist, schema, or credential constraint.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1200-1250",
+        "damn-vulnerable-ai-agent/src/index.js:293-319"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. Even the lab's modeled LLM mode passes no tools to the model and keeps the RAG exfiltration path scripted in code, so the agent as modeled never selects or sequences tools.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:1194-1271",
+      "damn-vulnerable-ai-agent/src/index.js:293-319",
+      "damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:59-75",
+      "damn-vulnerable-ai-agent/src/core/agents.js:301-332"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:27:39.548325+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:27:39.548325+00:00"
+  }
+}

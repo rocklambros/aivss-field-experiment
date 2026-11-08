@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L3-01",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L3-01",
+    "packet_path": "packets_v11/bridge/DV-L3-01.json",
+    "prompt_sha256": "1c785631a33b1da64cc936c8a36852b8a67637cb7279858931d4db8294d333f0"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:07.867526+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.33
+  },
+  "body": {
+    "id": "gen-1794074887-QrdJk5mRdORkbBozRZV2",
+    "object": "chat.completion",
+    "created": 1794074887,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"N\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message reaches the RAGBot handler and the scripted exfiltration reply path directly, with no independently enforced transformation reducing language to validated fields (damn-vulnerable-ai-agent/src/core/agents.js:301-332, damn-vulnerable-ai-agent/src/index.js:1285-1290).\",\"CP\":\"RAGBot answers only the latest user turn; the knowledge base is static with no ingestion path, and cross-session persistence exists only in MemoryBot, not on this path (damn-vulnerable-ai-agent/src/core/agents.js:327-331, damn-vulnerable-ai-agent/src/index.js:1841-1848).\",\"AP\":\"The effect is confined to the RAGBot component and its reply; no handoff or trust-boundary crossing is implemented on this path (damn-vulnerable-ai-agent/src/index.js:1711-1770).\",\"RH\":\"No evaluator, verifier, or reward channel is on this path; the agent is a deterministic regex handler returning scripted replies, so no proxy objective is reachable (damn-vulnerable-ai-agent/src/core/agents.js:301-332, damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106).\",\"ES\":\"No dynamic or unvetted extension is bound on this path; submit_to_index is a scripted outbound call and the chat agent executes no model-selected tools (damn-vulnerable-ai-agent/src/index.js:293-319, damn-vulnerable-ai-agent/src/core/agents.js:747-752).\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/core/agents.js:301-332\",\"damn-vulnerable-ai-agent/src/index.js:1285-1290\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1711-1770\"],\"RH\":[\"damn-vulnerable-ai-agent/src/core/agents.js:301-332\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:72-106\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:293-319\",\"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The path is a single unauthenticated HTTP chat request with a documented payload and an automated test, so the attack is fully scriptable without human interaction.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The reply discloses internal knowledge base documents including an admin password and an SSN, but no code execution, integrity, or availability impact is demonstrated.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"rationale\":\"In the default simulated mode no model is called; RAGBot is a deterministic regex handler that returns a scripted reply listing the three static documents.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"rationale\":\"The lab models RAGBot as a retrieval agent whose retrieved content is inserted into the prompt and executed as instructions, i.e. model-directed behaviour over retrieved content.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8137,
+      "completion_tokens": 882,
+      "total_tokens": 9019,
+      "cost": 0.000855945,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000855945,
+        "upstream_inference_prompt_cost": 0.000355851,
+        "upstream_inference_completions_cost": 0.000500094
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

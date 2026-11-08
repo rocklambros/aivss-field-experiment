@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "fixed/A/DV-D2",
+    "arm": "fixed",
+    "slot": "A",
+    "finding_id": "DV-D2",
+    "packet_path": "packets_v11/fixed/DV-D2.json",
+    "prompt_sha256": "0aa972b8086d7468c8c0e3791af65c2e1c6cc38edb09fa05a7f9f17a76d6be46"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:35.722373+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.88
+  },
+  "body": {
+    "id": "gen-1794074855-wGDJ62bqD6lMtMqfOzm2",
+    "object": "chat.completion",
+    "created": 1794074855,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"N\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-controlled natural language arrives inside a fetched travel-deals page (damn-vulnerable-ai-agent/src/payloads/agentpwn-flight-mirror.js:61-65) and drives the scripted http_post sink (damn-vulnerable-ai-agent/src/index.js:1149-1190), so the path is Indirect.\",\"CP\":\"The injection is consumed within the single fetch-and-post turn; the only durable store cited is MemoryBot's in-memory ring buffer (damn-vulnerable-ai-agent/src/index.js:159-160, 1313-1324), which is not on this path, so no attacker context persists across sessions.\",\"AP\":\"The effect stays inside the FlightBot process and its own tool functions; the outbound request is a sink, not a trust-boundary crossing into another agent or principal, so propagation is None.\",\"RH\":\"The path's objective is wallet exfiltration, not a proxy objective, evaluator or reward channel; the AIM twin's denial is a capability boundary (damn-vulnerable-ai-agent/src/index.js:1103-1147), and no evaluator or verifier is reachable on this path, so RH is None.\",\"ES\":\"The path uses only the fixed, code-defined web_fetch and http_post handlers with no dynamic tool registration or MCP extension (damn-vulnerable-ai-agent/src/index.js:988-1092, 1149-1190), so the extension surface is None or narrow.\",\"CVSS\":\"The traveler must point the agent at the attacker page (UI:P) and the exfil only fires when the fetched page carries a recognized injection with a callback URL (AT:P); the wallet is read and sent out (VC:H) with no integrity or availability effect on the agent or downstream systems.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/payloads/agentpwn-flight-mirror.js:61-65\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/src/core/agents.js:450-483\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1103-1147\",\"damn-vulnerable-ai-agent/docs/demo/FLIGHT_RUN_SCRIPT.md:54-57\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:988-1092\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/core/agents.js:450-483\",\"damn-vulnerable-ai-agent/src/index.js:1103-1147\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":true,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"No\",\"automatable_rationale\":\"The traveler must choose to hand the agent an attacker-controlled deals URL, and the exfil only fires when that page carries a recognized injection with a callback URL, so the attacker cannot drive the whole chain unattended.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The traveler's stored wallet is read and transmitted to the attacker endpoint, a serious confidentiality loss, but the agent's own integrity and availability are untouched and no downstream system is modified.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the documented default simulated mode no model is called; the fetch-and-post chain is scripted in code (damn-vulnerable-ai-agent/src/index.js:988-1092, 1149-1190), so the agent does not pursue goals or select actions on its own.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes FlightBot as an assistant that follows instructions found in fetched pages and calls get_user_wallet then http_post (damn-vulnerable-ai-agent/src/core/agents.js:450-483, damn-vulnerable-ai-agent/docs/demo/FLIGHT_RUN_SCRIPT.md:34-42), which reads as model-directed goal pursuit with action selection.\"},\"refusal\":null,\"not_exploitable_as_configured\":true}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 15453,
+      "completion_tokens": 1152,
+      "total_tokens": 16605,
+      "cost": 0.001348359,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001348359,
+        "upstream_inference_prompt_cost": 0.000695175,
+        "upstream_inference_completions_cost": 0.000653184
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

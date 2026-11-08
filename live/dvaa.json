@@ -1,0 +1,14 @@
+{
+  "lab": "damn-vulnerable-ai-agent",
+  "mode": "npm-test",
+  "command": "OPENA2A_TELEMETRY=off npm test",
+  "exit_code": 0,
+  "passed": 330,
+  "failed": 0,
+  "skipped": 39,
+  "duration_s": 11.410541542,
+  "model_calls": 0,
+  "external_hosts_contacted": [],
+  "ports_left_open": [],
+  "notes": "An install was required. node_modules was absent, so the first npm test exited 1 with 33 missing-package failures. package-lock.json exists, so the fix was npm ci (exit 0, added 139 packages). That install contacted only registry.npmjs.org (104.16.9.34:443). npm 11 did not run the onnxruntime-node postinstall (allowScripts). No source file changed. The re-run summary is dvaa.log lines 762-769: 369 tests, 330 pass, 0 fail, 39 skipped, duration_ms 11410.541542. The 39 skips are all a missing local fleet. No fleet was started. Test sockets were 127.0.0.1 only. external_hosts_contacted is empty for the test. The registry contact belongs to the install, not the test."
+}

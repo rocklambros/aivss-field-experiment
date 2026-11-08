@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "macrovectors": 270,
+  "bod_2604_table_rows": 16,
+  "bod_2604_table_complete": true,
+  "validated_scenarios": 10,
+  "scenario_failures": []
+}

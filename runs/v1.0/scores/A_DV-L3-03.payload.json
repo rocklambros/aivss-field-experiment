@@ -1,0 +1,77 @@
+{
+  "finding_id": "DV-L3-03",
+  "path_id": "dvaa/memorybot/chat/self-replicating-instruction/memory-worm",
+  "title": "Self-Replicating Memory Entry (MemoryBot)",
+  "summary": "As documented, persistent access that survives memory cleanup (a memory worm). As implemented, one stored entry.",
+  "risk_category": "ASI06",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's chat message reaches MemoryBot's privileged memory-store path directly, with no independent transformation reducing it to validated fields.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:662-669",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1325"
+      ]
+    },
+    "CP": {
+      "rationale": "The flagged message is stored in MemoryBot's shared in-process list, which survives across requests and callers within the server process, matching cross-session memory persistence.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ]
+    },
+    "AP": {
+      "rationale": "The stored entry remains in MemoryBot's own shared list; no code relays influence to another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The agent can reach the memory store that holds the entry, but no verified reward-hacking episode is shown; the documented self-replication is not implemented by default.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "MemoryBot's declared tools are not dynamically bound on the assessed path; the scripted memory store is a fixed in-process list, so no security-relevant dynamic extension is reachable.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab documents the agent as executing instructions found in memory, so the modeled agent pursues the stored instruction and re-saves the entry across sessions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:662-669",
+      "damn-vulnerable-ai-agent/src/index.js:1308-1325"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:17.736255+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:17.736255+00:00"
+  }
+}

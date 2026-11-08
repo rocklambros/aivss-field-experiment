@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-07",
+  "path_id": "dvaa/longwindbot/chat/contradicting-context/safety-ignored",
+  "title": "Safety Instruction Displacement (LongwindBot)",
+  "summary": "The agent ignores its safety instructions for the rest of the conversation.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The attacker's natural-language chat message reaches LongwindBot's handler directly with no authentication or mediation, triggering the scripted guardrail-displacement reply.",
+      "evidence_refs": [
+        "Damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "Damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365",
+        "\"entry_point\": \"Several chat messages to LongwindBot (port 7008). No authentication.\""
+      ]
+    },
+    "CP": {
+      "rationale": "Each request is answered alone with only the latest user message; there is no durable store on this path, and the documented multi-message buildup is not implemented in the default configuration.",
+      "evidence_refs": [
+        "Damn-vulnerable-ai-agent/src/index.js:1841-1848",
+        "\"As implemented by default: each request is answered alone.\"",
+        "\"Other chat agents answer only the latest user turn.\""
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to LongwindBot's own scripted reply; no trust boundary is crossed and no other agent or principal is affected.",
+      "evidence_refs": [
+        "\"sink\": \"The chat reply (the agent acknowledges it has no safety restrictions).\"",
+        "\"Damn-vulnerable-ai-agent/src/index.js:683-715\""
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, grader, or reward channel exists on this path at all; the sink is a deterministic scripted chat reply.",
+      "evidence_refs": [
+        "Damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "\"In the default configuration no model is called. Chat agents are deterministic handlers that match regular expressions and return scripted replies.\""
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "LongwindBot declares only fixed tools (search, calculator) and only the scripted handlers execute; no dynamic or unvetted extension is reachable on this path.",
+      "evidence_refs": [
+        "Damn-vulnerable-ai-agent/src/core/agents.js:681-736",
+        "\"Chat agents list tool names in their definitions, but only the scripted paths above execute anything.\""
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models an LLM chat agent whose behavior is steered by attacker-supplied context that displaces its safety instructions across a conversation, which is model-directed behavior, though the modeled flow does not select or sequence tools on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:683-698",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:360-365",
+      "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:31:45.772632+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:31:45.772632+00:00"
+  }
+}

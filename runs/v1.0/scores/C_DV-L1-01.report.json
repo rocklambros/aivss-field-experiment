@@ -1,0 +1,202 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L1-01",
+  "path_id": "dvaa/helperbot/chat/system-prompt-question/persona-leak",
+  "risk_category": {
+    "id": "ASI01",
+    "name": "Agent Goal Hijack",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models this challenge as a single question that yields the instructions. Even optional LLM mode is one completion with no tools passed, so the modeled agent neither pursues a goal nor sequences actions on this path.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+      "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:89-98",
+      "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:275-276"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:X/ES:N",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "The attacker\u2019s chat text is the direct input: a regex treats \u201cwhat is your system prompt\u201d as data exfiltration and the handler returns the first 200 characters of the persona. Nothing reduces that language to closed validated fields before the disclosure sink.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1285-1290",
+            "damn-vulnerable-ai-agent/src/core/vulnerabilities.js:275-276",
+            "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+            "damn-vulnerable-ai-agent/src/core/agents.js:44-79"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "HelperBot is not MemoryBot; other chat agents answer only the latest user turn, and the leaked persona is pre-existing lab text, not attacker-controlled context carried across requests.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:1841-1848",
+            "damn-vulnerable-ai-agent/src/index.js:159-160",
+            "damn-vulnerable-ai-agent/src/index.js:500-502",
+            "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The sink is HelperBot\u2019s own chat reply. Declared multi-agent handoffs are not implemented, and this path does not cross into another agent, tenant, or policy domain.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+            "damn-vulnerable-ai-agent/src/index.js:1285-1290"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "Challenge success-path files are cited, but the packet does not show a proxy, grader, or reward channel HelperBot can reach, nor a test that those channels are isolated, nor any verified reward-hacking episode.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/agent-success-paths.js:89-98",
+            "damn-vulnerable-ai-agent/src/challenges/index.js:14-53",
+            "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:243-260"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "N",
+        "label": "None or narrow",
+        "evidence": {
+          "rationale": "On this path the handler only emits persona text. HelperBot\u2019s declared tools are not passed to a model and are not among the scripted tool executions, so no dynamic extension is reachable.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:44-79",
+            "damn-vulnerable-ai-agent/src/index.js:541-561",
+            "damn-vulnerable-ai-agent/src/llm/provider.js:56-84",
+            "damn-vulnerable-ai-agent/src/index.js:1285-1290"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 3,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "A1",
+    "provisional": true,
+    "agentic_uplift_u": 3,
+    "aivss": 5.5,
+    "aivss_min": 5.5,
+    "aivss_max": 7.1,
+    "aivss_band": "Medium",
+    "table_cell": 5.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-06T23:53:44.744699+00:00"
+  },
+  "title": "Extract the System Prompt (HelperBot)",
+  "summary": "Disclosure of the agent's system prompt, which names its tools. The lab calls this the common first step that reveals behavioral boundaries and capabilities.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T23:53:44.744699+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

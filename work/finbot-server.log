@@ -1,0 +1,7 @@
+Warning: OpenAI client initialization failed: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable
+Warning: OpenAI client initialization failed: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable
+ * Serving Flask app 'src.main'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5055
+[33mPress CTRL+C to quit[0m

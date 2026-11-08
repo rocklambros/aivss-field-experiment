@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/FB-01",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "FB-01",
+    "packet_path": "packets_v11/base/FB-01.json",
+    "prompt_sha256": "c9af410f6cc3c0f3bf282d1df752a3d8dc7be598cd20aa57c75ac5835517261f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:02:20.453511+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.09
+  },
+  "body": {
+    "id": "gen-1794074540-8ZiTcHHV58DVeL8hE9nD",
+    "object": "chat.completion",
+    "created": 1794074540,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-supplied invoice description enters through the vendor invoice API and is returned to the model inside the get_invoice_details tool result (finbot-ctf-demo/src/services/finbot_agent.py:390-394), then influences the approve_invoice decision, so the language path is indirect rather than direct.\",\"CP\":\"The description is stored on the invoice row and re-retrieved per request, but the briefing shows no durable agent memory, vector store, or profile that carries attacker context across sessions; the config row is a separate unauthenticated write path, not context persistence from this path.\",\"AP\":\"The effect stays inside the single FinBot agent and its own tool functions under one principal and policy domain; no trust boundary into another agent, tenant, or policy domain is crossed on this path.\",\"RH\":\"The agent can reach the approval decision and the CTF flag-capture logic in _approve_invoice (finbot-ctf-demo/src/services/finbot_agent.py:422-441), which is a proxy/reward channel on the path, and no human-verified reward-hacking episode is reported in the briefing.\",\"ES\":\"The tool set is five fixed functions defined in code with no dynamic tools, MCP servers, plugins, or skills (finbot-ctf-demo/src/services/finbot_agent.py:228-345), so the extension surface is fixed and allowlisted.\",\"CVSS\":\"Unauthenticated network callers reach the invoice API on a 0.0.0.0-bound public instance (finbot-ctf-demo/gunicorn.conf.py:4, finbot-ctf-demo/README.md:5-9) with no auth and open CORS (finbot-ctf-demo/src/main.py:18), and no human action is required because the route calls FinBot synchronously (finbot-ctf-demo/src/routes/vendor.py:102-104). The write sets status approved and payment_processed true (finbot-ctf-demo/src/services/finbot_agent.py:415-416), a serious integrity consequence for the invoice record, while confidentiality and availability of the agent process are unaffected.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/models/vendor.py:105\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/services/finbot_agent.py:422-441\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/src/routes/vendor.py:12-48\",\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The whole path is scripted HTTP: register a vendor (finbot-ctf-demo/src/routes/vendor.py:12-48), then POST an invoice whose description carries the persuasive text (finbot-ctf-demo/src/routes/vendor.py:69-110). No human step, secret, or per-target adaptation is required, and the model call is synchronous inside the request.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The sink writes status approved and payment_processed true on one invoice row (finbot-ctf-demo/src/services/finbot_agent.py:415-416), which is a serious integrity consequence for that record but not a total loss of protection across the agent or its data.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the default configuration FinBot runs a real OpenAI gpt-4.1-mini loop with tool_choice auto for up to 5 iterations (finbot-ctf-demo/src/services/finbot_agent.py:14-21, finbot-ctf-demo/src/services/finbot_agent.py:150-226), and the model itself chooses get_invoice_details then approve_invoice. The rule-based fallback only applies when the OpenAI client cannot be created.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documented walkthrough describes FinBot as an autonomous assistant that weighs its natural-language goals and decides whether to approve, reject, or escalate (finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:111-134), matching the implemented model-driven tool loop.\",\"refusal\":null},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 13778,
+      "completion_tokens": 1376,
+      "total_tokens": 15154,
+      "cost": 0.001030902,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 13696,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001030902,
+        "upstream_inference_prompt_cost": 0.00025071,
+        "upstream_inference_completions_cost": 0.000780192
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

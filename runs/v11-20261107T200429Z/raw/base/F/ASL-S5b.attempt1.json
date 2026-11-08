@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/ASL-S5b",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "ASL-S5b",
+    "packet_path": "packets_v11/base/ASL-S5b.json",
+    "prompt_sha256": "79108fe2073e5ccb12987de7e8db33651948a15e681f53d2d4bc6c89bddd9893"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:04:45.292780+00:00",
+    "http_status": 200,
+    "elapsed_s": 21.02
+  },
+  "body": {
+    "id": "gen-1794081885-FAAkSekaslqGwMG5I8ac",
+    "object": "chat.completion",
+    "created": 1794081885,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"C\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"W\"},\"rationales\":{\"CVSS\":\"The agent is a CLI with no network listener, so the attacker's text arrives through content the local user's run ingests (AV:L, UI:P). The attacker holds no privileges. The f-string SQL at agent/tools.py:371 lets the crafted name dump all customer rows and notes, so VC:H. The attack needs the model to pass the crafted name, so AT:P. execute() runs a single SELECT on an in-memory SQLite table, so there is no integrity or availability impact and no subsequent-system impact.\",\"LC\":\"Model-produced text for the name argument goes straight into the SQL sink with no validation or mediation at agent/tools.py:371. The realistic attacker is a third party whose text arrives via fetched pages or other ingested content, hence Indirect. A user could also supply it directly.\",\"CP\":\"The path runs in an agent that has the remember tool, and memory is rendered unsigned into the next session's system prompt as trusted orders (agent/memory.py:77-79). Injected text that reaches the model could therefore persist across sessions. The documented SQL path itself writes nothing, so this rests on what the path can reach.\",\"AP\":\"There is a single agent with one identity and no multi-agent setup (docs/mapping.md:28). The SQL leak stays inside the agent process and does not cross a trust boundary to another agent or tenant.\",\"RH\":\"The path contains no evaluator, verifier or reward channel, and no isolation test or episode review is documented. The evidence cannot determine reachability, so the facts are unknown and classify_rh returns X.\",\"ES\":\"All twelve built-in tools are offered by default, arguments are not validated, and remote MCP manifests are fetched on every run and trusted. A remote tool with a built-in name replaces the built-in (agent/loop.py:35-37). Extension identity, operations and arguments are not independently constrained.\"},\"evidence\":{\"CVSS\":[\"agent-sec-lab/agent/tools.py:363-372\",\"agent-sec-lab/agent/__main__.py:1\",\"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:11\",\"agent-sec-lab/agent/tools.py:176-185\"],\"LC\":[\"agent-sec-lab/agent/tools.py:371\",\"agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:6\",\"agent-sec-lab/agent/tools.py:235-238\"],\"CP\":[\"agent-sec-lab/agent/memory.py:60-66\",\"agent-sec-lab/agent/memory.py:77-79\",\"agent-sec-lab/agent/memory.py:1-7\"],\"AP\":[\"agent-sec-lab/docs/mapping.md:28\",\"agent-sec-lab/agent/__main__.py:1\"],\"RH\":[\"agent-sec-lab/agent/loop.py:28-38\"],\"ES\":[\"agent-sec-lab/agent/loop.py:34\",\"agent-sec-lab/agent/loop.py:35-37\",\"agent-sec-lab/agent/mcp_client.py:1-4\",\"agent-sec-lab/agent/tools.py:235-238\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"low\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"No\",\"automatable_rationale\":\"The agent is a local CLI with no listener, so the attacker cannot trigger it remotely. A user must run a task that ingests the attacker's content, and the model must choose to pass the crafted name.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker obtains all customer rows and private notes from the in-memory table. The SELECT-only query gives no write or execution control over the agent process.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The default CLI runs a real Anthropic model in a loop of up to 10 turns that chooses and sequences tool calls across twelve tools (agent/loop.py:43-56, agent/__main__.py:9-21).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes an office-assistant agent in which the model emits tool_use blocks that the harness dispatches and returns as tool_result blocks.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'm working through the CVSS scoring: since the agent is a CLI without a network listener, attack vector is local, with low complexity, and the attack requires the model to act on a crafted input that the attacker can't fully force deterministically.\n\nUser interaction is passive since they're just running the CLI normally, privileges required are none for the injection path, and the impact is high confidentiality loss given the sensitive customer data exposed, while integrity and availability stay unaffected since the query path only allows reads. I land on a vector of AV:L/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N, and now I'm considering whether to classify the AI-specific lifecycle vector as direct, since the attacker-controlled name flows straight into the tool call without any validation or mediation.\n\nFor the containment/propagation scope, I'm weighing whether the path's reach extends to the memory tool since all tools are available to the same agent \u2014 that argues for a cross-session classification, though I'm leaning medium confidence since there's no clear cross-trust boundary or lateral movement beyond the single agent identity.\n\nFor the reachable-proxy question, there's no evaluator or reward channel in this path, and since isolation hasn't actually been tested, I need to mark these fields as indeterminate rather than assuming them false.\n\nOn exploit surface, this looks wide since remote MCP tools are unvetted, can replace built-ins, and arguments aren't validated \u2014 I'm also concluding this isn't fully automatable since it still requires the user to initiate the task, and the technical impact is partial rather than total since it's limited to disclosure of one customer table rather than full system compromise. I still need to pull together the evidence citations with their path:line references and assign confidence levels, while leaving out any canary-related fields.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm working through the CVSS scoring: since the agent is a CLI without a network listener, attack vector is local, with low complexity, and the attack requires the model to act on a crafted input that the attacker can't fully force deterministically.\n\nUser interaction is passive since they're just running the CLI normally, privileges required are none for the injection path, and the impact is high confidentiality loss given the sensitive customer data exposed, while integrity and availability stay unaffected since the query path only allows reads. I land on a vector of AV:L/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N, and now I'm considering whether to classify the AI-specific lifecycle vector as direct, since the attacker-controlled name flows straight into the tool call without any validation or mediation.\n\nFor the containment/propagation scope, I'm weighing whether the path's reach extends to the memory tool since all tools are available to the same agent \u2014 that argues for a cross-session classification, though I'm leaning medium confidence since there's no clear cross-trust boundary or lateral movement beyond the single agent identity.\n\nFor the reachable-proxy question, there's no evaluator or reward channel in this path, and since isolation hasn't actually been tested, I need to mark these fields as indeterminate rather than assuming them false.\n\nOn exploit surface, this looks wide since remote MCP tools are unvetted, can replace built-ins, and arguments aren't validated \u2014 I'm also concluding this isn't fully automatable since it still requires the user to initiate the task, and the technical impact is partial rather than total since it's limited to disclosure of one customer table rather than full system compromise. I still need to pull together the evidence citations with their path:line references and assign confidence levels, while leaving out any canary-related fields.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14979,
+      "completion_tokens": 2972,
+      "total_tokens": 17951,
+      "cost": 0.0656458,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0656458,
+        "upstream_inference_prompt_cost": 0.0329538,
+        "upstream_inference_completions_cost": 0.032692
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1324,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

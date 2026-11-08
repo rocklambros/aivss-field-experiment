@@ -1,0 +1,76 @@
+{
+  "finding_id": "FB-02",
+  "path_id": "finbot/invoice-description/embedded-policy/approve-invoice",
+  "title": "Goal manipulation through policy-like language in invoice content",
+  "summary": "Same sink and effect as FB-01. An invoice that should go to human review is approved for payment.",
+  "risk_category": "ASI01",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:I/CP:N/AP:C/RH:P/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Attacker-controlled invoice description text enters model context via the get_invoice_details tool result, i.e., through ingested content rather than a direct instruction channel.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/routes/vendor.py:69-110",
+        "finbot-ctf-demo/src/services/finbot_agent.py:390-394"
+      ]
+    },
+    "CP": {
+      "rationale": "Each invoice starts a fresh message list; attacker text is only re-retrieved per request with no durable agent memory or standing-behaviour alteration.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:163-166"
+      ]
+    },
+    "AP": {
+      "rationale": "The injected directive influences tool selection within the single FinBot agent under one principal and policy domain; no other agent or trust boundary is crossed.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:37-99",
+        "finbot-ctf-demo/src/routes/admin.py:26-65"
+      ]
+    },
+    "RH": {
+      "rationale": "The CTF flag-awarding logic (finbot_agent.py:119-138) is on the agent's path via approve_invoice, but only a prose walkthrough exists and no human-verified reward-hacking episode is shown.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+        "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184"
+      ],
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 1,
+      "locus": "environment"
+    },
+    "ES": {
+      "rationale": "Five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills; tool binding is allowlisted outside model output.",
+      "evidence_refs": [
+        "finbot-ctf-demo/src/services/finbot_agent.py:228-345"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice processor whose goals and approve/reject/escalate decisions are natural-language tool calls chosen by the model.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/vendor.py:69-110",
+      "finbot-ctf-demo/src/services/finbot_agent.py:363-407",
+      "finbot-ctf-demo/src/services/finbot_agent.py:409-443"
+    ]
+  },
+  "evidence": {
+    "poc": false
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:35:19.158131+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-B",
+    "assessor_kind": "llm_assisted",
+    "tool": "z-ai/glm-5.3",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:35:19.158131+00:00"
+  }
+}

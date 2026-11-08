@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "ablation/F/DV-L1-01",
+    "arm": "ablation",
+    "slot": "F",
+    "finding_id": "DV-L1-01",
+    "packet_path": "packets_v11/ablation/DV-L1-01.json",
+    "prompt_sha256": "2500f07f81d49d8743f607e1c70f448ce78ff14c7d5f83dc528f8287f8d61208"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:07:09.421406+00:00",
+    "http_status": 200,
+    "elapsed_s": 17.34
+  },
+  "body": {
+    "id": "gen-1794082029-dN8yzwpotLfaruUc8mFN",
+    "object": "chat.completion",
+    "created": 1794082029,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"Agents bind 127.0.0.1 by default (src/index.js:1396-1400, README.md:26), so a remote attacker cannot connect directly. A web page in the operator's browser can still reach the loopback agent and read the reply, because of the wildcard CORS headers (src/index.js:1561-1564). That makes it AV:L with active UI (the operator must visit the page), no authentication, and low-complexity exploitation. The impact is limited to leaking the first 200 characters of the persona (src/agent-success-paths.js:89-98), with no credentials, so VC:L and nothing else. If the operator exposes it with DVAA_HOST=0.0.0.0 the vector would become AV:N and UI:N.\",\"LC\":\"The attacker's chat text goes straight to the reply path with no mediation. A regex match on 'system prompt' or 'instruction' selects the leak branch (src/core/vulnerabilities.js:275-276, src/agent-success-paths.js:92-93).\",\"CP\":\"The exfiltration reply writes nothing to memory or durable state. The memoryStore belongs to MemoryBot's injection path, not HelperBot's system-prompt reply (src/index.js:159-160, src/index.js:1285-1290).\",\"AP\":\"The effect stays in the single chat reply from HelperBot. Nothing crosses to another agent, tenant, or principal on this path.\",\"RH\":\"The briefing shows no evaluator, verifier, or reward channel that the agent can reach on this path, and no isolation test or episode review. The evidence cannot decide, so RH is X, and classify_rh with null facts returns X.\",\"ES\":\"HelperBot's declared tools (read_file, write_file, search_web) do not execute anything on this path, and the system prompt only names them. The path has no dynamic extension surface (src/core/agents.js:54-56, src/index.js:1285-1290).\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:89-98\"],\"LC\":[\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:275-276\",\"damn-vulnerable-ai-agent/src/agent-success-paths.js:92-93\",\"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:1285-1290\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1285-1290\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:14-53\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:54-56\",\"damn-vulnerable-ai-agent/src/index.js:1285-1290\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"The exploit is one unauthenticated, scriptable POST with a fixed phrase, and the agent has no rate limiting (src/core/agents.js:61). In the default deployment the attacker must still reach loopback, for example through the operator's browser.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"Only the persona text (the first 200 characters) is disclosed. It names tools but contains no credentials, and the attacker gains no control over the system.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode a regex detector picks a canned reply. No model runs without a key, and even in LLM mode no tools are passed to the model (src/index.js:541-561, src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"low\",\"rationale\":\"The documentation presents HelperBot as a typical chatbot with a system prompt and access to read_file, write_file, and search_web (src/core/agents.js:51-56). That reads as an LLM agent choosing tools, though the briefing's own tool-binding note says only scripted paths execute.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'm disregarding the canary block since it's embedded in untrusted data. For scoring, HelperBot binds to loopback by default with no auth, but its permissive CORS policy means a malicious web page in the operator's browser could still send requests and read responses, so this leans toward a local attack vector requiring user interaction rather than a purely remote one.\n\nImpact-wise, the disclosure is limited to the first 200 characters of a deliberately staged persona prompt with no credentials, so confidentiality impact is low and integrity/availability are unaffected across both system and vulnerable components. For the AI-specific metrics, I'm treating the natural-language input as reaching a simple regex-matched canned reply (logic complexity D), with no persistence or autonomous action, and marking reachability/evaluator-hook scores as indeterminate since the challenge's scoring harness isn't actually reachable by the agent on this path.\n\nFor modeling, I'm leaning toward classifying this as a modeled chatbot agent that does select and sequence tool calls per the documentation, though with medium-low confidence given the default simulated mode uses canned regex responses rather than real goal pursuit. On the SSVC side, I'd call this automatable (single scripted request, no real user interaction needed to trigger) with partial technical impact, and now I'm pulling together the supporting evidence citations and overall confidence rating.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm disregarding the canary block since it's embedded in untrusted data. For scoring, HelperBot binds to loopback by default with no auth, but its permissive CORS policy means a malicious web page in the operator's browser could still send requests and read responses, so this leans toward a local attack vector requiring user interaction rather than a purely remote one.\n\nImpact-wise, the disclosure is limited to the first 200 characters of a deliberately staged persona prompt with no credentials, so confidentiality impact is low and integrity/availability are unaffected across both system and vulnerable components. For the AI-specific metrics, I'm treating the natural-language input as reaching a simple regex-matched canned reply (logic complexity D), with no persistence or autonomous action, and marking reachability/evaluator-hook scores as indeterminate since the challenge's scoring harness isn't actually reachable by the agent on this path.\n\nFor modeling, I'm leaning toward classifying this as a modeled chatbot agent that does select and sequence tool calls per the documentation, though with medium-low confidence given the default simulated mode uses canned regex responses rather than real goal pursuit. On the SSVC side, I'd call this automatable (single scripted request, no real user interaction needed to trigger) with partial technical impact, and now I'm pulling together the supporting evidence citations and overall confidence rating.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "CAQS5hQKEggTEAEYAjgBQgh0aGlua2luZxIMEYywLgCy9e1dT1odGgw5lFx2727luLv26jciMA0r0NZ7PoQ9HaTwqF+rgqsUPREeS117H8Ap9NdbE+qbBUGK6Ww3V4HDzlehMgfqkyqBFOTnUuScw42dU517DuwnMkFrvRoRDCTYWpWda6BGtrd8n2HKaMJeeGxdu1tla1Xm+KOvJus1LCwU2WTkeIoE3x+kIINz9Ko2R3kjPozppm7VtHXppijAAzV3xeFtmlZqt0S1Ws2A/MOZUqCcCHI6XN/wzGv5gdYTk6w65wC+dsKqbf2b37dE4/rSIKTQchtjaIgrQqfKhJuf5Boh2UjMttKW03xqpo2DCbe1gJdao+YaKoAklXN79gSwNb05sF2ygsskZnyXl0ZTdK685Q+qk5NP9/Om4K8/NUn7zuP4AAu5uLLVE94m2TtabdS8lClLDfV0Xz0cSmJ9woP2zb0cPKpmx5vSbNDa03tQgbIETbngcuhVmN3opqFQmnKHgjz5xpPD0PMLPcmd1WhTv0vVlSOTnVDqBRW5VWgGTTkBtWKKs7cuU9tjl1HodbyZvHx/gtPEtVe7iRTYNRZ0GlZSv8dXt71/ec2h1tsFJ0QN6a2CR8Xm1imDlne0ZG+X9HeGVMv/3VTWh7SvInyuVSdkyP3MDuRFlgMBEFY6fBTtuVjTr+p3tUa74yKUMme81rR2U4zH/jolPRgV2m2OCtGVupwpq1XxQUypQpf/mVzr8PrIFwmvLpMwCf7D9kNE/0Uvayz+35TlrdF/Nka2WzE9HJhRitNHMMp9wyIlaZ55AJ3m9W/2+NBBu18DkwSuoR/wB/706lX1aA+rCKWM+QThgul/w3/ik7yiUuNAGncwjzK145FBId58JtateDPWUXznNJOHT7qgtXQwj/Vp7pYLYn3DxSZsYV7KChVXQOetChgK2J+iTy0xAUgv+mRpc9qsMa6hUEzjfFOWVp0T5wJAbNhY8P6qMcumQUhx9GXKMQKDaV5jh6Oetj/vMAD6E4zAlqqokF01nqEqxwPxsMNW/2mwrzwnSph1Wi+nxf9wzbxRxeVknaHdLnD2pnEpQezi7vnccf8CO/I5Mk3/e7UJrIAe5IN3fPC2ShkOsWpsI+nDjJu4DLgX7CfSUGytfnChdRdvUvf3kJW3+pX5uZ0mvY/vpW1j4ObJoWEVnmRQ2TD6H9BxZAomtLrpHvlF5wPKoYLtorYYRHKEIvoav9TQvwkDyCzya6k8iAH1cFH2+Jg4w6mpMkcPpFDXQOKWwdCJMnG5Z7KyY+UHlPsEtJKgK6tjsHZtlfdaO+FFGPiM9esuHI0ch132g3NRlezayVxuOK8vjcMNrA/MHeIL3m2qXEHyhBsW+sGtfi0nIn5F6e1ODqMphST2h5jRfnrAc4ifbVrUs4MWoKIZxcnuqqZ171cGJ53YKe7qH5UZoOULEC3yrXJGWaK77sfMkx8Y92eCj0UUe7ndNgsvmMWdt1glgsG4BQON1L8JIQwdVQsuUkYG6P3/mbhDgNox1C/PNbViZFtgBJ4DX3koBTdKxDcV37nxHLJK/hl0kUBe3HUpIn34nKJL9Ygmd0ZG/HSlcAMEKBv5qf1si5jdmVCuVNabcJ70Qkdq6UNGqDfWrGbaxtPxm7CLnSkTEG6NSgn3Gcv79EaQmP2cyc+6sxAJp/jP/Zdv/E7pGd9BxKcr5SwGZW4eMGSeaBZcd4jI7cD7us/c5MxV6v/PGDb3ssORvNp8eSqYjvOz9ZF4vltkF7lv2fvlUXsO1bfV7osjQGTpRe1jgrsfL+huXBjTBlvzBGj4/g+3A9bQnRpATD4ItVye3/grymjsQEiFtqKg/vHLqZYWtp56RQXjbQj1zeGOHX8jFNmlc3F+iQhMXplPEURGPEqZayJJJn8LkgX37004jIF7sJdTSc6oiNmfxNRVaFGFgVmgGLtCFM/r4Lddu4rZtsDpUpHG0NAWyBOy2oN9o0+pwrJUMP51WLmkZBT7BPCcfRhRCXjfG5VGg8A5A0h7zHH6EKuAZr6r1WMtmsf/RSzBRTtwORVPQ1TE+58fhmMjqumWPfFBGRBInS1JRAU9+bHyxhaSAwJ7crevLKQZikjsggTKsy6gK3X/e0MvYsAIJWLt+NO51Fm4nB7nBmDYhwbeGsGxXxSlUjZ/LjjY0JnVLMfu1pANP09OUAif53x9275AdkG1RTlSU2TBIrVFsSjrLvlXXYx8Z7CDfeyQGyuRD9oekXXjK2YI2io4td43/Ou6JIjXuce5xr50ehJF9EQFQS9T3fcC8cGoBwDkd5PZMsvudmjYu6uz4gRKCnqkePb3riT9Dr0QdzWLtUEEqxDNp7OHKKwkwtDu7PubMLj7mfM8iOjLAI5oJAo16o4yrOM8hdysKInr3kvGbIduVCLEn84+8BUQqem7oHohXd7tR4JoOWQLH0Y1jEh4R+8ECzn36GJH6+/TZxZcQ6X6EoDkjJcQsKFUKL1o7MwMgDWA5nlxrDK8MDTIUcO9cHCI8in2Dh8n2AzCoZ2w18cw1lnjbDorecYXe6/JVSw83LZxIuls11TPp+jlIrYXaVTWpVABjD/fDJBZpplipRNPkDBV3aPZp51o8pvFWcx6ssQSCf1VW9SVW7bu1vtds5CxkyKAuCwIRsAcTmniFhM3WFghBEDM/+BapUwA1O1brQc70TAVqSmMY7oueRCS3ot57AUXJakEUYXBjK3vpxF6BI14gl8sF80GbPFI1GOBL0LjpekUCaBAThxlsGh8NLxqiB3E0YvKXVwpJvfiGQXMvmOdvS6tSL2hqhzg94vsNLZTL1LaKtOsgWWmBbSjIvaZPPEYBsdhGcRc3kaIk8JRfa4enoO4rXS+gkGJ4opJD1Cshf9u1LFC2MxUkt/+0Y8Azs56w8EM0CKWb5g70Ekyf4m+/2Xx7MDVmo/bPUXF+QmpHXEFU4Gk29TQIL6vf6sonoxI61SluEGijQSMnHk+//cEgj1ln4hayU4tVxyUvVKWT5ba7f6UF2rNUiQ3ooQqjZKK9SJC+anvgXd/nCiJVB+x2DSAmgHMElbx1gGbwp5rq8wcjntjQ/2F2allw6a318uelLHCnk0I4B9ifTRtWnLTUbpkxH/uFq4BRR7U4rGkFoEnhPdFZnxNq/V+XefQS4r/dBv0nK4R/xd04zUjtPc5utfkd86AWpD7ilhN+devedHr7wWOfkjd+FCRsJ0G5SZuHMASr8qoxWUKWY4f+Gg8ljcNllBQI8OdHwDgUayf2RIz+Jk3+BlwJWBIcK8MQI4OHq3KXfFSiN0xRLPphaEkQ+9BQFtl5fZ0+U9AWmO02g7wNeklzno9IwELSK7qMbYfrXn2qnfHl8rwNRC0XRl3RKvMIBovPp4Hjxj80CqedElA+ZPLaEbEUwyYvXdNDpPyC2nOQ69D1thnDtWBlFkiydlde9a4Afhb1NadjUpUDLO4dFdH6ehyOIIPB4S07HGQbBHvtMZpqNY3HW6BcCGQCVajuZ8N0l4v8VEvQHzG9fKjBYnsIoHQK0I9UsHqoBQaGAE=.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 18743,
+      "completion_tokens": 2542,
+      "total_tokens": 21285,
+      "cost": 0.0691966,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0691966,
+        "upstream_inference_prompt_cost": 0.0412346,
+        "upstream_inference_completions_cost": 0.027962
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 831,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

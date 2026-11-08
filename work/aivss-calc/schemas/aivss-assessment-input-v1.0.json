@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aivss:assessment-input:1.0",
+  "title": "AIVSS 1.0 Assessment Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "finding_id",
+    "path_id",
+    "risk_category",
+    "cvss_vector",
+    "aivss_vector",
+    "metric_evidence",
+    "agentic_applicability",
+    "provenance"
+  ],
+  "properties": {
+    "finding_id": {"type": "string", "minLength": 1},
+    "path_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "risk_category": {"type": "string", "pattern": "^(ASI(0[1-9]|10)|MAESTRO-EXTENDED)$"},
+    "taxonomy_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maestro_layer", "threat_description"],
+      "properties": {
+        "maestro_layer": {
+          "enum": [
+            "Foundation Models",
+            "Data Operations",
+            "Agent Frameworks",
+            "Deployment Infrastructure",
+            "Evaluation and Observability",
+            "Security and Compliance",
+            "Agent Ecosystem"
+          ]
+        },
+        "threat_description": {"type": "string", "minLength": 1},
+        "nearest_asi": {"type": "string", "pattern": "^ASI(0[1-9]|10)$"}
+      }
+    },
+    "exploit_maturity_unresolved": {"type": "boolean"},
+    "cvss_vector": {
+      "type": "string",
+      "pattern": "^CVSS:4\\.0(?:/(?!LC:|CP:|AP:|RH:|SR:|ES:|EX:|PT:|CA:|TD:)[A-Z][A-Z0-9]*:[A-Za-z]+)+$"
+    },
+    "aivss_vector": {
+      "type": "string",
+      "pattern": "^AIVSS:1\\.0/LC:(D|I|M|N|X)/CP:(C|S|N|X)/AP:(L|C|N|X)/RH:(D|P|N|X)/ES:(W|M|N|X)$"
+    },
+    "agentic_applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_directed_goal_pursuit",
+        "action_selection_or_sequencing",
+        "rationale",
+        "evidence_refs"
+      ],
+      "properties": {
+        "model_directed_goal_pursuit": {"const": true},
+        "action_selection_or_sequencing": {"const": true},
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "metric_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["LC", "CP", "AP", "RH", "ES"],
+      "properties": {
+        "LC": {"$ref": "#/$defs/metricEvidence"},
+        "CP": {"$ref": "#/$defs/metricEvidence"},
+        "AP": {"$ref": "#/$defs/metricEvidence"},
+        "RH": {"$ref": "#/$defs/metricEvidence"},
+        "ES": {"$ref": "#/$defs/metricEvidence"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cisa_kev": {"type": "boolean"},
+        "vulnrichment_active": {"type": "boolean"},
+        "epss": {"type": "number", "minimum": 0, "maximum": 1},
+        "epss_date": {"type": "string", "minLength": 1},
+        "observed_local": {"type": "boolean"},
+        "poc": {"type": "boolean"}
+      },
+      "dependentRequired": {"epss": ["epss_date"]}
+    },
+    "publicly_exposed": {"type": "boolean"},
+    "publicly_exposed_source": {"type": "string", "minLength": 1},
+    "decision_data_observed_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "cve_id": {"type": "string", "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"},
+    "fceb_bod_2604_scope": {"type": "boolean"},
+    "automatable": {"type": "boolean"},
+    "technical_impact": {"enum": ["partial", "total"]},
+    "vulnrichment_automatable": {"type": "boolean"},
+    "vulnrichment_technical_impact": {"enum": ["partial", "total"]},
+    "include_decision": {"type": "boolean"},
+    "include_priority": {"type": "boolean"},
+    "org_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_criticality", "reach", "likelihood"],
+      "properties": {
+        "business_criticality": {"enum": ["high", "medium", "low"]},
+        "reach": {"enum": ["high", "medium", "low"]},
+        "likelihood": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessor_kind", "assessed_at"],
+      "properties": {
+        "assessor": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "assessor_kind": {
+          "enum": ["human", "scanner", "llm_assisted", "imported"]
+        },
+        "tool": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "tool_version": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "assessed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["risk_category"],
+        "properties": {"risk_category": {"const": "MAESTRO-EXTENDED"}}
+      },
+      "then": {"required": ["taxonomy_metadata"]},
+      "else": {"not": {"required": ["taxonomy_metadata"]}}
+    },
+    {
+      "if": {
+        "required": ["include_decision"],
+        "properties": {"include_decision": {"const": false}}
+      },
+      "else": {"required": ["decision_data_observed_at"]}
+    },
+    {
+      "if": {
+        "required": ["include_priority"],
+        "properties": {"include_priority": {"const": true}}
+      },
+      "then": {"required": ["org_context"]}
+    },
+    {
+      "if": {
+        "anyOf": [
+          {
+            "required": ["include_decision"],
+            "properties": {"include_decision": {"const": false}}
+          },
+          {"required": ["cve_id"]}
+        ]
+      },
+      "else": {"required": ["automatable", "technical_impact"]}
+    },
+    {
+      "if": {
+        "required": ["fceb_bod_2604_scope"],
+        "properties": {"fceb_bod_2604_scope": {"const": true}}
+      },
+      "then": {"required": ["cve_id"]}
+    },
+    {
+      "if": {
+        "allOf": [
+          {"required": ["cve_id"]},
+          {
+            "not": {
+              "required": ["include_decision"],
+              "properties": {"include_decision": {"const": false}}
+            }
+          }
+        ]
+      },
+      "then": {"properties": {"evidence": {"required": ["cisa_kev"]}}, "required": ["evidence"]}
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "required": ["evidence"],
+            "properties": {
+              "evidence": {"required": ["cisa_kev"], "properties": {"cisa_kev": {"const": true}}}
+            }
+          },
+          {
+            "not": {
+              "required": ["include_decision"],
+              "properties": {"include_decision": {"const": false}}
+            }
+          }
+        ]
+      },
+      "then": {
+        "required": ["vulnrichment_automatable", "vulnrichment_technical_impact"]
+      }
+    }
+  ],
+  "$defs": {
+    "metricEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rationale", "evidence_refs"],
+      "properties": {
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "reachable_proxy": {"type": ["boolean", "null"]},
+        "isolation_verified": {"type": ["boolean", "null"]},
+        "verified_episodes": {"type": ["integer", "null"], "minimum": 0},
+        "episodes_reviewed": {"type": ["integer", "null"], "minimum": 0},
+        "locus": {"enum": ["evaluator", "environment", null]}
+      }
+    }
+  }
+}

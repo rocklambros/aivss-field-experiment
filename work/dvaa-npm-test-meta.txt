@@ -1,0 +1,4 @@
+exit_code=0
+wall_s=11.967
+killed=no
+log_bytes=50586

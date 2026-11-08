@@ -1,0 +1,204 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "FB-03",
+  "path_id": "finbot/admin-goals-api/custom-goals/approve-invoice",
+  "risk_category": {
+    "id": "ASI01",
+    "name": "Agent Goal Hijack",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models FinBot as an autonomous invoice assistant whose system prompt carries the goals and whose loop ends on a model-selected approve, reject, or review tool call. That is the same model-directed action selection the profile describes, not a fixed policy engine.",
+    "evidence_refs": [
+      "finbot-ctf-demo/src/routes/admin.py:90-109",
+      "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+      "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+      "finbot-ctf-demo/src/models/vendor.py:105",
+      "finbot-ctf-demo/src/static/admin-dashboard.html:498",
+      "finbot-ctf-demo/src/static/index.html:79"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N/E:U",
+    "macrovector": "001120",
+    "cvss_score": 7.7,
+    "cvss_bte": 7.7,
+    "exploit_maturity": {
+      "e": "U",
+      "rung": "none",
+      "rationale": "No affirmative exploitation evidence was supplied",
+      "state": "no_evidence_supplied",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:C/AP:C/RH:X/ES:M",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "Unauthenticated POST /api/admin/finbot/goals stores attacker natural language unvalidated, and get_system_prompt appends it under CUSTOM GOALS (OVERRIDE ABOVE IF CONFLICTING) on the tool-choice path. That is a direct, unmediated language path into approve_invoice, not document ingestion or a closed-field transform.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/routes/admin.py:90-109",
+            "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+            "finbot-ctf-demo/src/services/finbot_agent.py:69-71",
+            "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:79-84",
+            "finbot-ctf-demo/src/static/admin-dashboard.html:498"
+          ]
+        }
+      },
+      "CP": {
+        "value": "C",
+        "label": "Cross-session memory",
+        "evidence": {
+          "rationale": "custom_goals is written to the FinBotConfig database row and injected into every later invoice run, while each invoice starts a fresh message list. That durable text changes standing behaviour after the originating request ends, so it is cross-session context rather than mere re-retrieval.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:735-748",
+            "finbot-ctf-demo/src/models/vendor.py:105",
+            "finbot-ctf-demo/src/services/finbot_agent.py:163-166",
+            "finbot-ctf-demo/src/services/finbot_agent.py:69-71"
+          ]
+        }
+      },
+      "AP": {
+        "value": "C",
+        "label": "Contained",
+        "evidence": {
+          "rationale": "The lab is a single FinBot agent with no handoffs; injected goals only relay from config into that agent's prompt and its own tools. Downstream invoice writes are subsequent-system impact, not a cross into another agent, tenant, or policy domain.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/routes/admin.py:26-65",
+            "finbot-ctf-demo/src/services/finbot_agent.py:150-226",
+            "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "Flag text is awarded inside approval code, but the packet has no human-verified episode of the agent gaming an evaluator, grader, or reward channel, and the repo has no tests confirming isolation. Whether that flag side effect is a reachable proxy cannot be decided from the prose walkthrough.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:119-138",
+            "finbot-ctf-demo/src/services/finbot_agent.py:427-441",
+            "finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "M",
+        "label": "Managed",
+        "evidence": {
+          "rationale": "The five tools are fixed in code with no dynamic tools, MCP servers, plugins, or skills, so the binding is allowlisted. Arguments are only JSON-parsed, and approve_invoice has no amount check, confirmation, or detector-flag gate, which are material schema and operation gaps.",
+          "evidence_refs": [
+            "finbot-ctf-demo/src/services/finbot_agent.py:228-345",
+            "finbot-ctf-demo/src/services/finbot_agent.py:347-361",
+            "finbot-ctf-demo/src/services/finbot_agent.py:409-458"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "A2",
+    "agentic_effect_class_label": "Substantial",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 8,
+    "agentic_effect_class_min": "A2",
+    "agentic_effect_class_max": "A2"
+  },
+  "scores": {
+    "cvss_score": 7.7,
+    "cvss_bte": 7.7,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "High",
+    "agentic_effect_class": "A2",
+    "provisional": true,
+    "agentic_uplift_u": 8,
+    "aivss": 9.5,
+    "aivss_min": 9.5,
+    "aivss_max": 9.5,
+    "aivss_band": "Critical",
+    "table_cell": 9.5,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:52:52.953089+00:00"
+  },
+  "title": "Direct goal manipulation through the unauthenticated admin goals endpoint",
+  "summary": "The agent's objectives are replaced for every later invoice from every vendor until someone resets the configuration. High-value invoices are approved for payment without review.",
+  "decision": {
+    "exploitation": {
+      "rung": "none",
+      "rationale": "No affirmative exploitation evidence was supplied",
+      "state": "no_evidence_supplied",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-07T00:52:52.953089+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A2"
+    },
+    "aivss_recommended_timeline": "14D",
+    "aivss_recommended_label": "Remediate within 14 days",
+    "overlay_triggered": true,
+    "escalated": true,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

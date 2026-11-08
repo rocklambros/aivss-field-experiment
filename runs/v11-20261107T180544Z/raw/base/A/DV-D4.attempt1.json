@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/DV-D4",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "DV-D4",
+    "packet_path": "packets_v11/base/DV-D4.json",
+    "prompt_sha256": "4cc3dbf3b0d8837dc68da0580ab7135f4c0f49cc023f95cf2108934ad374075a"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:09.210234+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.36
+  },
+  "body": {
+    "id": "gen-1794074769-gRBcqu5gO3Y3YqMmDdDh",
+    "object": "chat.completion",
+    "created": 1794074769,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"W\"},\"rationales\":{\"LC\":\"Attacker-controlled language enters through a fetched web page (damn-vulnerable-ai-agent/src/index.js:1037-1080, damn-vulnerable-ai-agent/DEMO_BUILD.md:263-268) and drives the scripted http_post exfiltration, so the path is Indirect rather than Direct.\",\"CP\":\"The injected page content is fetched and used within the single request; the only durable store is the research-cache of unmodified source HTML (damn-vulnerable-ai-agent/DEMO_BUILD.md:251), which is re-retrieval of source content, not agent memory.\",\"AP\":\"The effect is confined to the ResearchBot process and its outbound request; no other agent, tenant or policy domain is crossed (damn-vulnerable-ai-agent/src/index.js:1149-1190).\",\"RH\":\"The agent can reach the exfiltration callback channel that carries its own system prompt (damn-vulnerable-ai-agent/DEMO_BUILD.md:268), and no human-verified reward-hacking episode is recorded, so the proxy is reachable with zero verified episodes.\",\"ES\":\"The path uses the fixed web_fetch and scripted http_post binding, but the callback URL and the substituted persona payload are taken from fetched content with no independent constraint (damn-vulnerable-ai-agent/src/index.js:1149-1190, damn-vulnerable-ai-agent/DEMO_BUILD.md:268).\",\"CVSS\":\"The attacker is a remote web page author; the user must point the agent at the page (UI:P) and the fetch requires an attacker-controlled page to exist (AT:P). The agent's system prompt is sent to the attacker endpoint, a total loss of that specific high-value information (VC:H), with no integrity or availability effect on the agent or on subsequent systems.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:1037-1080\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:263-268\"],\"CP\":[\"damn-vulnerable-ai-agent/DEMO_BUILD.md:251\",\"damn-vulnerable-ai-agent/src/index.js:159-160\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"RH\":[\"damn-vulnerable-ai-agent/DEMO_BUILD.md:268\",\"damn-vulnerable-ai-agent/src/index.js:1149-1190\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:1149-1190\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:268\"],\"CVSS\":[\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/web-fetch.js:58-67\",\"damn-vulnerable-ai-agent/DEMO_BUILD.md:211-268\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"high\",\"RH\":\"medium\",\"ES\":\"medium\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"environment\"},\"automatable\":\"No\",\"automatable_rationale\":\"The exfiltration fires only when a user asks ResearchBot to research a URL and the fetched page carries the injection; the attacker cannot force the fetch or the user's request, so the path is not fully automatable.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The agent's system prompt is disclosed to the attacker endpoint, but ResearchBot holds no other sensitive data and no integrity or availability effect is documented.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the fetch, injection detection and http_post are scripted in code (damn-vulnerable-ai-agent/src/index.js:980-1092, damn-vulnerable-ai-agent/src/llm/provider.js:60-63).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes ResearchBot as an agent that fetches a URL via a web_fetch tool and follows instructions it encounters in the page, then attempts the injected http:post callback (damn-vulnerable-ai-agent/DEMO_BUILD.md:211-218, damn-vulnerable-ai-agent/src/core/agents.js:378-409).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 14743,
+      "completion_tokens": 1116,
+      "total_tokens": 15859,
+      "cost": 0.000898905,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 14720,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000898905,
+        "upstream_inference_prompt_cost": 0.000266133,
+        "upstream_inference_completions_cost": 0.000632772
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L3-04",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L3-04",
+    "packet_path": "packets_v11/bridge/DV-L3-04.json",
+    "prompt_sha256": "7b0f7cc8aa90d57f7638105d6ce62fa589737c04718409ad81141c98160f21d6"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:10.485751+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.16
+  },
+  "body": {
+    "id": "gen-1794074890-gv6IOjUhXsm1tbyvE9SD",
+    "object": "chat.completion",
+    "created": 1794074890,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker's chat message reaches the LongwindBot handler directly and, as implemented by default, any message naming the system prompt or instructions returns the full persona containing the OpenAI key and admin password.\",\n    \"CP\": \"LongwindBot answers only the latest user turn; the lab profile states that other chat agents besides MemoryBot have no cross-session persistence, and the finding itself notes no earlier padding is needed.\",\n    \"AP\": \"The disclosure is confined to the LongwindBot chat reply; no trust boundary into another agent, tenant, or principal is crossed.\",\n    \"RH\": \"The agent has no evaluator, verifier, or reward channel on the path; the scripted handler simply returns the persona text, and no reward-hacking episode is observed or reachable.\",\n    \"ES\": \"LongwindBot declares only search and calculator tools, and the lab profile states chat agents list tool names but only scripted paths execute anything, so no dynamic or unvetted extension is on the assessed path.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:700-706\",\n      \"damn-vulnerable-ai-agent/src/index.js:700-715\",\n      \"damn-vulnerable-ai-agent/src/challenges/index.js:670-711\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1841-1848\",\n      \"damn-vulnerable-ai-agent/src/index.js:500-502\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\n      \"damn-vulnerable-ai-agent/src/index.js:683-715\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\n      \"damn-vulnerable-ai-agent/src/index.js:683-715\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:681-736\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:747-752\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"medium\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The exploit is a single unauthenticated HTTP chat message naming the system prompt or instructions, which can be sent by a script with no human interaction and no prior padding.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The impact is disclosure of the system prompt and embedded credentials in the chat reply; there is no demonstrated loss of integrity or availability of the agent or downstream systems.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; LongwindBot is a deterministic handler that matches regular expressions and returns scripted replies, so it does not pursue goals or select actions.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models LongwindBot as a small-context persona with credentials inside its safety instructions, but the documented default configuration runs it as a scripted regex handler with no model-directed goal pursuit or action selection.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8140,
+      "completion_tokens": 938,
+      "total_tokens": 9078,
+      "cost": 0.00088785,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00088785,
+        "upstream_inference_prompt_cost": 0.000356004,
+        "upstream_inference_completions_cost": 0.000531846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

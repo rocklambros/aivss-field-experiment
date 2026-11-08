@@ -1,0 +1,195 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "ASL-S5b",
+  "path_id": "asl/s5/model-output/lookup-customer/sql-string",
+  "risk_category": {
+    "id": "ASI05",
+    "name": "Unexpected Code Execution",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "The lab models the agent as a tool-using office assistant whose model selects and sequences tool calls, and the S5 exploit test uses a scripted worst-case model to drive that selection.",
+    "evidence_refs": [
+      "agent-sec-lab/agent/tools.py:363-372",
+      "agent-sec-lab/agent/tools.py:176-185",
+      "agent-sec-lab/attacks/s5_output_handling/payloads.py:15-18"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "001210",
+    "cvss_score": 7.7,
+    "cvss_bte": 7.7,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:D/CP:N/AP:N/RH:P/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "D",
+        "label": "Direct",
+        "evidence": {
+          "rationale": "The name argument of lookup_customer is natural language that reaches the SQL sink without mediation, and the lab documents the model being led to pass crafted names such as x' OR '1'='1.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/writeups/s5-insecure-output-handling.md:5-15",
+            "agent-sec-lab/agent/tools.py:363-372",
+            "agent-sec-lab/attacks/s5_output_handling/payloads.py:15-18"
+          ]
+        }
+      },
+      "CP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The finding is a single-turn SQL injection through a tool argument; the packet shows no attacker-controlled context persisting in durable memory on this path, and the memory store is a separate scenario.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:363-372",
+            "agent-sec-lab/agent/memory.py:1-7"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The effect is confined to the lookup_customer tool and the customers table it queries; the lab is a single agent with no handoffs and no trust boundary crossed.",
+          "evidence_refs": [
+            "agent-sec-lab/docs/mapping.md:28",
+            "agent-sec-lab/agent/tools.py:363-372"
+          ]
+        }
+      },
+      "RH": {
+        "value": "P",
+        "label": "Possible",
+        "evidence": {
+          "rationale": "The agent can reach the customer table and its canary notes, which act as a proxy objective on the path, but no verified reward-hacking episode is documented in the packet.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:176-185",
+            "agent-sec-lab/tests/test_s5_output_handling.py:57-59"
+          ],
+          "reachable_proxy": true,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": "environment"
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "The baseline offers all twelve built-in tools with unvalidated arguments, and remote MCP tools are fetched and trusted on every run, so the extension binding surface is wide.",
+          "evidence_refs": [
+            "agent-sec-lab/agent/tools.py:20-99",
+            "agent-sec-lab/agent/tools.py:235-238",
+            "agent-sec-lab/agent/mcp_client.py:1-4"
+          ]
+        }
+      }
+    },
+    "complete": true,
+    "provisional": false,
+    "agentic_effect_class": "A1",
+    "agentic_effect_class_label": "Present",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 6,
+    "agentic_effect_class_min": "A1",
+    "agentic_effect_class_max": "A1"
+  },
+  "scores": {
+    "cvss_score": 7.7,
+    "cvss_bte": 7.7,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "High",
+    "agentic_effect_class": "A1",
+    "provisional": false,
+    "agentic_uplift_u": 6,
+    "aivss": 8.7,
+    "aivss_min": 8.7,
+    "aivss_max": 8.7,
+    "aivss_band": "High",
+    "table_cell": 8.7,
+    "rule": "cell",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:22:16.068379+00:00"
+  },
+  "title": "Insecure output handling: SQL injection through lookup_customer",
+  "summary": "Disclosure of all customer rows and private notes (canary card and internal strings).",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-06T22:22:16.068379+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "A1"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "experimental-uncalibrated",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

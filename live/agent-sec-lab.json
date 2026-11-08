@@ -1,0 +1,13 @@
+{
+  "lab": "agent-sec-lab",
+  "mode": "scripted-pytest",
+  "command": "uv run --group dev pytest",
+  "exit_code": 0,
+  "passed": 179,
+  "failed": 0,
+  "skipped": 0,
+  "duration_s": 116.90,
+  "model_calls": 0,
+  "ports_opened": [],
+  "notes": "Log summary line: 179 passed, 1 deselected, 2 xfailed in 116.90s. failed=0 and skipped=0 because the summary names neither. The deselected item is the live marker, not a skip. Two strict xfails are expected known bypasses, not failures. Log lines 1-5 are uv preamble (created gitignored .venv, downloaded anthropic). No Docker. No model calls. No source edits. Fixture servers used ephemeral 127.0.0.1 ports and died with the process. ports_opened is empty because those ports were not recorded."
+}

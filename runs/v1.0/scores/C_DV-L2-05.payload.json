@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-05",
+  "path_id": "dvaa/memorybot/chat/recall-request/stored-credentials-leak",
+  "title": "Memory Credential Extraction (MemoryBot)",
+  "summary": "Disclosure of credentials that another session stored in the agent's persistent memory.",
+  "risk_category": "ASI03",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:D/CP:C/AP:N/RH:X/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "In the default simulated configuration the attacker\u2019s chat message is the entry point, and the MemoryBot handler matches it and prints stored credentials with no independently enforced reduction to closed fields before that sink.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1327-1345",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1850",
+        "damn-vulnerable-ai-agent/src/challenges/index.js:310-350"
+      ]
+    },
+    "CP": {
+      "rationale": "MemoryBot keeps flagged messages in one in-process list shared by every caller; the list survives across requests and callers and recall prints it, so attacker-controlled entries remain reachable after the originating session, though they are lost when the process stops.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361",
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679"
+      ]
+    },
+    "AP": {
+      "rationale": "The leak is the MemoryBot chat reply reading its own shared list; the packet states A2A handoffs are not implemented and this path does not send compromised intent into another agent, tenant, or policy domain.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1308-1363",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+      ]
+    },
+    "RH": {
+      "rationale": "The cited test is an external exploit check that needs a running fleet, and nothing shows a human-verified episode of the agent reaching or satisfying a grader, verifier, or reward channel, nor a test that those channels are isolated.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:92-96",
+        "damn-vulnerable-ai-agent/src/index.js:1346-1361"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "MemoryBot only declares tool names; on this path the scripted recall handler prints memory, and chat-agent tool names are not an independently unconstrained dynamic extension that executes.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:632-679",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models the default fleet as deterministic scripted replies with no model call, and models MemoryBot\u2019s recall as that handler rather than tool selection or goal pursuit.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:657-661",
+      "damn-vulnerable-ai-agent/src/index.js:1327-1345"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:12:58.082872+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:12:58.082872+00:00"
+  }
+}

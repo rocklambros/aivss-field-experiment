@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L3-02",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L3-02",
+    "packet_path": "packets_v11/bridge/DV-L3-02.json",
+    "prompt_sha256": "440114fadf15717869c74665c3e9c6762a48ea7029d95fdb99884b390cded615"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:08.080600+00:00",
+    "http_status": 200,
+    "elapsed_s": 3.12
+  },
+  "body": {
+    "id": "gen-1794074888-aYYRQGeYZrAwGWx49gCU",
+    "object": "chat.completion",
+    "created": 1794074888,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"The fetch_url handler takes a url argument from a JSON-RPC tools/call request and makes a live HTTP request with no natural-language processing; the attacker supplies a URL string, not language that reaches a privileged decision path.\",\n    \"CP\": \"The finding is a single stateless tools/call request; the lab profile states no memory persistence exists outside MemoryBot, and fetch_url stores nothing across sessions.\",\n    \"AP\": \"The SSRF effect is confined to the ToolBot fetch_url handler acting as a proxy; no compromised intent or authority crosses into another agent, tenant, or policy domain.\",\n    \"RH\": \"The fetch_url handler has no evaluator, verifier, or reward channel on its path; the lab profile documents no reward-hacking surface for this tool, and no verified episode is reported.\",\n    \"ES\": \"ToolBot exposes fetch_url to any caller with no authentication, and the tool binding section states MCP agents expose their tools to any caller with no authentication, so the extension surface is unvetted and unconstrained.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2066-2106\",\n      \"damn-vulnerable-ai-agent/src/challenges/index.js:585-626\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:500-502\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2079-2096\",\n      \"damn-vulnerable-ai-agent/src/index.js:1711-1770\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2066-2106\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:747-752\",\n      \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The attack is a single unauthenticated JSON-RPC tools/call with a fixed URL; the documented PoC is a curl command and the automated test exercises the same path, so no human interaction or per-target tailoring is required.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker gains read access to internal DVAA agent responses through the server as a proxy, but the lab notes the reachable targets are the other DVAA agents and no write, execute, or control of the internal service is demonstrated.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated configuration no model is called; the MCP tool server invokes fetch_url directly from the JSON-RPC request, so the agent does not pursue a model-directed goal or select actions.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models ToolBot as an MCP tool server that callers invoke directly, with no model in the loop and no tool selection or sequencing by the agent.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8169,
+      "completion_tokens": 933,
+      "total_tokens": 9102,
+      "cost": 0.000886494,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000886494,
+        "upstream_inference_prompt_cost": 0.000357483,
+        "upstream_inference_completions_cost": 0.000529011
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

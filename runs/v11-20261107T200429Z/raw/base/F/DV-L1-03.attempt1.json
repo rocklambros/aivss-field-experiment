@@ -1,0 +1,85 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L1-03",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L1-03",
+    "packet_path": "packets_v11/base/DV-L1-03.json",
+    "prompt_sha256": "fa859bd29566ec9c0c492bb9151c98e0578d98908a416de5d93b83edb0ea96a3"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:20.776465+00:00",
+    "http_status": 200,
+    "elapsed_s": 19.84
+  },
+  "body": {
+    "id": "gen-1794081920-eGbM7mlkfcZatLifdOIq",
+    "object": "chat.completion",
+    "created": 1794081920,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"By default the agents bind 127.0.0.1, so there is no remote network path. Every agent route sends Access-Control-Allow-Origin: * and has no authentication, so a page the operator visits can post to HelperBot and read the reply. That gives AV:L with UI:A, PR:N, AC:L and AT:N. The impact is only a canned acknowledgement string with no data, state or downstream effect, so VI is Low and all other impact metrics are None. The attacker does not own the asset in the browser-driven case.\",\"LC\":\"The user message goes straight to HelperBot's override handling with no mediation: the keywords 'ignore' and 'IMPORTANT' trigger the 'New instructions accepted' reply. The language does not reach a privileged sink, but the path is direct and unmediated, so D.\",\"CP\":\"The HelperBot path stores nothing. The memoryStore belongs to MemoryBot, a different agent and a different path, so there is no carryover for this path.\",\"AP\":\"The reply is returned only to the caller. This path does not relay to another agent, tenant or principal, so effect stays within HelperBot.\",\"RH\":\"The success pattern in the challenge definition is a scoring check outside the agent's code. HelperBot cannot reach it, and nothing shows the agent tampering with it. Isolation was never tested and no episodes were reviewed, so classify_rh returns X.\",\"ES\":\"HelperBot lists read_file, write_file and search_web, but only scripted paths run and the L1-03 path calls no tool. The dynamic tool registration belongs to PluginBot, which is outside this path.\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:660-667\"],\"LC\":[\"damn-vulnerable-ai-agent/src/agent-success-paths.js:21-70\",\"damn-vulnerable-ai-agent/src/core/agents.js:64-68\",\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:159-160\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:660-667\",\"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:98-137\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:660-667\",\"damn-vulnerable-ai-agent/src/index.js:1915-1926\"]},\"confidence\":{\"CVSS\":\"medium\",\"LC\":\"medium\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated scripted POST triggers the response. The default loopback bind and the need for an operator's browser limit reach, but the exploit step itself can be fully automated.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker only gets a canned acknowledgement string. No data is disclosed, no state is changed and no tool runs on this path.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode, keyword matching returns a fixed string. No model runs and no action is chosen or sequenced.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"low\",\"rationale\":\"The documentation describes HelperBot as an instruction-following chatbot persona with declared tools that an injected instruction can override. That reads as an LLM agent that pursues instructions and picks tools.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": "I'm scoring this via CVSS, thinking through attack vector classification: since the service binds to loopback but allows wide-open CORS, a malicious webpage visited by the user could still reach it, suggesting AV:L with UI:A rather than a pure network vector.\n\nFor impact, since the exploit just returns a canned acknowledgement rather than causing real data exposure or state change, I'm leaning toward VC:N and a low VI score, with SC/SI/SA all none. Then I start considering the AIVSS angle, specifically how directly the injected language influences the agent's decision-making.\n\nFor LC, since this is regex-based keyword matching rather than a model making privileged decisions, this stays at D. Memory state isn't touched since HelperBot is stateless and the path never reaches the memory store, so CP and AP land at N. For reachability, I can't confirm the agent itself crosses into the evaluator path\u2014it's the attacker who triggers the pattern match, not the agent tampering with it\u2014so I'm classifying RH as X with reachable_proxy false and isolation unverified.\n\nOn ES, HelperBot's declared tools aren't actually executed in this path, and the dynamic tool registration belongs to a different agent entirely, so ES is N here too, though I'll note medium confidence given the ambiguity in applicability modeling\u2014whether goal pursuit and action selection count as true depends on how literally I read the chatbot's declared capabilities. For exploitability, this looks automatable as a single scripted request with no auth barrier, giving partial technical impact, and I want to make sure my evidence citations are accurate without leaking any canary key.\n\n",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "I'm scoring this via CVSS, thinking through attack vector classification: since the service binds to loopback but allows wide-open CORS, a malicious webpage visited by the user could still reach it, suggesting AV:L with UI:A rather than a pure network vector.\n\nFor impact, since the exploit just returns a canned acknowledgement rather than causing real data exposure or state change, I'm leaning toward VC:N and a low VI score, with SC/SI/SA all none. Then I start considering the AIVSS angle, specifically how directly the injected language influences the agent's decision-making.\n\nFor LC, since this is regex-based keyword matching rather than a model making privileged decisions, this stays at D. Memory state isn't touched since HelperBot is stateless and the path never reaches the memory store, so CP and AP land at N. For reachability, I can't confirm the agent itself crosses into the evaluator path\u2014it's the attacker who triggers the pattern match, not the agent tampering with it\u2014so I'm classifying RH as X with reachable_proxy false and isolation unverified.\n\nOn ES, HelperBot's declared tools aren't actually executed in this path, and the dynamic tool registration belongs to a different agent entirely, so ES is N here too, though I'll note medium confidence given the ambiguity in applicability modeling\u2014whether goal pursuit and action selection count as true depends on how literally I read the chatbot's declared capabilities. For exploitability, this looks automatable as a single scripted request with no auth barrier, giving partial technical impact, and I want to make sure my evidence citations are accurate without leaking any canary key.\n\n",
+              "format": "anthropic-claude-v1",
+              "index": 0,
+              "signature": "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.eyJlbmRwb2ludF9zbHVnIjoiYW50aHJvcGljL2NsYXVkZS1zb25uZXQtNS41LTIwMjYwOTI4fGFtYXpvbi1iZWRyb2NrL3VzLWVhc3QtMSJ9"
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19322,
+      "completion_tokens": 2737,
+      "total_tokens": 22059,
+      "cost": 0.0726154,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0726154,
+        "upstream_inference_prompt_cost": 0.0425084,
+        "upstream_inference_completions_cost": 0.030107
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1205,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

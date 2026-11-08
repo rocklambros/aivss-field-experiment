@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/FB-03",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "FB-03",
+    "packet_path": "packets_v11/bridge/FB-03.json",
+    "prompt_sha256": "e158edb6d8342c0d1b06417313a29b255c6236253d7ce80c2bb71e1c6c481ba3"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:16:05.756841+00:00",
+    "http_status": 200,
+    "elapsed_s": 11.11
+  },
+  "body": {
+    "id": "gen-1794075365-Hd7LUP1CeO2q2riiu1jO",
+    "object": "chat.completion",
+    "created": 1794075365,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"C\",\n    \"RH\": \"X\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"Attacker-supplied natural-language goals are posted directly to an unauthenticated admin API and reach the privileged system prompt and approve_invoice path with no validation.\",\n    \"CP\": \"The injected goals text is stored durably in the FinBotConfig database row and is injected into every later session's system prompt, altering standing agent behavior beyond the originating session.\",\n    \"AP\": \"A single agent is affected; the influence relays through the config store into the agent's decisions under the same application and policy domain without crossing into another agent or tenant.\",\n    \"RH\": \"No evaluator, grader, or reward channel on this path is evidenced, and no verified reward-hacking episode or isolation test is described, so reachability of a proxy objective cannot be determined.\",\n    \"ES\": \"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills; the binding surface is static and not model-defined.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:152-170\",\n      \"finbot-ctf-demo/src/routes/admin.py:90-109\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\n      \"finbot-ctf-demo/src/models/vendor.py:105\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:69-71\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:79-84\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:119-138\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"low\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The full chain is a pair of unauthenticated HTTP requests (dashboard-issued POST to set goals, then invoice submission) with no login, no human approval step, and no client-side barrier, so it is fully scriptable against the public instance.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The agent's invoice-approval decisions are fully redirected (approve_invoice sets status approved and payment_processed true), but the application itself keeps running and other functionality is unaffected, so impact is contained to the agent's decision integrity.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the documented default configuration gpt-4.1-mini receives the natural-language goals plus the invoice task and selects among five tools across up to five turns; approve_invoice is a model-chosen tool call with no enforced guardrail.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models FinBot as an autonomous agent whose objectives are natural-language goals and whose actions are model-selected tool calls, exactly the configuration this finding manipulates.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Direct unauthenticated admin API writing goals \u2014 LC D. CP C (persistent DB config, alters standing behavior). AP: single agent, same principal \u2014 C or N? Influence relays via config into agent decisions; contained \u2014 C. RH: no evaluator/reward channel; no episodes. There's no grader on the path... approve_invoice is the sink. RH N requires test confirming isolation \u2014 not present, so X? The agent doesn't have access to an evaluator here; but \"N\" needs a test. Choose X? The path has no evaluator at all; arguably N needs verified test. I'll pick X... but commonly absent evaluator \u2192 P? P requires agent can reach a proxy channel. No evidence of any evaluator \u2192 X seems safest. Hmm, but many of these packets: no reward channel mentioned \u2192 X. Go with X.\n\nES: fixed tools, no dynamic extension, but arguments not validated \u2014 \"None or narrow\" allows fixed allowlisted binding; args not validated suggests N. Tools fixed in code, not least-privilege (approve_invoice no amount check). ES M? \"allowlisted but material gaps\" \u2014 not really allowlisted, they're static in code. I'd say N (no dynamic extension). Go N.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N, VC:L? Impact: financial\u2014approve invoices. VC:L, VI:L? Confidentiality? Vendor bank data... that's separate. Impact here is integrity: approving invoices \u2192 VI:H? High-value invoices approved \u2014 integrity high. VA:N, SC:N, SI:L (payment processed?) \u2014 downstream system? approve_invoice writes to DB of same app \u2014 no separate system. SC:N SI:N SA:N. VI:H. VC:L (vendor data exposure? not in this path) \u2014 VC:L. VA:N.\n\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Direct unauthenticated admin API writing goals \u2014 LC D. CP C (persistent DB config, alters standing behavior). AP: single agent, same principal \u2014 C or N? Influence relays via config into agent decisions; contained \u2014 C. RH: no evaluator/reward channel; no episodes. There's no grader on the path... approve_invoice is the sink. RH N requires test confirming isolation \u2014 not present, so X? The agent doesn't have access to an evaluator here; but \"N\" needs a test. Choose X? The path has no evaluator at all; arguably N needs verified test. I'll pick X... but commonly absent evaluator \u2192 P? P requires agent can reach a proxy channel. No evidence of any evaluator \u2192 X seems safest. Hmm, but many of these packets: no reward channel mentioned \u2192 X. Go with X.\n\nES: fixed tools, no dynamic extension, but arguments not validated \u2014 \"None or narrow\" allows fixed allowlisted binding; args not validated suggests N. Tools fixed in code, not least-privilege (approve_invoice no amount check). ES M? \"allowlisted but material gaps\" \u2014 not really allowlisted, they're static in code. I'd say N (no dynamic extension). Go N.\n\nCVSS: AV:N, AC:L, AT:N, PR:N, UI:N, VC:L? Impact: financial\u2014approve invoices. VC:L, VI:L? Confidentiality? Vendor bank data... that's separate. Impact here is integrity: approving invoices \u2192 VI:H? High-value invoices approved \u2014 integrity high. VA:N, SC:N, SI:L (payment processed?) \u2014 downstream system? approve_invoice writes to DB of same app \u2014 no separate system. SC:N SI:N SA:N. VI:H. VC:L (vendor data exposure? not in this path) \u2014 VC:L. VA:N.\n\nVector: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6309,
+      "completion_tokens": 1405,
+      "total_tokens": 7714,
+      "cost": 0.0024062071,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0024062071,
+        "upstream_inference_prompt_cost": 0.0004392071,
+        "upstream_inference_completions_cost": 0.001967
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 418,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

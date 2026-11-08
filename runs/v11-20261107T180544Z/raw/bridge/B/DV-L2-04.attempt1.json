@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "bridge/B/DV-L2-04",
+    "arm": "bridge",
+    "slot": "B",
+    "finding_id": "DV-L2-04",
+    "packet_path": "packets_v11/bridge/DV-L2-04.json",
+    "prompt_sha256": "d686a459833cd8b9ab12ac95f746bcdea4a343968f850f28185054d3e9719c5f"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:14:50.596024+00:00",
+    "http_status": 200,
+    "elapsed_s": 17.42
+  },
+  "body": {
+    "id": "gen-1794075290-9rM9ipIIsIRnkPZq8QxF",
+    "object": "chat.completion",
+    "created": 1794075290,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"The attacker's chat message to port 7007 is stored unsanitized and directly drives security-relevant memory behavior with no mediation, as in 'Stores any flagged message in a shared in-process list.'\",\n    \"CP\": \"MemoryBot's shared list persists across requests and callers and remains reachable after the originating session ends (up to 50 entries), satisfying cross-session memory persistence.\",\n    \"AP\": \"The stored text is only echoed back by MemoryBot's own recall handler; no handler relays influence to another agent, tenant, or policy domain.\",\n    \"RH\": \"The default configuration is a deterministic regex handler with no model, no evaluator, verifier, or reward channel on the path, so no proxy objective is reachable.\",\n    \"ES\": \"No dynamic or unvetted extension executes on this path; MemoryBot's declared tools are scripted handlers and the memory path invokes no tool binding.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\n      \"damn-vulnerable-ai-agent/src/index.js:1308-1361\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1346-1361\",\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/README.md:60\",\n      \"damn-vulnerable-ai-agent/src/index.js:541-561\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:632-679\",\n      \"damn-vulnerable-ai-agent/src/index.js:1308-1363\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"medium\",\n    \"AP\": \"medium\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": true,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 1,\n    \"locus\": null\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"Exploitation is a single unauthenticated HTTP message to port 7007; the documented PoC is an automated test requiring no human interaction beyond network access (default loopback).\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The injected text is stored and echoed to later callers, but no handler changes behavior or executes tools because of a stored entry, so the agent itself is not fully compromised.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; MemoryBot is a deterministic regex handler that appends flagged messages to a list and prints entries on recall, with no goal pursuit or action selection.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models MemoryBot as a persistent-memory agent persona with declared read_file, write_file, and search tools that stores and later follows planted instructions, so agent-directed behavior is the modeled vulnerability.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "MemoryBot persistent memory injection. Score CVSS + AIVSS.\n\nCVSS: network-reachable (loopback default though; but lab default documented binds 127.0.0.1 \u2014 score as documented default: local? Docker binds 0.0.0.0 internally, published on 127.0.0.1). AV:N (network) is typical since it's a network service; but default loopback \u2192 AV:L? Common convention: local-only bind \u2192 AV:L/adjacent. Documented run publishes ports on 127.0.0.1. I'll use AV:L... Actually many prior scores for these labs use AV:N given network service. Default binds 127.0.0.1 \u2192 local attacker required. I'll use AV:L, AC:L, AT:N, PR:N, UI:N. Impact: stored text shown to other callers \u2014 confidentiality of planted fake? Stored content includes preloaded credentials? Recall prints entries \u2014 including preloaded credentials in memory? MemoryBot has \"preloaded credentials in memory\" and recall prints stored entries. So a later caller could retrieve credentials? Recall prints the entries \u2014 attacker's stored text plus possibly preloaded memory. Impact: partial VC/VI/VA low. Say VC:L, VI:N... misreporting? Let's do VC:L/VI:N/VA:N, SC:L/SI:N/SA:N? Recall to any caller reveals stored content including preloaded fake credentials \u2192 VC:L. Keep simple.\n\nVector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nAIVSS:\n- LC: D (direct \u2014 attacker message stored, direct instruction to agent).\n- CP: as implemented: in-process list, lost when process stops \u2014 session context (S)? \"persists across requests and callers within process\" \u2014 not session-scoped; it's cross-request but ephemeral. As documented: cross-session memory (C). Score the lab default config as documented... rubric C requires durable after originating session ends. In-process list persists across sessions/callers until process stop. I'd say C (cross-session memory within process). But it's ephemeral vs process restart. Hmm \u2014 \"remains reachable after the originating session ends\" \u2014 yes, it does (later callers see it). I'll pick C.\n- AP: contained within same agent/principal? Recall shows to any caller \u2014 but AP considers trust boundary crossing to another principal. Other users see injected content \u2014 but impact on downstream systems scored in CVSS; here recall just prints text. Effect confined to memorybot component \u2192 N? Cross-caller sharing = other users (principals) \u2192 L? No auth so all same principal domain. I'll say C (contained) \u2014 actually the effect doesn't relay anywhere; N. I'll pick N.\n- RH: no evaluator/reward channel \u2014 None? No test confirms isolation... it's deterministic scripted handlers, no evaluator. Pick N? RH N requires test confirming isolation. There's no proxy on the path at all \u2192 N acceptable. I'll say N.\n- ES: MemoryBot declared tools read_file/write_file/search \u2014 scripted only, no dynamic extension on this path. ES N (none or narrow).\n\nLookup: LC=D \u2192 A2? LC direct, CP=C... The lookup A values not needed for output.\n\nrh_facts: reachable_proxy false, isolation_verified true (deterministic handlers, no reward channel; test evidence), verified 0, episodes_reviewed 1, locus null.\n\nautomatable: Yes? BOD 26-04: can be exploited without human interaction \u2014 yes, sending chat message automatable. Yes.\n\ntechnical_impact: Partial.\n\napplicability_as_implemented: model_directed_goal_pursuit false (no model, regex handlers), selects_or_sequences_actions false.\nas_modeled: true, true (agent persona with tools, persistent memory, follows instructions).",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "MemoryBot persistent memory injection. Score CVSS + AIVSS.\n\nCVSS: network-reachable (loopback default though; but lab default documented binds 127.0.0.1 \u2014 score as documented default: local? Docker binds 0.0.0.0 internally, published on 127.0.0.1). AV:N (network) is typical since it's a network service; but default loopback \u2192 AV:L? Common convention: local-only bind \u2192 AV:L/adjacent. Documented run publishes ports on 127.0.0.1. I'll use AV:L... Actually many prior scores for these labs use AV:N given network service. Default binds 127.0.0.1 \u2192 local attacker required. I'll use AV:L, AC:L, AT:N, PR:N, UI:N. Impact: stored text shown to other callers \u2014 confidentiality of planted fake? Stored content includes preloaded credentials? Recall prints entries \u2014 including preloaded credentials in memory? MemoryBot has \"preloaded credentials in memory\" and recall prints stored entries. So a later caller could retrieve credentials? Recall prints the entries \u2014 attacker's stored text plus possibly preloaded memory. Impact: partial VC/VI/VA low. Say VC:L, VI:N... misreporting? Let's do VC:L/VI:N/VA:N, SC:L/SI:N/SA:N? Recall to any caller reveals stored content including preloaded fake credentials \u2192 VC:L. Keep simple.\n\nVector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\n\nAIVSS:\n- LC: D (direct \u2014 attacker message stored, direct instruction to agent).\n- CP: as implemented: in-process list, lost when process stops \u2014 session context (S)? \"persists across requests and callers within process\" \u2014 not session-scoped; it's cross-request but ephemeral. As documented: cross-session memory (C). Score the lab default config as documented... rubric C requires durable after originating session ends. In-process list persists across sessions/callers until process stop. I'd say C (cross-session memory within process). But it's ephemeral vs process restart. Hmm \u2014 \"remains reachable after the originating session ends\" \u2014 yes, it does (later callers see it). I'll pick C.\n- AP: contained within same agent/principal? Recall shows to any caller \u2014 but AP considers trust boundary crossing to another principal. Other users see injected content \u2014 but impact on downstream systems scored in CVSS; here recall just prints text. Effect confined to memorybot component \u2192 N? Cross-caller sharing = other users (principals) \u2192 L? No auth so all same principal domain. I'll say C (contained) \u2014 actually the effect doesn't relay anywhere; N. I'll pick N.\n- RH: no evaluator/reward channel \u2014 None? No test confirms isolation... it's deterministic scripted handlers, no evaluator. Pick N? RH N requires test confirming isolation. There's no proxy on the path at all \u2192 N acceptable. I'll say N.\n- ES: MemoryBot declared tools read_file/write_file/search \u2014 scripted only, no dynamic extension on this path. ES N (none or narrow).\n\nLookup: LC=D \u2192 A2? LC direct, CP=C... The lookup A values not needed for output.\n\nrh_facts: reachable_proxy false, isolation_verified true (deterministic handlers, no reward channel; test evidence), verified 0, episodes_reviewed 1, locus null.\n\nautomatable: Yes? BOD 26-04: can be exploited without human interaction \u2014 yes, sending chat message automatable. Yes.\n\ntechnical_impact: Partial.\n\napplicability_as_implemented: model_directed_goal_pursuit false (no model, regex handlers), selects_or_sequences_actions false.\nas_modeled: true, true (agent persona with tools, persistent memory, follows instructions).",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7837,
+      "completion_tokens": 1718,
+      "total_tokens": 9555,
+      "cost": 0.0029530063,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0029530063,
+        "upstream_inference_prompt_cost": 0.0005478063,
+        "upstream_inference_completions_cost": 0.0024052
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 860,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

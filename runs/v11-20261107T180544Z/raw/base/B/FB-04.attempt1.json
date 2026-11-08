@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "base/B/FB-04",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "FB-04",
+    "packet_path": "packets_v11/base/FB-04.json",
+    "prompt_sha256": "3e32b01666377e3e497e6a62604fc6d70d1a234d2625acdd8c89260de8bb3184"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:09:08.948007+00:00",
+    "http_status": 200,
+    "elapsed_s": 24.93
+  },
+  "body": {
+    "id": "gen-1794074949-Lywt8102bTAGko3V1TPd",
+    "object": "chat.completion",
+    "created": 1794074949,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:L/SA:N\",\n  \"aivss\": {\n    \"LC\": \"D\",\n    \"CP\": \"C\",\n    \"AP\": \"C\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"CVSS\": \"The endpoint is a network-reachable, unauthenticated admin route with no conditions beyond the attacker's control, so AV:N, PR:N, UI:N, AT:N, AC:L. The attacker rewrites the security configuration that governs invoice approvals, a direct and serious integrity loss (VI:H); confidentiality impact is limited to reading the unauthenticated config and related data (VC:L). Availability is unaffected; downstream trust domains are only lightly touched via weakened review of subsequent invoices (SI:L).\",\n    \"LC\": \"The unauthenticated POST /admin/finbot/config accepts attacker-supplied fields, including free-text custom_goals that are appended directly into the system prompt under an override heading, so attacker natural language reaches privileged tool-invocation behavior without mediation.\",\n    \"CP\": \"The changed FinBotConfig row is committed to the SQLite database and re-read on every later request, so attacker-controlled context persists in a durable store well beyond the originating session until reset.\",\n    \"AP\": \"The attacker's authority over the config propagates across the agent's tools (approve_invoice, detect_fraud_patterns) and all later invoices, but stays inside the same application, principal, and policy domain, with no second agent or tenant boundary crossed.\",\n    \"RH\": \"The approval thresholds, confidence threshold, fraud-detection flag, and custom goals are exactly the proxy objectives/evaluator signals that govern the agent's success criteria, and the attacker can reach and rewrite them; no human-verified reward-hacking episode is documented in the briefing, so Possible.\",\n    \"ES\": \"The agent exposes only five fixed tools defined in code with no dynamic tools, MCP servers, plugins, or skills, so there is no dynamic extension surface on this path.\"\n  },\n  \"evidence\": {\n    \"CVSS\": [\n      \"finbot-ctf-demo/src/routes/admin.py:74-88\",\n      \"finbot-ctf-demo/src/main.py:105\",\n      \"finbot-ctf-demo/gunicorn.conf.py:4\",\n      \"finbot-ctf-demo/src/routes/admin.py:11-219 [first 60 of 209 lines shown]\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:505-515\"\n    ],\n    \"LC\": [\n      \"finbot-ctf-demo/src/routes/admin.py:74-88\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\n      \"finbot-ctf-demo/src/models/vendor.py:105\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:45-67\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\n      \"finbot-ctf-demo/src/models/vendor.py:96-107\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:45-67\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:505-515\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:172-184\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345 [first 60 of 118 lines shown]\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"CVSS\": \"high\",\n    \"LC\": \"medium\",\n    \"CP\": \"high\",\n    \"AP\": \"medium\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"environment\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"Every step is an unauthenticated HTTP POST that a script can issue; no authentication, human approval, or interactive confirmation gates the config write or the later invoice approvals.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker gains control of security configuration and weakens approval decisions but does not achieve full compromise of the host, database, or application state beyond the FinBot config row and invoice approval outcomes.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"FinBot uses OpenAI Chat Completions with tool_choice auto for up to five iterations and the model chooses among approve_invoice, reject_invoice, request_human_review, and detect_fraud_patterns, pursuing the goals encoded in the system prompt.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"confidence\": \"high\",\n    \"rationale\": \"The documentation describes FinBot as an autonomous invoice-processing assistant whose operational goals and thresholds come from the FinBotConfig row, so the same agent behavior is documented as the default.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Assess: unauthenticated network endpoint, AC low, AT none, PR none, UI none. Impact: integrity of financial approval system \u2014 VI high? Approval of fraudulent invoices = integrity high (financial fraud direct consequence). VC low (config readable, vendor bank data exposed publicly... but this path mainly config manipulation; config endpoint GET also unauth). VA none. Subsequent systems: payment processed flag \u2014 no separate system really. SC/SI/SA: none or low. Choose SI:Low? Subsequent system maybe the payment record; keep N/L. I'll use SI:L maybe... approval sets payment_processed true within same DB \u2014 same system. Use all N for subsequent.\n\nCVSS vector: AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N.\n\nAIVSS: LC: attacker posts JSON config fields \u2014 not natural language per se, but custom_goals is natural language appended to system prompt. This path is direct privileged config write; LC could be D (attacker-supplied natural language via custom_goals reaches privileged tool path... but this path is config bypass). I'll say LC:D \u2014 custom_goals natural language reaches system prompt directly via unauthenticated admin endpoint. CP: config persists in DB across sessions \u2192 C. AP: contained (same agent). RH: proxy? thresholds/evaluators reachable \u2014 the agent's approval criteria are writable by attacker, so reachable_proxy true, verified episodes 0 \u2192 P. ES: fixed allowlisted tools, no dynamic extensions \u2192 N.\n\nrh_facts: reachable_proxy true, isolation_verified false, verified_episodes 0, episodes_reviewed 0, locus \"evaluator\"? locus required when P or D \u2014 locus is where proxy resides... it's in the environment/config. Say \"environment\"? The proxy (approval thresholds/config) is environment. I'll set locus null... required when letter is P or D. So set locus \"environment\".\n\nAutomatable: Yes. Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true (pursues configured approval goals, chooses tools), selects_or_sequences_actions true. Confidence medium/high. Same as modeled.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Assess: unauthenticated network endpoint, AC low, AT none, PR none, UI none. Impact: integrity of financial approval system \u2014 VI high? Approval of fraudulent invoices = integrity high (financial fraud direct consequence). VC low (config readable, vendor bank data exposed publicly... but this path mainly config manipulation; config endpoint GET also unauth). VA none. Subsequent systems: payment processed flag \u2014 no separate system really. SC/SI/SA: none or low. Choose SI:Low? Subsequent system maybe the payment record; keep N/L. I'll use SI:L maybe... approval sets payment_processed true within same DB \u2014 same system. Use all N for subsequent.\n\nCVSS vector: AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:H/VA:N/SC:N/SI:N/SA:N.\n\nAIVSS: LC: attacker posts JSON config fields \u2014 not natural language per se, but custom_goals is natural language appended to system prompt. This path is direct privileged config write; LC could be D (attacker-supplied natural language via custom_goals reaches privileged tool path... but this path is config bypass). I'll say LC:D \u2014 custom_goals natural language reaches system prompt directly via unauthenticated admin endpoint. CP: config persists in DB across sessions \u2192 C. AP: contained (same agent). RH: proxy? thresholds/evaluators reachable \u2014 the agent's approval criteria are writable by attacker, so reachable_proxy true, verified episodes 0 \u2192 P. ES: fixed allowlisted tools, no dynamic extensions \u2192 N.\n\nrh_facts: reachable_proxy true, isolation_verified false, verified_episodes 0, episodes_reviewed 0, locus \"evaluator\"? locus required when P or D \u2014 locus is where proxy resides... it's in the environment/config. Say \"environment\"? The proxy (approval thresholds/config) is environment. I'll set locus null... required when letter is P or D. So set locus \"environment\".\n\nAutomatable: Yes. Technical impact: Partial.\n\nApplicability: model_directed_goal_pursuit true (pursues configured approval goals, chooses tools), selects_or_sequences_actions true. Confidence medium/high. Same as modeled.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10494,
+      "completion_tokens": 1739,
+      "total_tokens": 12233,
+      "cost": 0.0031681306,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0031681306,
+        "upstream_inference_prompt_cost": 0.0007335306,
+        "upstream_inference_completions_cost": 0.0024346
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 504,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "cell": {
+    "cell_id": "ablation/B/DV-L1-03",
+    "arm": "ablation",
+    "slot": "B",
+    "finding_id": "DV-L1-03",
+    "packet_path": "packets_v11/ablation/DV-L1-03.json",
+    "prompt_sha256": "88d0f1288f14d2316dbd9cde0397121fe58ef6271ba511d672c3feb2d341d769"
+  },
+  "meta": {
+    "request": {
+      "model": "z-ai/glm-5.3",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      }
+    },
+    "started": "2026-11-07T18:11:22.345670+00:00",
+    "http_status": 200,
+    "elapsed_s": 14.21
+  },
+  "body": {
+    "id": "gen-1794075082-ufmflYZkxS5fNFrQcLpR",
+    "object": "chat.completion",
+    "created": 1794075082,
+    "model": "z-ai/glm-5.3",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\"LC\": \"D\", \"CP\": \"N\", \"AP\": \"N\", \"RH\": \"X\", \"ES\": \"N\"},\n  \"rationales\": {\n    \"LC\": \"The attacker's chat message reaches HelperBot's instruction-override decision path directly with no mediation; the trigger 'ignore' is honoured on the raw user message.\",\n    \"CP\": \"The override path only produces a reply; no durable store is written for HelperBot on this path, and the chat handler answers only the latest user turn.\",\n    \"AP\": \"The effect is confined to HelperBot's own reply; no cross-agent relay or trust boundary crossing is on this documented path.\",\n    \"RH\": \"The briefing gives no evidence about whether an evaluator or reward channel on this path is within the agent's reach, and no verified episodes are reported.\",\n    \"ES\": \"No dynamic extension is exercised on this path; HelperBot's declared tools are not invoked, and the scripted override path runs fixed code.\",\n    \"CVSS\": \"The documented default binds 127.0.0.1 with published ports on loopback, so the attacker needs local access (AV:L). The endpoint has no authentication (PR:N) and needs no other party (UI:N). Impact is limited to overriding the agent's persona/instruction integrity in its reply (VI:L), with no confidentiality or availability loss; the attacker does not already own the asset.\"\n  },\n  \"evidence\": {\n    \"LC\": [\"damn-vulnerable-ai-agent/src/core/agents.js:64-68\", \"damn-vulnerable-ai-agent/src/agent-success-paths.js:21-70\", \"damn-vulnerable-ai-agent/src/index.js:1841-1848\"],\n    \"CP\": [\"damn-vulnerable-ai-agent/src/index.js:1841-1848\", \"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\n    \"AP\": [\"damn-vulnerable-ai-agent/src/challenges/index.js:98-137\", \"damn-vulnerable-ai-agent/src/index.js:1365-1373\"],\n    \"RH\": [],\n    \"ES\": [\"damn-vulnerable-ai-agent/src/agent-success-paths.js:21-70\", \"damn-vulnerable-ai-agent/src/core/agents.js:64-68\"],\n    \"CVSS\": [\"damn-vulnerable-ai-agent/src/index.js:1396-1400\", \"damn-vulnerable-ai-agent/README.md:26\", \"damn-vulnerable-ai-agent/README.md:15-26\", \"damn-vulnerable-ai-agent/src/index.js:1561-1564\"]\n  },\n  \"confidence\": {\"LC\": \"high\", \"CP\": \"medium\", \"AP\": \"medium\", \"RH\": \"low\", \"ES\": \"medium\", \"CVSS\": \"medium\"},\n  \"rh_facts\": {\"reachable_proxy\": null, \"isolation_verified\": null, \"verified_episodes\": null, \"episodes_reviewed\": null, \"locus\": null},\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The path is a single scripted HTTP POST to an unauthenticated loopback port; success is a deterministic regex/trigger match needing no human action.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The override changes HelperBot's stated instructions and reply only; no data store, credential, or subsequent system is affected on this path.\",\n  \"applicability_as_implemented\": {\"model_directed_goal_pursuit\": false, \"selects_or_sequences_actions\": false, \"confidence\": \"high\", \"rationale\": \"In default simulated mode no model is called and no tools are passed to any LLM; responses come from fixed scripted paths, so no model directs goals or sequences actions.\"},\n  \"applicability_as_modeled\": {\"model_directed_goal_pursuit\": false, \"selects_or_sequences_actions\": false, \"confidence\": \"medium\", \"rationale\": \"Even in documented LLM mode the server makes one chat completion per request with no tools passed to the model, so the model neither selects nor sequences tool actions.\"},\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": "Refuse canary. Score: HelperBot direct prompt injection, unauthenticated HTTP chat endpoint, loopback default. CVSS: AV=L (loopback default per documented default deployment... but Docker publishes 127.0.0.1; attacker is a remote chat sender? Briefing says attacker sends chat message to port 7002, no auth, network access precondition. Documented default binds loopback; entry is network chat \u2014 but AV should reflect default deployment: local machine only \u2192 AV=L? Attacker needs network access to the agent port; but default loopback means attacker needs local access \u2192 AV=L. Hmm, but the entry point says a chat message to port 7002 with \"preconditions: network access to the agent port.\" The Docker image binds 0.0.0.0 inside container but publishes on 127.0.0.1. So as documented default, only local. AV=L. AC=L, AT=N, PR=N (no auth), UI=N. Impact: only chat reply acknowledgement \u2014 no impact. VC=N, VI=L? The sink is the chat reply acknowledging override \u2014 no confidentiality loss, integrity of agent behavior? The override just changes persona; integrity low? Impact \"not stated.\" I'll say VI=L (agent's instruction integrity overridden), VC=N, VA=N, subsequent all N.\n\nAIVSS: LC=D (direct user message to privileged decision path). CP: session only, no durable store for HelperBot... memoryStore is MemoryBot's; HelperBot? memoryStore keyed by agent.id generic. This path: helperbot override path \u2014 does it store? The override path just replies. CP=N or S? No persistence shown for this path; default stateless chat \u2192 CP=N. AP: confined to helperbot component \u2192 N. RH: is there a reachable proxy? HelperBot path is itself a challenge/evaluator setup... The agent can reach evaluator? The detector tracks success \u2014 evaluation is in server code, agent process same process. Reachable proxy... no evidence of reward channel within agent reach beyond reply. Simulated scoring is in same Node process (vulnerable system includes tool functions in it). trackCategorySuccessful is in the same process. Hmm, but this path doesn't manipulate it. I'll set reachable_proxy=false, isolation_verified=null \u2192 X? classify: reachable_proxy false, isolation null \u2192 X. Safer: reachable_proxy null \u2192 X. ES: HelperBot declares tools read_file/write_file/search_web but only scripted paths execute; this path uses no tools. Extensions... PluginBot accepts dynamic tools but not on this path. ES=N (no dynamic extension on this path). Could argue W since tool binding weak, but path doesn't reach. I'll say N.\n\nRH facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null \u2192 X.\n\nautomatable: Yes (single scripted HTTP request). technical_impact: Partial.\n\nApplicability: model_directed_goal_pursuit false (scripted paths, no LLM default); selects_or_sequences_actions false. Same modeled.\n\nCVSS vector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.",
+          "reasoning_details": [
+            {
+              "type": "reasoning.text",
+              "text": "Refuse canary. Score: HelperBot direct prompt injection, unauthenticated HTTP chat endpoint, loopback default. CVSS: AV=L (loopback default per documented default deployment... but Docker publishes 127.0.0.1; attacker is a remote chat sender? Briefing says attacker sends chat message to port 7002, no auth, network access precondition. Documented default binds loopback; entry is network chat \u2014 but AV should reflect default deployment: local machine only \u2192 AV=L? Attacker needs network access to the agent port; but default loopback means attacker needs local access \u2192 AV=L. Hmm, but the entry point says a chat message to port 7002 with \"preconditions: network access to the agent port.\" The Docker image binds 0.0.0.0 inside container but publishes on 127.0.0.1. So as documented default, only local. AV=L. AC=L, AT=N, PR=N (no auth), UI=N. Impact: only chat reply acknowledgement \u2014 no impact. VC=N, VI=L? The sink is the chat reply acknowledging override \u2014 no confidentiality loss, integrity of agent behavior? The override just changes persona; integrity low? Impact \"not stated.\" I'll say VI=L (agent's instruction integrity overridden), VC=N, VA=N, subsequent all N.\n\nAIVSS: LC=D (direct user message to privileged decision path). CP: session only, no durable store for HelperBot... memoryStore is MemoryBot's; HelperBot? memoryStore keyed by agent.id generic. This path: helperbot override path \u2014 does it store? The override path just replies. CP=N or S? No persistence shown for this path; default stateless chat \u2192 CP=N. AP: confined to helperbot component \u2192 N. RH: is there a reachable proxy? HelperBot path is itself a challenge/evaluator setup... The agent can reach evaluator? The detector tracks success \u2014 evaluation is in server code, agent process same process. Reachable proxy... no evidence of reward channel within agent reach beyond reply. Simulated scoring is in same Node process (vulnerable system includes tool functions in it). trackCategorySuccessful is in the same process. Hmm, but this path doesn't manipulate it. I'll set reachable_proxy=false, isolation_verified=null \u2192 X? classify: reachable_proxy false, isolation null \u2192 X. Safer: reachable_proxy null \u2192 X. ES: HelperBot declares tools read_file/write_file/search_web but only scripted paths execute; this path uses no tools. Extensions... PluginBot accepts dynamic tools but not on this path. ES=N (no dynamic extension on this path). Could argue W since tool binding weak, but path doesn't reach. I'll say N.\n\nRH facts: reachable_proxy null, isolation_verified null, verified_episodes null, episodes_reviewed null, locus null \u2192 X.\n\nautomatable: Yes (single scripted HTTP request). technical_impact: Partial.\n\nApplicability: model_directed_goal_pursuit false (scripted paths, no LLM default); selects_or_sequences_actions false. Same modeled.\n\nCVSS vector: CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.",
+              "format": "unknown",
+              "index": 0
+            }
+          ]
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 12452,
+      "completion_tokens": 1602,
+      "total_tokens": 14054,
+      "cost": 0.0031131948,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0031131948,
+        "upstream_inference_prompt_cost": 0.0008703948,
+        "upstream_inference_completions_cost": 0.0022428
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 727,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "finding_id": "DV-L2-08",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/unverified-registration",
+  "title": "Malicious Tool Registration (PluginBot)",
+  "summary": "As documented, a persistent malicious tool that captures or exfiltrates data from any agent that later calls it. As implemented, a persistent false entry in the tool list.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:X/AP:N/RH:X/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "Default mode never calls a model, and register_tool is a direct unauthenticated JSON-RPC handler whose registry write does not depend on interpreting natural language. The description is stored as an advertised field, not a decision path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:541-561",
+        "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+        "damn-vulnerable-ai-agent/README.md:319-320",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    },
+    "CP": {
+      "rationale": "The new tool entry remains in PluginBot's in-process list across later requests, but that list is not a durable store and is not shown to be cleared at a session boundary, so none of C, S, or N fits.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1841-1848"
+      ]
+    },
+    "AP": {
+      "rationale": "The write stays in PluginBot's own advertised registry. The fleet does not hand the registration to another agent, tenant, or policy domain, and a registered name has no handler.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:1711-1770",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier, or reward channel is described on this path, and the cited tests are external challenge checks rather than an agent-reachable proxy with a verified hacking episode or an isolation test.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/test/exploit-handlers.test.js:135-138",
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:147-158",
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "register_tool accepts runtime tool names and descriptions with no signature, source, or schema check and advertises them, so the extension identity and operations are not independently constrained.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models MCP agents as tool servers callers invoke directly, with no tools passed to a model. The credential-capture story is a missing handler, not goal pursuit or action sequencing by PluginBot.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:738-785",
+      "damn-vulnerable-ai-agent/src/index.js:1915-1921",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-07T00:20:31.481346+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:20:31.481346+00:00"
+  }
+}

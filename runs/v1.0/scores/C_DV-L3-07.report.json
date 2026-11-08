@@ -1,0 +1,199 @@
+{
+  "aivss_version": "1.0",
+  "report_schema_version": "1.0",
+  "rubric_version": "1.2.0",
+  "calculator_version": "1.2.0",
+  "specification_status": "v1",
+  "finding_id": "DV-L3-07",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/same-name-shadow",
+  "risk_category": {
+    "id": "ASI04",
+    "name": "Agentic Supply Chain Vulnerabilities",
+    "scheme": "ASI"
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models PluginBot and ProxyBot as MCP tool servers with scripted or caller-invoked tools, not as a model that pursues goals or sequences actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251"
+    ]
+  },
+  "cvss": {
+    "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+    "macrovector": "102211",
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "exploit_maturity": {
+      "e": "P",
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null,
+      "input_vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N"
+    }
+  },
+  "agentic_ai_profile": {
+    "vector": "AIVSS:1.0/LC:N/CP:X/AP:N/RH:X/ES:W",
+    "metrics": {
+      "LC": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "Default simulated mode does not call a model, and the sink is a direct unauthenticated JSON-RPC tools/call that writes the registry rather than natural language driving a decision or invocation.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:541-561",
+            "damn-vulnerable-ai-agent/src/llm/provider.js:60-63",
+            "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+          ]
+        }
+      },
+      "CP": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "register_tool replaces an advertised-list entry, but the memory profile limits cross-session persistence to MemoryBot and does not say whether PluginBot's list survives the session boundary or is only request-scoped.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+            "damn-vulnerable-ai-agent/src/index.js:159-160",
+            "damn-vulnerable-ai-agent/src/index.js:500-502",
+            "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+          ]
+        }
+      },
+      "AP": {
+        "value": "N",
+        "label": "None",
+        "evidence": {
+          "rationale": "The implemented effect stays on PluginBot's own registry and keeps the original handler; ProxyBot registration changes nothing, and no code hands the change to another agent or policy domain.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+            "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+            "damn-vulnerable-ai-agent/src/index.js:2253-2324",
+            "damn-vulnerable-ai-agent/src/index.js:1711-1770"
+          ]
+        }
+      },
+      "RH": {
+        "value": "X",
+        "label": "Insufficient evidence",
+        "evidence": {
+          "rationale": "The cited unit test runs without a fleet and is not a human-verified episode of an agent meeting a proxy, evaluator, or reward, and no citation places such a channel inside or outside the agent's reach.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:170-182",
+            "damn-vulnerable-ai-agent/src/challenges/index.js:801-842"
+          ],
+          "reachable_proxy": false,
+          "isolation_verified": false,
+          "verified_episodes": 0,
+          "episodes_reviewed": 0,
+          "locus": null
+        }
+      },
+      "ES": {
+        "value": "W",
+        "label": "Wide",
+        "evidence": {
+          "rationale": "PluginBot accepts runtime tool definitions with no signature or source check, so tool identity on the registration path is dynamic and unvetted.",
+          "evidence_refs": [
+            "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+            "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+            "damn-vulnerable-ai-agent/src/index.js:1915-1926",
+            "damn-vulnerable-ai-agent/src/index.js:2159-2251"
+          ]
+        }
+      }
+    },
+    "complete": false,
+    "provisional": true,
+    "agentic_effect_class": "AX",
+    "agentic_effect_class_label": "Insufficient evidence",
+    "agentic_effect_class_status": "unvalidated",
+    "agentic_uplift_u": 2,
+    "agentic_effect_class_min": "A0",
+    "agentic_effect_class_max": "A1"
+  },
+  "scores": {
+    "cvss_score": 2.0,
+    "cvss_bte": 2.0,
+    "cvss_nomenclature": "CVSS-BT",
+    "cvss_band": "Low",
+    "agentic_effect_class": "AX",
+    "provisional": true,
+    "agentic_uplift_u": 2,
+    "aivss": 2.0,
+    "aivss_min": 2.0,
+    "aivss_max": 5.5,
+    "aivss_band": "Low",
+    "table_cell": null,
+    "rule": "cvss_bte_unchanged",
+    "status": "normative",
+    "basis": "Lookup Table AIVSS (Table 6): A0 or AX keep CVSS-BTE unchanged; A1 or A2 take the higher of the band cell and CVSS-BTE. AIVSS is never lower than CVSS-BTE."
+  },
+  "provenance": {
+    "assessor": "rater-C",
+    "assessor_kind": "llm_assisted",
+    "tool": "x-ai/grok-4.7",
+    "tool_version": "xai/zdr/us",
+    "assessed_at": "2026-11-07T00:42:04.053387+00:00"
+  },
+  "title": "Tool Shadowing (same-name tool replaces a legitimate tool)",
+  "summary": "As documented, persistent interception or modification of every call meant for the real tool. As implemented, the advertised description of the tool is replaced.",
+  "decision": {
+    "exploitation": {
+      "rung": "poc",
+      "rationale": "Public or private proof-of-concept exists",
+      "state": "poc",
+      "authoritative": false,
+      "epss": null,
+      "epss_date": null
+    },
+    "cve_id": null,
+    "fceb_bod_2604_scope": false,
+    "ssvc": {
+      "methodology": "Stakeholder-Specific Vulnerability Categorization (SSVC)",
+      "methodology_url": "https://certcc.github.io/SSVC/",
+      "decision_table": "cisa:DT_BOD2604:1.0.0",
+      "outcome_namespace": "cisa:BOD2604:1.0.0",
+      "decision_table_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+      "decision_point_namespaces": {
+        "in_kev": "cisa:KEV:1.0.0",
+        "publicly_exposed": "cisa:PE:1.0.0",
+        "automatable": "ssvc:A:2.0.0",
+        "technical_impact": "ssvc:TI:1.0.0",
+        "agentic_ai_effect_class": "aivss:effect_class:1.0.0"
+      },
+      "extension_note": "Agentic AI Effect Class is a transparent fifth SSVC extension input."
+    },
+    "bod_2604_model_version": "cisa:BOD2604:1.0.0",
+    "bod_2604_decision_table": "cisa:DT_BOD2604:1.0.0",
+    "bod_2604_model_source": "https://certcc.github.io/SSVC/howto/cisa_response/",
+    "bod_2604_directive": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+    "decision_basis": "informative_bod_26_04_analogy",
+    "compliance_applicable": false,
+    "decision_points": {
+      "in_kev": false,
+      "publicly_exposed": false,
+      "publicly_exposed_source": "lab default is localhost-only",
+      "decision_data_observed_at": "2026-11-07T00:42:04.053387+00:00",
+      "automatable": true,
+      "automatable_source": "supplied",
+      "technical_impact": "partial",
+      "technical_impact_source": "supplied",
+      "agentic_effect_class": "AX"
+    },
+    "aivss_recommended_timeline": "60D",
+    "aivss_recommended_label": "Remediate within 60 days",
+    "overlay_triggered": false,
+    "escalated": false,
+    "aivss_recommended_forensic_triage_indicated": false,
+    "overlay_status": "provisional",
+    "bod_2604_analogy_timeline": "60D",
+    "bod_2604_analogy_label": "Remediate within 60 days",
+    "forensic_triage_indicated": false,
+    "note": "This non-CVE result is an informative analogy, not a BOD 26-04 compliance deadline. Inputs were supplied explicitly."
+  }
+}

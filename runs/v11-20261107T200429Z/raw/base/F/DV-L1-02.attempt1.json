@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/DV-L1-02",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "DV-L1-02",
+    "packet_path": "packets_v11/base/DV-L1-02.json",
+    "prompt_sha256": "c9c41bc26c1f4fc2b68a1cd119f322ff405f73f97bd208a31fcc908d6296b23e"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:05:18.665174+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.29
+  },
+  "body": {
+    "id": "gen-1794081918-qXoJl48Q58GaiE65pgZB",
+    "object": "chat.completion",
+    "created": 1794081918,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:A/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"X\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The attacker's chat message goes straight to the reply path with no mediation. A regex detector flags it and the critical-level branch returns the persona and secrets (src/index.js:586-625).\",\"CP\":\"The LegacyBot leak is stateless: one request returns static planted data. The memoryStore belongs to MemoryBot and is not part of this path, so no attacker-controlled context persists.\",\"AP\":\"The effect stays inside the LegacyBot response. Nothing is relayed to another agent, tenant or principal on this path.\",\"RH\":\"The path has no evaluator, verifier or reward channel to assess. The only success check is the challenge's own successCriteria pattern, which sits in a separate scoring layer. The facts are too thin to decide reachability or isolation, so the classification is X.\",\"ES\":\"LegacyBot's declared tools (read_file, write_file, execute_command, send_email, access_database) are never invoked on this path. Only scripted paths execute, and none involve a dynamic or unvetted extension on the leak path.\",\"CVSS\":\"The default bind is 127.0.0.1 (src/index.js:1396-1400), and the documented Docker run publishes ports on loopback only (README.md:26), so remote network access is not the default. Every agent route sends Access-Control-Allow-Origin: * with no authentication (src/index.js:1561-1564), so a web page in the operator's browser can query the agent and read the reply. That requires the operator to visit the page, which gives AV:L and UI:A. Disclosure is of fake planted values, so VC is Low and subsequent systems are unaffected. The attacker does not own the asset.\"},\"evidence\":{\"LC\":[\"damn-vulnerable-ai-agent/src/index.js:586-625\",\"damn-vulnerable-ai-agent/src/challenges/index.js:79-86\"],\"CP\":[\"damn-vulnerable-ai-agent/src/index.js:1313-1324\",\"damn-vulnerable-ai-agent/src/index.js:586-625\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:586-625\"],\"RH\":[\"damn-vulnerable-ai-agent/src/challenges/index.js:87-89\"],\"ES\":[\"damn-vulnerable-ai-agent/src/core/agents.js:99\",\"damn-vulnerable-ai-agent/src/index.js:586-625\"],\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1561-1564\",\"damn-vulnerable-ai-agent/src/core/vulnerabilities.js:425-443\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"low\",\"ES\":\"medium\",\"CVSS\":\"medium\"},\"rh_facts\":{\"reachable_proxy\":null,\"isolation_verified\":null,\"verified_episodes\":null,\"episodes_reviewed\":null,\"locus\":null},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated HTTP chat request returns the secrets deterministically, so it can be scripted. The attacker still needs reach to the loopback port, for example through a victim's browser.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"Only the planted fake credentials and PII held in the agent's context are disclosed. There is no write, execution or availability impact.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"By default no model runs. A regex detector and canned code branches return the secrets, and no model chooses or sequences actions.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"medium\",\"rationale\":\"The documentation describes LegacyBot as an LLM assistant with embedded prompt secrets and declared tools that does whatever users ask. In optional LLM mode a model call answers the user.\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19498,
+      "completion_tokens": 1484,
+      "total_tokens": 20982,
+      "cost": 0.0592196,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0592196,
+        "upstream_inference_prompt_cost": 0.0428956,
+        "upstream_inference_completions_cost": 0.016324
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

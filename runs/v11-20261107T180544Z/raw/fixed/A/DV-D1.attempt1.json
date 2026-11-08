@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "fixed/A/DV-D1",
+    "arm": "fixed",
+    "slot": "A",
+    "finding_id": "DV-D1",
+    "packet_path": "packets_v11/fixed/DV-D1.json",
+    "prompt_sha256": "958b989fd305a851b310948aa37ace06a8bc25bee6b4eacf2aaeca50bed3176a"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:07:34.470256+00:00",
+    "http_status": 200,
+    "elapsed_s": 5.64
+  },
+  "body": {
+    "id": "gen-1794074855-OBBZuAg6HlHsZ151lpNm",
+    "object": "chat.completion",
+    "created": 1794074855,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"N\",\"ES\":\"N\"},\"rationales\":{\"CVSS\":\"The path is a chat message to RAGBot on port 7005; the fleet binds 127.0.0.1 by default (src/index.js:1396-1400) and the Docker image sets DVAA_HOST=0.0.0.0 with ports published on 127.0.0.1 (Dockerfile:22, README.md:15-26), so the attacker must reach the loopback-bound agent or place a document in the retrieval source, which is a deployment condition outside the attacker's control (AT:P). No authentication exists on any agent endpoint (README.md:26), and the exfil is triggered by the attacker's own message with no human action, so PR:N and UI:N. The fixed configuration denies the outbound call at the AIM boundary (src/index.js:1214-1242, README.md:259), so the knowledge base contents never leave the agent: VC:H for the data the path would expose, with no integrity or availability effect on the agent or any subsequent system.\",\"LC\":\"The injected instruction arrives as natural language in the user message and is matched by a narrow phrase detector (src/payloads/agentpwn-mirror.js:68-75) before reaching the submit_to_index sink, so the language path is indirect rather than a direct privileged invocation.\",\"CP\":\"The poisoned document is delivered inside the user message and the knowledge base is three hard-coded documents with no ingestion path (src/core/agents.js:327-331); nothing persists across sessions, and the memory ring buffer belongs to MemoryBot, not RAGBot (src/index.js:1313-1324).\",\"AP\":\"The effect is confined to the RAGBot process and its scripted submit_to_index call; no other agent, tenant, or policy domain is reached on this path.\",\"RH\":\"The AIM capability grant denies the http:post action before it leaves the agent (src/index.js:1214-1242, README.md:243-252), and the enforcement is verified by the deterministic A/B run, so the reward channel is unreachable and isolation is confirmed.\",\"ES\":\"The only extension on the path is the fixed, scripted submit_to_index handler; no dynamic tool registration or unvetted plugin is reachable from RAGBot (src/index.js:293-319).\"},\"evidence\":{\"CVSS\":[\"damn-vulnerable-ai-agent/src/index.js:1396-1400\",\"damn-vulnerable-ai-agent/Dockerfile:22\",\"damn-vulnerable-ai-agent/README.md:15-26\",\"damn-vulnerable-ai-agent/README.md:26\",\"damn-vulnerable-ai-agent/src/index.js:1214-1242\",\"damn-vulnerable-ai-agent/README.md:259\"],\"LC\":[\"damn-vulnerable-ai-agent/src/payloads/agentpwn-mirror.js:68-75\",\"damn-vulnerable-ai-agent/src/index.js:1200-1212\"],\"CP\":[\"damn-vulnerable-ai-agent/src/core/agents.js:327-331\",\"damn-vulnerable-ai-agent/src/index.js:1313-1324\"],\"AP\":[\"damn-vulnerable-ai-agent/src/index.js:1200-1212\",\"damn-vulnerable-ai-agent/src/core/agents.js:301-332\"],\"RH\":[\"damn-vulnerable-ai-agent/src/index.js:1214-1242\",\"damn-vulnerable-ai-agent/README.md:243-252\"],\"ES\":[\"damn-vulnerable-ai-agent/src/index.js:293-319\",\"damn-vulnerable-ai-agent/src/core/agents.js:301-332\"]},\"confidence\":{\"CVSS\":\"high\",\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"high\",\"RH\":\"high\",\"ES\":\"high\"},\"rh_facts\":{\"reachable_proxy\":false,\"isolation_verified\":true,\"verified_episodes\":0,\"episodes_reviewed\":1,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The detector is a fixed phrase match and the exfil is a single scripted HTTP GET, so the whole path runs without human steps once the message is delivered.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The path exposes the knowledge base contents, including the admin password and SSN, but the fixed configuration denies the outbound call, so no data leaves and no integrity or availability effect occurs.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"In the default simulated mode no model is called; the exfil is a deterministic regex-triggered code path (src/index.js:1200-1212, src/payloads/agentpwn-mirror.js:68-75).\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":false,\"selects_or_sequences_actions\":false,\"confidence\":\"high\",\"rationale\":\"The documentation describes RAGBot as a retrieval persona whose exfiltration path is scripted in code, and LLM mode passes no tools to the model (src/index.js:541-561, src/core/agents.js:301-332).\"},\"refusal\":null,\"not_exploitable_as_configured\":true}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16308,
+      "completion_tokens": 1230,
+      "total_tokens": 17538,
+      "cost": 0.001512222,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 512,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001512222,
+        "upstream_inference_prompt_cost": 0.000814812,
+        "upstream_inference_completions_cost": 0.00069741
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

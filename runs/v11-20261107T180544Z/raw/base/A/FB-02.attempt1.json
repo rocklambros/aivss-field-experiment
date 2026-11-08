@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "base/A/FB-02",
+    "arm": "base",
+    "slot": "A",
+    "finding_id": "FB-02",
+    "packet_path": "packets_v11/base/FB-02.json",
+    "prompt_sha256": "163ddc64b571d0fbd78b6c44a1fafbc72c975dc1645eeb27f3ffd70dd32c3f5f"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 8000,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:06:34.462690+00:00",
+    "http_status": 200,
+    "elapsed_s": 4.8
+  },
+  "body": {
+    "id": "gen-1794074794-o9HAsGgeCLn5NSCRdi1P",
+    "object": "chat.completion",
+    "created": 1794074794,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"I\",\"CP\":\"N\",\"AP\":\"N\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"Attacker-supplied invoice description enters the model context as a tool result from get_invoice_details (finbot_agent.py:390-394) and drives the approve_invoice call, so language reaches a privileged tool-invocation path indirectly through ingested content.\",\"CP\":\"The description is stored on the invoice row and re-read per request, but the briefing shows no durable agent memory, vector store, or standing goal change from this path; the custom_goals store is a separate admin path, so persistence is only re-retrieval of unmodified source content.\",\"AP\":\"The effect is confined to the FinBot agent process and its own tool functions; the invoice row write is the same component's sink, with no crossing into another agent, tenant, or policy domain.\",\"RH\":\"The agent can reach the approval decision and the CTF flag logic in _approve_invoice (finbot_agent.py:422-441), which is a reward/proxy channel on the path, and no verified reward-hacking episode is reported in the briefing.\",\"ES\":\"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills, and the binding is fixed and allowlisted, so the extension surface is none or narrow.\",\"CVSS\":\"Unauthenticated network POST to the vendor invoice API on a 0.0.0.0-bound public instance (main.py:105, gunicorn.conf.py:4) with no auth and open CORS (main.py:18); the attacker is an external party who does not own the asset. Integrity impact is high because approve_invoice writes status approved and payment_processed true (finbot_agent.py:415-416), while confidentiality and availability of the vulnerable system and subsequent systems are not shown to be affected.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/services/finbot_agent.py:363-407\",\"finbot-ctf-demo/src/services/finbot_agent.py:390-394\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\"finbot-ctf-demo/src/models/vendor.py:105\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:409-443\",\"finbot-ctf-demo/src/services/finbot_agent.py:422-441\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/vendor.py:69-110\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/services/finbot_agent.py:415-416\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"medium\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":0,\"locus\":\"evaluator\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"The path is a single unauthenticated HTTP POST with attacker-controlled JSON body; no human interaction, credentials, or target-specific secrets are required, so it can be scripted end to end.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The sink writes status approved and payment_processed true on one invoice row (finbot_agent.py:415-416), a serious integrity modification, but it does not destroy or fully compromise the vulnerable system's data or availability.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"In the default configuration the OpenAI client with gpt-4.1-mini drives a tool_choice auto loop of up to 5 iterations (finbot_agent.py:14-21, 150-226), and the model chooses and sequences get_invoice_details then approve_invoice itself.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant whose natural-language goals are built per request and which decides whether to approve, reject, or request review (finbot_agent.py:32-99, 351-352).\"},\"refusal\":null}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 11197,
+      "completion_tokens": 1157,
+      "total_tokens": 12354,
+      "cost": 0.001134138,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 2816,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.001134138,
+        "upstream_inference_prompt_cost": 0.000478119,
+        "upstream_inference_completions_cost": 0.000656019
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

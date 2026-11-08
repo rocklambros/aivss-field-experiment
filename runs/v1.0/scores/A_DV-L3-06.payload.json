@@ -1,0 +1,75 @@
+{
+  "finding_id": "DV-L3-06",
+  "path_id": "dvaa/toolbot/mcp/read-file-then-fetch-url/exfiltration-chain",
+  "title": "Tool Chain Data Exfiltration (read then send)",
+  "summary": "Two individually low-risk tool calls combine into exfiltration of credentials. In the lab the outbound step is logged, not sent.",
+  "risk_category": "ASI02",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:N",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The default configuration calls no model; MCP agents are tool servers invoked directly by the caller, so no natural-language path reaches a security-relevant sink.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ]
+    },
+    "CP": {
+      "rationale": "ToolBot keeps no memory; the lab profile states cross-session persistence exists only in MemoryBot, and this path is stateless.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:1313-1324"
+      ]
+    },
+    "AP": {
+      "rationale": "The two tool calls stay within the single ToolBot MCP server under one principal; no trust boundary is crossed.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106"
+      ]
+    },
+    "RH": {
+      "rationale": "No evaluator, verifier or reward channel is on this path, and the outbound step is only logged, so no proxy objective is reachable.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "ToolBot exposes a fixed set of four tools (read_file, write_file, execute, fetch_url) with no dynamic extension on the assessed path.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:154-197",
+        "damn-vulnerable-ai-agent/src/index.js:1941-2106"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models the path as two attacker-issued tool calls (read_file then fetch_url), not as model-directed goal pursuit or action selection.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/index.js:1941-1966",
+      "damn-vulnerable-ai-agent/src/index.js:2066-2106"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:23.668839+00:00",
+  "automatable": false,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:23.668839+00:00"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "cell": {
+    "cell_id": "base/B/DV-L3-08",
+    "arm": "base",
+    "slot": "B",
+    "finding_id": "DV-L3-08",
+    "packet_path": "packets_v11/base/DV-L3-08.json",
+    "prompt_sha256": "5c60aeed8bd0e82634ab0b05fa3ff9ef87fd9754a0d85ae7c27d5bfcb704c292"
+  },
+  "meta": {
+    "request": {
+      "model": "google/gemini-4-argon",
+      "temperature": 0,
+      "max_tokens": 64000,
+      "provider": {
+        "order": [
+          "google-vertex/us",
+          "google-vertex/global"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:33:25.342115+00:00",
+    "http_status": 200,
+    "elapsed_s": 7.86
+  },
+  "body": {
+    "id": "gen-1794083605-Su2KVjgxzSPGiJsA96RR",
+    "error": {
+      "message": "Gemini blocked the request: SAFETY",
+      "code": 403,
+      "metadata": {
+        "error_type": "content_policy_violation",
+        "provider_code": "SAFETY"
+      }
+    }
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "v10_runner_commit": "68c86f3",
+  "v10_runner_sha256": "be042701547a4987550abfa441f3ffc308694f98adc8e6bc3c37437794db94a0",
+  "byte_identity_with_v10": "unverifiable, v1.0 stored no prompts",
+  "packets": [
+    {
+      "packet_id": "ASL-S1~bridge",
+      "prompt_sha256": "ad58f3b8550e7e480a8461f3c5fb41e9dc0636580865d932da1d014f02c2eac0",
+      "prompt_chars": 30792
+    },
+    {
+      "packet_id": "ASL-S2a~bridge",
+      "prompt_sha256": "7e089d149be536c2c8919dacf9f6062d6363db7b2f566fc7536d82820edbc252",
+      "prompt_chars": 30278
+    },
+    {
+      "packet_id": "ASL-S2b~bridge",
+      "prompt_sha256": "c1614ec82864791e0290e85be6bfb53f5f40e8ed9010eb96850e336c8cc2fe8b",
+      "prompt_chars": 29856
+    },
+    {
+      "packet_id": "ASL-S2c~bridge",
+      "prompt_sha256": "d9adbfc81826ff349a678eddb5f10d311e7581d0e2a039d1bbfb347bcf6a3a90",
+      "prompt_chars": 30068
+    },
+    {
+      "packet_id": "ASL-S3a~bridge",
+      "prompt_sha256": "fba0a85e1701580811981c969eb1f90cb9db38f5b14d63356bed3586584395dc",
+      "prompt_chars": 30470
+    },
+    {
+      "packet_id": "ASL-S3b~bridge",
+      "prompt_sha256": "c26c51f65a1511eff404572bf1e89beba7882c3c6cf5999b31897f28c881c733",
+      "prompt_chars": 30120
+    },
+    {
+      "packet_id": "ASL-S3c~bridge",
+      "prompt_sha256": "25634e6fc9e65a930a0460601bbafd71522c2f36b40159e10a67bf3371c3f168",
+      "prompt_chars": 29914
+    },
+    {
+      "packet_id": "ASL-S4a~bridge",
+      "prompt_sha256": "db3b5a52b76b79c29d69b44dd533ccc8ac192debd733b4dfe6d78633668a1b32",
+      "prompt_chars": 30691
+    },
+    {
+      "packet_id": "ASL-S4b~bridge",
+      "prompt_sha256": "d3d0cb29772756fcf067762c7ad8ea83758fc2e5171f6c9f3a30e1eebad6f1be",
+      "prompt_chars": 30187
+    },
+    {
+      "packet_id": "ASL-S5a~bridge",
+      "prompt_sha256": "347d795827455b9fd691ca782647e57147ab23920a4aa25b823913825db1015d",
+      "prompt_chars": 30153
+    },
+    {
+      "packet_id": "ASL-S5b~bridge",
+      "prompt_sha256": "249b0bb80f76d368090bf20c6bdabc127cb5bd418ed4ac12cd11afb4dcea90e3",
+      "prompt_chars": 29950
+    },
+    {
+      "packet_id": "ASL-S5c~bridge",
+      "prompt_sha256": "8631ebf248200557b4bd119b82b635b1350214b8638427931b6c130f9bddecab",
+      "prompt_chars": 29961
+    },
+    {
+      "packet_id": "ASL-S6a~bridge",
+      "prompt_sha256": "dd6550642c1acd0f64ecf5ae15fedbe148b98b44d67603ccc5176f6888239e19",
+      "prompt_chars": 29941
+    },
+    {
+      "packet_id": "ASL-S6b~bridge",
+      "prompt_sha256": "ebf187e0e57dee572c4e9ea4f15982425441ca4f19506234312d4ea55cdf3b2f",
+      "prompt_chars": 30119
+    },
+    {
+      "packet_id": "ASL-S6c~bridge",
+      "prompt_sha256": "168831e2523b3605b7fcb7bae0383f3767b0d4932538f61214554626f1c6b0c5",
+      "prompt_chars": 29836
+    },
+    {
+      "packet_id": "ASL-S6d~bridge",
+      "prompt_sha256": "e854409ae03cbf6d100823c8a3405116562802f8debabf7dbeeedcc7f67bf9d8",
+      "prompt_chars": 29783
+    },
+    {
+      "packet_id": "ASL-S7~bridge",
+      "prompt_sha256": "7081c3bc14073b7da0675c7e289081417ebe1a95afc7d5a22554081631928fd3",
+      "prompt_chars": 30332
+    },
+    {
+      "packet_id": "ASL-S8a~bridge",
+      "prompt_sha256": "c2f6e1cd6153ff0bcb18b9fbd21963a9f48529236fbbee3168ccfa0d8d57d3a0",
+      "prompt_chars": 30447
+    },
+    {
+      "packet_id": "ASL-S8b~bridge",
+      "prompt_sha256": "76f70e75f8b4600b1ca82cdfd2574e9f3b717a75daaee401e17bca61252d27c8",
+      "prompt_chars": 30133
+    },
+    {
+      "packet_id": "DV-D1~bridge",
+      "prompt_sha256": "462376669f7d4a029f0e09d209c0ae016851412ec9a8a8f47561fb0a64add0a1",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-D2~bridge",
+      "prompt_sha256": "131a695730ebe3fbe92711dde783b81cad50beed146778db74aaaf314d025c41",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-D3~bridge",
+      "prompt_sha256": "ca756d7532fc0c61a6ff9a73276c5e1f96a62fc5a8fd31e37d4dc26b0661ba99",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-D4~bridge",
+      "prompt_sha256": "0256f03c3e1d106f58d1dce6a4e464160cd8605368cbd88181b21feceb6c513e",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L1-01~bridge",
+      "prompt_sha256": "08444377df23d96f4d7a2ac0e10d5972be8e9d2a552cb9fed141b937803ec737",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L1-02~bridge",
+      "prompt_sha256": "1db719caf4766c04d614a8a5dba75585b8773d5fa56ab1f3ac2cc4a0d6c9934a",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L1-03~bridge",
+      "prompt_sha256": "2cf3dac2aca38ef269bfd0ceed75cddddb3ffe14e710e820e1843108222c0c22",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-01~bridge",
+      "prompt_sha256": "bc38d7ac8f81b4987ce952125afe53a04a2c92306d630e42a4fa9d85ad3f234d",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-02~bridge",
+      "prompt_sha256": "3716148990831518553ce62dd04b47792147d0a41db35d698473c992157dc103",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-03~bridge",
+      "prompt_sha256": "029859cb90feb5f09e7b2331c370f1af2ba0f1e9c65d095f09f9a2a4da02be73",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-04~bridge",
+      "prompt_sha256": "d686a459833cd8b9ab12ac95f746bcdea4a343968f850f28185054d3e9719c5f",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-05~bridge",
+      "prompt_sha256": "e25d254a08a0f67ed42deb13a0bec0848f607e96c258a761fce8397b759925a5",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-06~bridge",
+      "prompt_sha256": "9859e26d1ee6ce7a28394d06208aab8acb3799fa1e8bac33781f4a2e817d76da",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-07~bridge",
+      "prompt_sha256": "86f6d3ec6a8d559639281ca56b5058e1fad3d971a439ed4b01562970615379ed",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-08~bridge",
+      "prompt_sha256": "69cd1b39aab24787399dae414748b75e60cf9e4b9059f42caedc9ab2b11dea89",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L2-09~bridge",
+      "prompt_sha256": "37383f033fa4cf04ed4bc4ba110701e984960446048624ed229c71f0f3695ad6",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-01~bridge",
+      "prompt_sha256": "1c785631a33b1da64cc936c8a36852b8a67637cb7279858931d4db8294d333f0",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-02~bridge",
+      "prompt_sha256": "440114fadf15717869c74665c3e9c6762a48ea7029d95fdb99884b390cded615",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-03~bridge",
+      "prompt_sha256": "d332c2b79f21cd9d12d3222fe28235459c25b15ac8062f14fdc972d689f9ee6d",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-04~bridge",
+      "prompt_sha256": "7b0f7cc8aa90d57f7638105d6ce62fa589737c04718409ad81141c98160f21d6",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-05~bridge",
+      "prompt_sha256": "657a0300d2d9ea8df816181bea896c2d07cda84418e2e0c1fb189fc4bf0288d4",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-06~bridge",
+      "prompt_sha256": "1b791c011a3bae0237a517cdf7adce818a6c13bef64b685e40c059d0d592df35",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-07~bridge",
+      "prompt_sha256": "274cc4c9e2633f530e26844d09d5402bd9ff75e2ee0f26d72c0cf4002cd8fa9f",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L3-08~bridge",
+      "prompt_sha256": "0c22e0c4bef6e2304407f1e7274adbb1b09e537d20e38c0336273e37f876494f",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "DV-L4-02~bridge",
+      "prompt_sha256": "da106413d5aac72a8fb7301200b6605773ed12f2ea3dbe3e8a08f6c137c8897e",
+      "prompt_chars": 31417
+    },
+    {
+      "packet_id": "FB-01~bridge",
+      "prompt_sha256": "31395e1646e60c3e1f48c2aec8d43ddda4abc611e340fbf313498ba171b928a1",
+      "prompt_chars": 25303
+    },
+    {
+      "packet_id": "FB-02~bridge",
+      "prompt_sha256": "ff60c3c1d2d4ab6c5a8ef0da24e37e1fcb0d504ba080d8d231f3e2430c7071c9",
+      "prompt_chars": 24386
+    },
+    {
+      "packet_id": "FB-03~bridge",
+      "prompt_sha256": "e158edb6d8342c0d1b06417313a29b255c6236253d7ce80c2bb71e1c6c481ba3",
+      "prompt_chars": 24734
+    },
+    {
+      "packet_id": "FB-04~bridge",
+      "prompt_sha256": "c8277b9e5eddf7f403e63faabae9fb71977f74c57216d9e2427a732c4c8a536f",
+      "prompt_chars": 24477
+    }
+  ]
+}

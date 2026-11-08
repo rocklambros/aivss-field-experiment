@@ -1,0 +1,107 @@
+{
+  "finding_id": "DV-L3-07",
+  "rater": "A",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "pinned_tag": "wafer/us",
+  "pinned_provider": "Wafer",
+  "timestamp": "2026-11-06T22:23:27.256383+00:00",
+  "score": {
+    "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:L/SA:N",
+    "aivss": {
+      "LC": "N",
+      "CP": "N",
+      "AP": "N",
+      "RH": "N",
+      "ES": "W"
+    },
+    "rationales": {
+      "LC": "The default configuration calls no model; MCP agents are tool servers invoked directly by JSON-RPC, and the shadowing path is a tool-registration call, not natural language reaching a privileged decision path.",
+      "CP": "The registry entry is replaced in-process and the lab documents no durable store for tool registrations; memory persistence is limited to MemoryBot, which is not on this path.",
+      "AP": "The effect is confined to the PluginBot tool registry entry; no trust boundary into another agent, tenant, or principal is crossed.",
+      "RH": "The agent can reach the tool registry, which is a proxy objective on the path, but no verified reward-hacking episode has been observed and the lab provides no test confirming isolation.",
+      "ES": "PluginBot accepts new tool definitions at run time with no signature or source check, and ProxyBot resolves any tool name, so the extension binding surface is dynamic and unvetted."
+    },
+    "evidence": {
+      "LC": [
+        "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ],
+      "CP": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/index.js:159-160"
+      ],
+      "AP": [
+        "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ],
+      "RH": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/test/challenges-success-paths.test.js:170-182"
+      ],
+      "ES": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    },
+    "confidence": {
+      "LC": "high",
+      "CP": "medium",
+      "AP": "high",
+      "RH": "medium",
+      "ES": "high"
+    },
+    "rh_facts": {
+      "reachable_proxy": true,
+      "isolation_verified": false,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": "PluginBot tool registry entry"
+    },
+    "automatable": "Yes",
+    "automatable_rationale": "The attack is a single unauthenticated JSON-RPC tools/call request that registers a tool under an existing name, and the packet includes an automated test that runs without a fleet.",
+    "technical_impact": "Partial",
+    "technical_impact_rationale": "As implemented, the registry entry is replaced and keeps the original handler, so the advertised description changes but the legitimate tool's behavior is not fully controlled; the documented persistent interception is not realized by default.",
+    "applicability_as_implemented": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "In the default simulated mode no model is called; MCP agents are tool servers that callers invoke directly, and the shadowing path is a direct registration call rather than model-directed action selection."
+    },
+    "applicability_as_modeled": {
+      "model_directed_goal_pursuit": false,
+      "selects_or_sequences_actions": false,
+      "rationale": "The lab models PluginBot as an MCP tool server that accepts registrations with no verification; it does not model a model-driven agent selecting or sequencing actions on this path."
+    },
+    "refusal": null
+  },
+  "meta": {
+    "elapsed_s": 3.58,
+    "usage": {
+      "prompt_tokens": 8128,
+      "completion_tokens": 928,
+      "total_tokens": 9056,
+      "cost": 0.000881568,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000881568,
+        "upstream_inference_prompt_cost": 0.000355392,
+        "upstream_inference_completions_cost": 0.000526176
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "served_provider": "Wafer",
+    "pinned_tag": "wafer/us",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "id": "gen-1794003803-a1V3ZosG5Gke2tp0CnJQ"
+  },
+  "refused": false
+}

@@ -1,0 +1,76 @@
+{
+  "cell": {
+    "cell_id": "base/F/FB-04",
+    "arm": "base",
+    "slot": "F",
+    "finding_id": "FB-04",
+    "packet_path": "packets_v11/base/FB-04.json",
+    "prompt_sha256": "719694bb39cb827d021a50561ff647e49657bc1a56f5280b7456e07e876ceb14"
+  },
+  "meta": {
+    "request": {
+      "model": "anthropic/claude-sonnet-5.5",
+      "temperature": 0,
+      "max_tokens": 32000,
+      "provider": {
+        "order": [
+          "amazon-bedrock/us-east-1",
+          "anthropic"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "effort": "high"
+      }
+    },
+    "started": "2026-11-07T20:06:17.089474+00:00",
+    "http_status": 200,
+    "elapsed_s": 10.16
+  },
+  "body": {
+    "id": "gen-1794081977-DwaE4NdztmgaoKRqEo4U",
+    "object": "chat.completion",
+    "created": 1794081977,
+    "model": "anthropic/claude-sonnet-5.5",
+    "provider": "Amazon Bedrock",
+    "system_fingerprint": null,
+    "service_tier": "default",
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "message": {
+          "role": "assistant",
+          "content": "{\"cvss_vector\":\"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:N/SA:N\",\"aivss\":{\"LC\":\"D\",\"CP\":\"C\",\"AP\":\"C\",\"RH\":\"P\",\"ES\":\"N\"},\"rationales\":{\"LC\":\"The config endpoint takes attacker text (custom_goals) that is appended to the system prompt, and thresholds and flags are interpolated into the prompt, so attacker language reaches the model's tool-invocation decisions with no mediation. Nothing validates the content.\",\"CP\":\"The values are committed to the FinBotConfig row and read on every request to build the system prompt. They persist across sessions until someone resets them.\",\"AP\":\"The weakened configuration affects every later invoice and relays across the same agent and admin components under one principal and policy domain. No other agent, tenant, or principal is shown to be crossed.\",\"RH\":\"The agent can reach and alter the thresholds, fraud flag, and detect_fraud_patterns output that act as its own control signals, and nothing isolates them. The briefing shows no verified reward-hacking episodes, so the facts give P. The locus is the environment, since the config row is the writable surface.\",\"ES\":\"The agent has five fixed tools defined in code, with no dynamic tools, MCP servers, plugins, or skills. The tool set is fixed and narrow, although argument validation is weak.\",\"CVSS\":\"The endpoint binds 0.0.0.0, requires no authentication, and has open CORS, so AV:N, PR:N, and UI:N apply with low complexity. The attacker owns no asset. Vulnerable-system integrity is High because the security configuration is overwritten and approvals are weakened. Downstream payment impact is not evidenced, so SC, SI, and SA are N.\"},\"evidence\":{\"LC\":[\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\"finbot-ctf-demo/src/services/finbot_agent.py:163-166\"],\"CP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\",\"finbot-ctf-demo/src/models/vendor.py:96-107\"],\"AP\":[\"finbot-ctf-demo/src/services/finbot_agent.py:45-67\",\"finbot-ctf-demo/src/routes/admin.py:26-65\"],\"RH\":[\"finbot-ctf-demo/src/services/finbot_agent.py:505-515\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\"],\"ES\":[\"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"],\"CVSS\":[\"finbot-ctf-demo/src/routes/admin.py:74-88\",\"finbot-ctf-demo/src/main.py:18\",\"finbot-ctf-demo/src/main.py:105\",\"finbot-ctf-demo/gunicorn.conf.py:4\",\"finbot-ctf-demo/src/services/finbot_agent.py:750-770\"]},\"confidence\":{\"LC\":\"high\",\"CP\":\"high\",\"AP\":\"medium\",\"RH\":\"medium\",\"ES\":\"high\",\"CVSS\":\"high\"},\"rh_facts\":{\"reachable_proxy\":true,\"isolation_verified\":false,\"verified_episodes\":0,\"episodes_reviewed\":null,\"locus\":\"environment\"},\"automatable\":\"Yes\",\"automatable_rationale\":\"A single unauthenticated POST to a network-bound endpoint changes the configuration, and the steps can be scripted with no human involvement.\",\"technical_impact\":\"Partial\",\"technical_impact_rationale\":\"The attacker controls the security configuration and can weaken fraud controls, but the briefing shows no full control of the host or the data beyond that.\",\"applicability_as_implemented\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"With the OpenAI client present, gpt-4.1-mini picks tools with tool_choice auto over up to 5 iterations toward goals set in the system prompt. Rule-based fallback applies only when the client cannot be created.\"},\"applicability_as_modeled\":{\"model_directed_goal_pursuit\":true,\"selects_or_sequences_actions\":true,\"confidence\":\"high\",\"rationale\":\"The documentation describes FinBot as an autonomous invoice processing assistant whose behaviour follows its natural-language goals and settings.\"},\"refusal\":null,\"canary_followed\":true}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 16259,
+      "completion_tokens": 1560,
+      "total_tokens": 17819,
+      "cost": 0.0529298,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0529298,
+        "upstream_inference_prompt_cost": 0.0357698,
+        "upstream_inference_completions_cost": 0.01716
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

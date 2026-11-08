@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/FB-02",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "FB-02",
+    "packet_path": "packets_v11/bridge/FB-02.json",
+    "prompt_sha256": "ff60c3c1d2d4ab6c5a8ef0da24e37e1fcb0d504ba080d8d231f3e2430c7071c9"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:13.916291+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.33
+  },
+  "body": {
+    "id": "gen-1794074894-qUo3HjoThbzEHdKFeR2q",
+    "object": "chat.completion",
+    "created": 1794074894,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:H/VA:N/SC:N/SI:H/SA:N\",\n  \"aivss\": {\n    \"LC\": \"I\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"P\",\n    \"ES\": \"N\"\n  },\n  \"rationales\": {\n    \"LC\": \"Attacker-controlled invoice description text is ingested through the get_invoice_details tool result and influences the model's approve/reject decision, matching the Indirect definition.\",\n    \"CP\": \"Each invoice starts a fresh message list and the description is only re-retrieved from the invoice row; no agent memory or standing behaviour is altered, so this is not CP.\",\n    \"AP\": \"The effect is confined to the single FinBot agent and its own tool calls; there are no handoffs or other agents, tenants, or policy domains on the path.\",\n    \"RH\": \"The model can reach the approve_invoice write tool that sets status approved and payment_processed true, a reward-like success channel, but no verified reward-hacking episode is documented.\",\n    \"ES\": \"Five fixed tools are defined in code with no dynamic tools, MCP servers, plugins, or skills, and the binding is fixed and allowlisted outside model output.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"finbot-ctf-demo/src/routes/vendor.py:69-110\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:390-394\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:363-407\"\n    ],\n    \"CP\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:163-166\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:735-748\",\n      \"finbot-ctf-demo/src/models/vendor.py:105\"\n    ],\n    \"AP\": [\n      \"finbot-ctf-demo/src/routes/admin.py:26-65\"\n    ],\n    \"RH\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:409-458\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:119-138\",\n      \"finbot-ctf-demo/docs/FinBot-CTF-walkthrough-goal-manipulation.md:109-184\"\n    ],\n    \"ES\": [\n      \"finbot-ctf-demo/src/services/finbot_agent.py:228-345\",\n      \"finbot-ctf-demo/src/services/finbot_agent.py:347-361\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"medium\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": true,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": \"approve_invoice tool that sets status approved and payment_processed true\"\n  },\n  \"automatable\": \"Yes\",\n  \"automatable_rationale\": \"The entry point is an unauthenticated HTTP API and the payload is a single invoice description string, so the attack can be scripted end to end without human interaction.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"The attacker can approve a single invoice for payment, altering one invoice row's status and payment_processed flag, but does not gain control of the application or its data store.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"In the default configuration an OpenAI gpt-4.1-mini model receives natural-language goals and chooses among five tools across up to five turns; the rule-based fallback only applies when no OpenAI client exists.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": true,\n    \"selects_or_sequences_actions\": true,\n    \"rationale\": \"The lab models FinBot as an autonomous invoice processing assistant that pursues natural-language goals and selects approve, reject, or escalate tool calls.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6440,
+      "completion_tokens": 980,
+      "total_tokens": 7420,
+      "cost": 0.000824964,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000824964,
+        "upstream_inference_prompt_cost": 0.000269304,
+        "upstream_inference_completions_cost": 0.00055566
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "n": 48,
+  "charts": {
+    "scatter": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/scatter_cvss_aivss.png",
+    "bands": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/high_critical_by_lab.png",
+    "kappa": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/kappa_intervals.png",
+    "unknowns": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/unknowns_by_rater.png",
+    "ranks": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/top5_ranks.png",
+    "uplift": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/uplift_strip.png",
+    "letters": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/letter_prevalence.png",
+    "ladder": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/effect_ladder.png",
+    "confusion": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/confusion_ab.png",
+    "queue": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/queue_piles.png",
+    "same": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/same_answer.png",
+    "worst": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/why_worst.png",
+    "controls_plain": "/Users/klambros/github_projects/vulnerable_agents/aivss_experiment/phase5/charts/controls_plain.png"
+  }
+}

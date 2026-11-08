@@ -1,0 +1,75 @@
+{
+  "cell": {
+    "cell_id": "bridge/A/DV-L2-09",
+    "arm": "bridge",
+    "slot": "A",
+    "finding_id": "DV-L2-09",
+    "packet_path": "packets_v11/bridge/DV-L2-09.json",
+    "prompt_sha256": "37383f033fa4cf04ed4bc4ba110701e984960446048624ed229c71f0f3695ad6"
+  },
+  "meta": {
+    "request": {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "temperature": 0,
+      "max_tokens": 2500,
+      "provider": {
+        "order": [
+          "wafer/us"
+        ],
+        "allow_fallbacks": false
+      },
+      "reasoning": {
+        "enabled": false
+      }
+    },
+    "started": "2026-11-07T18:08:07.496287+00:00",
+    "http_status": 200,
+    "elapsed_s": 2.99
+  },
+  "body": {
+    "id": "gen-1794074887-RE1v4d8bbNoVQnIqQDu6",
+    "object": "chat.completion",
+    "created": 1794074887,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "Wafer",
+    "system_fingerprint": null,
+    "service_tier": null,
+    "choices": [
+      {
+        "index": 0,
+        "logprobs": null,
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"cvss_vector\": \"CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N\",\n  \"aivss\": {\n    \"LC\": \"N\",\n    \"CP\": \"N\",\n    \"AP\": \"N\",\n    \"RH\": \"N\",\n    \"ES\": \"W\"\n  },\n  \"rationales\": {\n    \"LC\": \"In the default simulated configuration no model is called and MCP agents are tool servers invoked directly by callers; the documented MITM path requires an attacker-controlled proxy endpoint that no default code sets, so no natural-language path to security-relevant behaviour exists.\",\n    \"CP\": \"ProxyBot is an MCP tool server with no memory; the lab profile states cross-session persistence exists only in MemoryBot, and ProxyBot answers only the current request.\",\n    \"AP\": \"The finding is confined to the ProxyBot tool-call path; no handoff to another agent, tenant, or policy domain is implemented, and the A2A handoffs are declared but not implemented.\",\n    \"RH\": \"No evaluator, verifier, or reward channel is on the ProxyBot path; the scripted handlers return fixed results and no proxy connection is made, so there is no proxy objective the agent can reach.\",\n    \"ES\": \"ProxyBot resolves any tool name and accepts tool calls with no authentication, and the lab profile states MCP agents expose their tools to any caller with no authentication, making the extension binding surface unvetted.\"\n  },\n  \"evidence\": {\n    \"LC\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:787-840\",\n      \"damn-vulnerable-ai-agent/src/index.js:2253-2324\",\n      \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"\n    ],\n    \"CP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:159-160\",\n      \"damn-vulnerable-ai-agent/src/index.js:1313-1324\"\n    ],\n    \"AP\": [\n      \"damn-vulnerable-ai-agent/src/index.js:1711-1770\",\n      \"damn-vulnerable-ai-agent/src/index.js:2079-2096\"\n    ],\n    \"RH\": [\n      \"damn-vulnerable-ai-agent/src/index.js:2253-2324\",\n      \"damn-vulnerable-ai-agent/src/challenges/index.js:520-527\"\n    ],\n    \"ES\": [\n      \"damn-vulnerable-ai-agent/src/core/agents.js:770-784\",\n      \"damn-vulnerable-ai-agent/src/index.js:1915-1926\"\n    ]\n  },\n  \"confidence\": {\n    \"LC\": \"high\",\n    \"CP\": \"high\",\n    \"AP\": \"high\",\n    \"RH\": \"high\",\n    \"ES\": \"high\"\n  },\n  \"rh_facts\": {\n    \"reachable_proxy\": false,\n    \"isolation_verified\": false,\n    \"verified_episodes\": 0,\n    \"episodes_reviewed\": 0,\n    \"locus\": null\n  },\n  \"automatable\": \"No\",\n  \"automatable_rationale\": \"The documented MITM requires an attacker to control or sit on the proxy path, and the default configuration makes no proxy connection and sets no proxy URL, so the described effect is not reachable by an automated tool against the default deployment.\",\n  \"technical_impact\": \"Partial\",\n  \"technical_impact_rationale\": \"As implemented, ProxyBot returns scripted results and makes no proxy connection, so the documented interception of signing keys and fund transfers does not occur; the impact is limited to the scripted tool-call responses.\",\n  \"applicability_as_implemented\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"In the default simulated mode no model is called; ProxyBot is an MCP tool server that accepts any tool name and returns scripted results, with no model-directed goal pursuit or action selection.\"\n  },\n  \"applicability_as_modeled\": {\n    \"model_directed_goal_pursuit\": false,\n    \"selects_or_sequences_actions\": false,\n    \"rationale\": \"The lab models ProxyBot as an MCP tool server that accepts any tool name and returns scripted results labeled as proxied without TLS verification; it does not model a model-driven agent selecting or sequencing actions.\"\n  },\n  \"refusal\": null\n}",
+          "refusal": null,
+          "reasoning": null
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8137,
+      "completion_tokens": 994,
+      "total_tokens": 9131,
+      "cost": 0.000919449,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 1792,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.000919449,
+        "upstream_inference_prompt_cost": 0.000355851,
+        "upstream_inference_completions_cost": 0.000563598
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    }
+  }
+}

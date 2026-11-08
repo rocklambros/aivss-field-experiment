@@ -1,0 +1,80 @@
+{
+  "finding_id": "DV-L2-08",
+  "path_id": "dvaa/pluginbot/mcp/register-tool/unverified-registration",
+  "title": "Malicious Tool Registration (PluginBot)",
+  "summary": "As documented, a persistent malicious tool that captures or exfiltrates data from any agent that later calls it. As implemented, a persistent false entry in the tool list.",
+  "risk_category": "ASI04",
+  "cvss_vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+  "aivss_vector": "AIVSS:1.0/LC:N/CP:N/AP:N/RH:N/ES:W",
+  "metric_evidence": {
+    "LC": {
+      "rationale": "The register_tool path is a JSON-RPC tools/call with a tool name and description; no natural-language model path reaches the registry in the default simulated mode, and the entry gains no handler.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "CP": {
+      "rationale": "The registry entry persists in-process for the server lifetime, but it is not attacker-controlled context or memory that alters agent behaviour, and the lab states no handler changes behaviour because of a stored entry.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:159-160",
+        "damn-vulnerable-ai-agent/src/index.js:500-502"
+      ]
+    },
+    "AP": {
+      "rationale": "The effect is confined to PluginBot's in-process advertised tool registry; no trust boundary is crossed into another agent, tenant, or principal.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/index.js:2159-2251",
+        "damn-vulnerable-ai-agent/src/core/agents.js:738-785"
+      ]
+    },
+    "RH": {
+      "rationale": "The registry is a tool-list surface, not an evaluator, verifier, or reward channel; no proxy objective or reward signal is on the path, and no reward-hacking episode is described.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1921"
+      ],
+      "reachable_proxy": false,
+      "isolation_verified": true,
+      "verified_episodes": 0,
+      "episodes_reviewed": 0,
+      "locus": null
+    },
+    "ES": {
+      "rationale": "PluginBot accepts new tool definitions at run time with no signature or source check, and MCP agents expose tools to any caller with no authentication, so the extension binding surface is dynamic and unvetted.",
+      "evidence_refs": [
+        "damn-vulnerable-ai-agent/src/core/agents.js:747-752",
+        "damn-vulnerable-ai-agent/src/core/agents.js:770-784",
+        "damn-vulnerable-ai-agent/src/index.js:1915-1926"
+      ]
+    }
+  },
+  "agentic_applicability": {
+    "model_directed_goal_pursuit": true,
+    "action_selection_or_sequencing": true,
+    "rationale": "scored as modeled; default config is scripted. The lab models PluginBot as an MCP tool server that accepts registrations; the documented impact is a malicious tool that captures credentials when another agent calls it, not a model pursuing a goal or sequencing actions.",
+    "evidence_refs": [
+      "damn-vulnerable-ai-agent/src/core/agents.js:738-785",
+      "damn-vulnerable-ai-agent/src/index.js:1915-1921",
+      "damn-vulnerable-ai-agent/src/index.js:2227-2251",
+      "damn-vulnerable-ai-agent/src/agent-success-paths.js:113-156"
+    ]
+  },
+  "evidence": {
+    "poc": true
+  },
+  "publicly_exposed": false,
+  "publicly_exposed_source": "lab default is localhost-only",
+  "decision_data_observed_at": "2026-11-06T22:23:07.816516+00:00",
+  "automatable": true,
+  "technical_impact": "partial",
+  "include_decision": true,
+  "include_priority": false,
+  "provenance": {
+    "assessor": "rater-A",
+    "assessor_kind": "llm_assisted",
+    "tool": "deepseek/deepseek-v4.1-flash",
+    "tool_version": "wafer/us",
+    "assessed_at": "2026-11-06T22:23:07.816516+00:00"
+  }
+}
